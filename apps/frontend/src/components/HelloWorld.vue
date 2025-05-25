@@ -10,9 +10,11 @@ defineProps<{ msg: string }>()
 
 const count = ref(0)
 const isLoggedIn = ref(false)
+const isLoading = ref(true)
 
 const checkLoginStatus = async () => {
   try {
+    isLoading.value = true
     const clientOptions = getClientOptionsWithCredentials({
       allowInsecureConnection: true
     })
@@ -23,6 +25,8 @@ const checkLoginStatus = async () => {
   } catch (error) {
     console.error('Session check error:', error)
     isLoggedIn.value = false
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -42,7 +46,10 @@ onMounted(() => {
     </p>
   </div>
 
-  <Logout v-if="isLoggedIn" />
+  <div v-if="isLoading" class="loading-container">
+    <p>ログイン状態を確認中...</p>
+  </div>
+  <Logout v-else-if="isLoggedIn" />
   <Login v-else />
 
   <p>
@@ -65,5 +72,11 @@ onMounted(() => {
 <style scoped>
 .read-the-docs {
   color: #888;
+}
+
+.loading-container {
+  margin: 20px 0;
+  text-align: center;
+  color: #666;
 }
 </style>
