@@ -61,6 +61,11 @@ model OAuthResult {
   state: string;
 }
 
+model LoginSessionResponse {
+  name: string;
+  email: string;
+}
+
 @route("/logins")
 @tag("Login")
 interface Login {
@@ -70,4 +75,7 @@ interface Login {
   @post oauth(@body body: OAuthResult): PlainResult | Error;
   /** Logout */
   @delete logout(): PlainResult | Error;
+
+  /** セッション確認 */
+  @route("session") @get analyze(): AnalyzeResult | Error;
 }
