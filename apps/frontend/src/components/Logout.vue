@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import { createLoginClientContext } from '../api/loginClient/loginClientContext'
-import { logout as logoutOperation } from '../api/loginClient/loginClientOperations'
-import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
+import { useAuthStore } from '../stores/auth'
+
+const authStore = useAuthStore()
 
 const logout = async () => {
   try {
     console.log('Logout button clicked')
-    const clientOptions = getClientOptionsWithCredentials({
-      allowInsecureConnection: true
-    })
-    const client = createLoginClientContext("http://localhost:3000/", clientOptions)
-    const result = await logoutOperation(client)
-    console.log('Logout result:', result)
-    
-    // ログアウト成功後の処理（例：ホームページへリダイレクト）
-    if (result.resultCode === "success") {
-      window.location.href = '/'
-    }
+    await authStore.logout()
   } catch (error) {
     console.error('Logout error:', error)
   }

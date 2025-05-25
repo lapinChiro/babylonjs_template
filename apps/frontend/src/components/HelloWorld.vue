@@ -2,36 +2,15 @@
 import { ref, onMounted } from 'vue'
 import Login from './Login.vue'
 import Logout from './Logout.vue'
-import { createLoginClientContext } from '../api/loginClient/loginClientContext'
-import { session as sessionOperation } from '../api/loginClient/loginClientOperations'
-import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
+import { useAuthStore } from '../stores/auth'
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
-const isLoggedIn = ref(false)
-const isLoading = ref(true)
-
-const checkLoginStatus = async () => {
-  try {
-    isLoading.value = true
-    const clientOptions = getClientOptionsWithCredentials({
-      allowInsecureConnection: true
-    })
-    const client = createLoginClientContext("http://localhost:3000/", clientOptions)
-    const result = await sessionOperation(client)
-    
-    isLoggedIn.value = result.resultCode === 'success'
-  } catch (error) {
-    console.error('Session check error:', error)
-    isLoggedIn.value = false
-  } finally {
-    isLoading.value = false
-  }
-}
+const authStore = useAuthStore()
 
 onMounted(() => {
-  checkLoginStatus()
+  authStore.checkSession()
 })
 </script>
 
@@ -46,11 +25,15 @@ onMounted(() => {
     </p>
   </div>
 
-  <div v-if="isLoading" class="loading-container">
+  <div v-if="authStore.isLoading" class="loading-container">
     <p>ログイン状態を確認中...</p>
   </div>
-  <Logout v-else-if="isLoggedIn" />
+  <Logout v-else-if="authStore.isLoggedIn" />
   <Login v-else />
+  
+  <div v-if="authStore.isLoggedIn && authStore.userName" class="user-info">
+    <p>ログイン中: {{ authStore.userName }} ({{ authStore.userEmail }})</p>
+  </div>
 
   <p>
     Check out
@@ -78,5 +61,14 @@ onMounted(() => {
   margin: 20px 0;
   text-align: center;
   color: #666;
+}
+
+.user-info {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  text-align: center;
+  color: #333;
 }
 </style>

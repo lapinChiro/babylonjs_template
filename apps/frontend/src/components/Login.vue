@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { createLoginClientContext } from '../api/loginClient/loginClientContext'
-import { login as loginOperation } from '../api/loginClient/loginClientOperations'
-import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
+import { useAuthStore } from '../stores/auth'
+
+const authStore = useAuthStore()
 
 const login = async () => {
   try {
     console.log('Login button clicked')
-    const clientOptions = getClientOptionsWithCredentials({
-      allowInsecureConnection: true
-    })
-    const client = createLoginClientContext("http://localhost:3000/", clientOptions)
-    const result = await loginOperation(client)
-    console.log('Login result:', result)
-    
-    if (result.data?.url) {
-      window.location.href = result.data.url
-    }
+    await authStore.login()
   } catch (error) {
     console.error('Login error:', error)
   }
