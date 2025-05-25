@@ -2,8 +2,8 @@ import { parse } from "uri-template";
 import type { LoginClientContext } from "./loginClientContext.js";
 import { createRestError } from "../../helpers/error.js";
 import type { OperationOptions } from "../../helpers/interfaces.js";
-import { jsonAnalyzeResultToApplicationTransform, jsonOAuthLoginToApplicationTransform, jsonOAuthResultToTransportTransform, jsonPlainResultToApplicationTransform } from "../../models/internal/serializers.js";
-import { AnalyzeResult, OAuthLogin, type OAuthResult, PlainResult } from "../../models/models.js";
+import { jsonLoginSessionResponseToApplicationTransform, jsonOAuthLoginToApplicationTransform, jsonOAuthResultToTransportTransform, jsonPlainResultToApplicationTransform } from "../../models/internal/serializers.js";
+import { LoginSessionResponse, OAuthLogin, type OAuthResult, PlainResult } from "../../models/models.js";
 
 export interface LoginOptions extends OperationOptions {
 
@@ -87,13 +87,13 @@ export async function logout(
   throw createRestError(response);
 }
 ;
-export interface AnalyzeOptions extends OperationOptions {
+export interface SessionOptions extends OperationOptions {
 
 }
-export async function analyze(
+export async function session(
   client: LoginClientContext,
-  options?: AnalyzeOptions,
-): Promise<AnalyzeResult> {
+  options?: SessionOptions,
+): Promise<LoginSessionResponse> {
   const path = parse("/logins/session").expand({
 
   });
@@ -109,7 +109,7 @@ export async function analyze(
     options?.operationOptions?.onResponse(response);
   }
   if (+response.status === 200 && response.headers["content-type"]?.includes("application/json")) {
-    return jsonAnalyzeResultToApplicationTransform(response.body)!;
+    return jsonLoginSessionResponseToApplicationTransform(response.body)!;
   }
   throw createRestError(response);
 }

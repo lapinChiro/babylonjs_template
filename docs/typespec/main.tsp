@@ -61,9 +61,14 @@ model OAuthResult {
   state: string;
 }
 
-model LoginSessionResponse {
+model LoginSessionResponseData {
   name: string;
   email: string;
+}
+
+model LoginSessionResponse {
+  result_code: string;
+  data: LoginSessionResponseData;
 }
 
 @route("/logins")
@@ -77,5 +82,5 @@ interface Login {
   @delete logout(): PlainResult | Error;
 
   /** セッション確認 */
-  @route("session") @get analyze(): AnalyzeResult | Error;
+  @route("session") @get session(): LoginSessionResponse | Error;
 }

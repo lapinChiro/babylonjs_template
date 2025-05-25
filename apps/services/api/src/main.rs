@@ -58,6 +58,7 @@ async fn main() {
         .route("/logins", get(controllers::logins::new::execute))
         .route("/logins", post(controllers::logins::create::execute))
         .route("/logins", delete(controllers::logins::delete::execute))
+        .route("/logins/session", get(controllers::logins::session::execute))
         .with_state(app_state)
         .layer(cors_layer)
         .layer(session_layer);

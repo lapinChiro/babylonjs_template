@@ -1,30 +1,34 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import Login from './Login.vue'
+import Logout from './Logout.vue'
 import { createLoginClientContext } from '../api/loginClient/loginClientContext'
-import { login as loginOperation } from '../api/loginClient/loginClientOperations'
+import { session as sessionOperation } from '../api/loginClient/loginClientOperations'
 import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+const isLoggedIn = ref(false)
 
-const login = async () => {
+const checkLoginStatus = async () => {
   try {
-    console.log('Login button clicked')
     const clientOptions = getClientOptionsWithCredentials({
       allowInsecureConnection: true
     })
     const client = createLoginClientContext("http://localhost:3000/", clientOptions)
-    const result = await loginOperation(client)
-    console.log('Login result:', result)
+    const result = await sessionOperation(client)
     
-    if (result.data?.url) {
-      window.location.href = result.data.url
-    }
+    isLoggedIn.value = result.resultCode === 'success'
   } catch (error) {
-    console.error('Login error:', error)
+    console.error('Session check error:', error)
+    isLoggedIn.value = false
   }
 }
+
+onMounted(() => {
+  checkLoginStatus()
+})
 </script>
 
 <template>
@@ -38,9 +42,8 @@ const login = async () => {
     </p>
   </div>
 
-  <div class="login-container">
-    <button type="button" @click="login" class="login-button">ログイン</button>
-  </div>
+  <Logout v-if="isLoggedIn" />
+  <Login v-else />
 
   <p>
     Check out
@@ -62,23 +65,5 @@ const login = async () => {
 <style scoped>
 .read-the-docs {
   color: #888;
-}
-
-.login-container {
-  margin: 20px 0;
-}
-
-.login-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.login-button:hover {
-  background-color: #45a049;
 }
 </style>

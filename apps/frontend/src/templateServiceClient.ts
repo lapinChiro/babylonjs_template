@@ -1,5 +1,5 @@
 import { createLoginClientContext, type LoginClientContext, type LoginClientOptions } from "./api/loginClient/loginClientContext.js";
-import { analyze as analyze_2, type AnalyzeOptions as AnalyzeOptions_2, login, type LoginOptions, logout, type LogoutOptions, oauth, type OauthOptions } from "./api/loginClient/loginClientOperations.js";
+import { login, type LoginOptions, logout, type LogoutOptions, oauth, type OauthOptions, session, type SessionOptions } from "./api/loginClient/loginClientOperations.js";
 import { createTemplateServiceClientContext, type TemplateServiceClientContext, type TemplateServiceClientOptions } from "./api/templateServiceClientContext.js";
 import { createWidgetsClientContext, type WidgetsClientContext, type WidgetsClientOptions } from "./api/widgetsClient/widgetsClientContext.js";
 import { analyze, type AnalyzeOptions, create, type CreateOptions, delete_, type DeleteOptions, list, type ListOptions, read, type ReadOptions, update, type UpdateOptions } from "./api/widgetsClient/widgetsClientOperations.js";
@@ -34,8 +34,8 @@ export class LoginClient {
   async logout(options?: LogoutOptions) {
     return logout(this.#context, options);
   };
-  async analyze(options?: AnalyzeOptions_2) {
-    return analyze_2(this.#context, options);
+  async session(options?: SessionOptions) {
+    return session(this.#context, options);
   }
 }
 export class WidgetsClient {

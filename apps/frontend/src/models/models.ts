@@ -35,3 +35,11 @@ export interface OAuthResult {
 export interface PlainResult {
   resultCode: string;
 }
+export interface LoginSessionResponse {
+  resultCode: string
+  data: LoginSessionResponseData;
+}
+export interface LoginSessionResponseData {
+  name: string
+  email: string;
+}

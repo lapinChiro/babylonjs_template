@@ -1,4 +1,4 @@
-import { AnalyzeResult, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
+import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
 
 export function decodeBase64(value: string): Uint8Array | undefined {
   if(!value) {
@@ -226,5 +226,41 @@ export function decodeBase64(value: string): Uint8Array | undefined {
   }
     return {
     resultCode: input_.result_code
+  }!;
+}export function jsonLoginSessionResponseToTransportTransform(
+  input_?: LoginSessionResponse | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    result_code: input_.resultCode,data: jsonLoginSessionResponseDataToTransportTransform(input_.data)
+  }!;
+}export function jsonLoginSessionResponseToApplicationTransform(
+  input_?: any,
+): LoginSessionResponse {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    resultCode: input_.result_code,data: jsonLoginSessionResponseDataToApplicationTransform(input_.data)
+  }!;
+}export function jsonLoginSessionResponseDataToTransportTransform(
+  input_?: LoginSessionResponseData | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    name: input_.name,email: input_.email
+  }!;
+}export function jsonLoginSessionResponseDataToApplicationTransform(
+  input_?: any,
+): LoginSessionResponseData {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    name: input_.name,email: input_.email
   }!;
 }
