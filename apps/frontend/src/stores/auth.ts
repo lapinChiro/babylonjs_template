@@ -10,13 +10,17 @@ export const useAuthStore = defineStore('auth', () => {
   const userName = ref<string | null>(null)
   const userEmail = ref<string | null>(null)
 
+  const createLoginClient = () => {
+    const clientOptions = getClientOptionsWithCredentials({
+      allowInsecureConnection: true
+    })
+    return createLoginClientContext("http://localhost:3000/", clientOptions)
+  }
+
   const checkSession = async () => {
     isLoading.value = true
     try {
-      const clientOptions = getClientOptionsWithCredentials({
-        allowInsecureConnection: true
-      })
-      const client = createLoginClientContext("http://localhost:3000/", clientOptions)
+      const client = createLoginClient()
       const result = await sessionOperation(client)
       
       isLoggedIn.value = result.resultCode === 'success'
@@ -43,10 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const login = async () => {
     try {
-      const clientOptions = getClientOptionsWithCredentials({
-        allowInsecureConnection: true
-      })
-      const client = createLoginClientContext("http://localhost:3000/", clientOptions)
+      const client = createLoginClient()
       const result = await loginOperation(client)
       
       if (result.data?.url) {
@@ -61,10 +62,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logout = async () => {
     try {
-      const clientOptions = getClientOptionsWithCredentials({
-        allowInsecureConnection: true
-      })
-      const client = createLoginClientContext("http://localhost:3000/", clientOptions)
+      const client = createLoginClient()
       const result = await logoutOperation(client)
       
       if (result.resultCode === "success") {
