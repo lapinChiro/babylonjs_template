@@ -35,6 +35,9 @@ services:
       REDIS__POOL__MAX_SIZE: 16
       REDIS__POOL__TIMEOUTS__WAIT__SECS: 2
       REDIS__POOL__TIMEOUTS__WAIT__NANOS: 0
+      LOGIN_CLIENT_ID: ${LOGIN_CLIENT_ID:-xxx}
+      LOGIN_CLIENT_SECRET: ${LOGIN_CLIENT_SECRET:-xxx}
+      LOGIN_CALLBACK_URL: ${LOGIN_CALLBACK_URL:-http://localhost:5173/oauth}
     volumes:
       - ../apps/services:/app
       - cargo_cache:/usr/local/cargo/registry
