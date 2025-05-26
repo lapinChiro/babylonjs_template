@@ -14,7 +14,13 @@ export const useAuthStore = defineStore('auth', () => {
     const clientOptions = getClientOptionsWithCredentials({
       allowInsecureConnection: true
     })
-    return createLoginClientContext("http://localhost:3000/", clientOptions)
+    
+    // Determine endpoint based on current host
+    const endpoint = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3000/' 
+      : `${window.location.protocol}//${window.location.host}/api/`
+    
+    return createLoginClientContext(endpoint, clientOptions)
   }
 
   const checkSession = async () => {
