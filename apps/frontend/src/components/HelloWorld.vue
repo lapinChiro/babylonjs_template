@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Login from './Login.vue'
-import Logout from './Logout.vue'
 import { useAuthStore } from '../stores/auth'
 
 defineProps<{ msg: string }>()
@@ -28,8 +27,7 @@ onMounted(() => {
   <div v-if="authStore.isLoading" class="loading-container">
     <p>ログイン状態を確認中...</p>
   </div>
-  <Logout v-else-if="authStore.isLoggedIn" />
-  <Login v-else />
+  <Login v-else-if="!authStore.isLoggedIn" />
   
   <div v-if="authStore.isLoggedIn && authStore.userName" class="user-info">
     <p>ログイン中: {{ authStore.userName }} ({{ authStore.userEmail }})</p>

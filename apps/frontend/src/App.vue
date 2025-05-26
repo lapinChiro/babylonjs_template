@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import AppHeader from './components/AppHeader.vue'
+import AppSidebar from './components/AppSidebar.vue'
 </script>
 
 <template>
   <div id="app">
     <AppHeader />
-    <div class="main-content">
-      <nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
-      </nav>
-      <router-view />
+    <div class="app-layout">
+      <AppSidebar />
+      <div class="main-content">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
@@ -22,32 +22,24 @@ import AppHeader from './components/AppHeader.vue'
   flex-direction: column;
 }
 
+.app-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 .main-content {
   flex: 1;
-  max-width: 1280px;
-  margin: 0 auto;
   padding: 2rem;
-  width: 100%;
-  text-align: center;
+  overflow-y: auto;
+  background-color: #ffffff;
 }
 
-nav {
-  padding: 1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  text-decoration: none;
-  padding: 0 10px;
-}
-
-nav a.router-link-exact-active {
-  color: #42b883;
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
 }
 
 .logo {
