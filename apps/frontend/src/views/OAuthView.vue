@@ -8,12 +8,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { TemplateServiceClient } from '../templateServiceClient'
+import { useAuthStore } from '../stores/auth'
 import type { OAuthResult } from '../models/models'
-import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 const loading = ref(true)
 const error = ref<string | null>(null)
 
@@ -31,11 +31,7 @@ onMounted(async () => {
       state
     }
 
-    const clientOptions = getClientOptionsWithCredentials({
-      allowInsecureConnection: true
-    })
-    const client = new TemplateServiceClient("http://localhost:3000/", clientOptions)
-    const result = await client.loginClient.oauth(oauthResult)
+    const result = await authStore.handleOAuthCallback(oauthResult)
     
     if (result.resultCode === 'success') {
       await router.push('/')

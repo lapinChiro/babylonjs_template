@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { createLoginClientContext } from '../api/loginClient/loginClientContext'
-import { session as sessionOperation, login as loginOperation, logout as logoutOperation } from '../api/loginClient/loginClientOperations'
+import { session as sessionOperation, login as loginOperation, logout as logoutOperation, oauth as oauthOperation } from '../api/loginClient/loginClientOperations'
 import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
+import type { OAuthResult } from '../models/models'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
@@ -84,6 +85,23 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const handleOAuthCallback = async (oauthResult: OAuthResult) => {
+    try {
+      const client = createLoginClient()
+      const result = await oauthOperation(client, oauthResult)
+      
+      if (result.resultCode === 'success') {
+        // Check session after successful OAuth to update user state
+        await checkSession()
+      }
+      
+      return result
+    } catch (error) {
+      console.error('OAuth callback error:', error)
+      throw error
+    }
+  }
+
   return {
     isLoggedIn,
     isLoading,
@@ -91,6 +109,7 @@ export const useAuthStore = defineStore('auth', () => {
     userEmail,
     checkSession,
     login,
-    logout
+    logout,
+    handleOAuthCallback
   }
 })
