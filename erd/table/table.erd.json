@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "version": "1.0.0"
+  },
+  "includes": [
+    "_domain.erd.json"
+  ],
+  "templates": {
+    "table": [
+      {
+        "template": "erd/table/templates/table_ddl.ejs",
+        "file": "db/sql/table/${index}_${pname}.sql",
+        "refresh": true
+      },
+      {
+        "template": "erd/table/templates/table_rs.ejs",
+        "file": "apps/services/crates/postgresql/src/table/${pname}.rs",
+        "refresh": true
+      }
+    ]
+  },
+  "tables": [
+    {
+      "lname": "ユーザー",
+      "pname": "users",
+      "columns": [
+        {
+          "domain": "UUID",
+          "pk": true,
+          "default": "uv_uuid_v7()"
+        },
+        {
+          "lname": "ユーザー",
+          "pname": "user",
+          "domain": "コード"
+        },
+        {
+          "lname": "名前",
+          "pname": "name",
+          "domain": "名前",
+          "overrideDomainName": true
+        },
+        {
+          "domain": "メール"
+        }
+      ]
+    },
+    {
+      "lname": "セッション",
+      "pname": "sessions",
+      "fks": [
+        {
+          "columns": ["ユーザーUUID"],
+          "table": "ユーザー",
+          "foreignColumns": ["UUID"]
+        }
+      ],
+      "columns": [
+        {
+          "domain": "UUID",
+          "pk": true,
+          "default": "uv_uuid_v7()"
+        },
+        {
+          "lname": "ユーザー",
+          "pname": "user",
+          "domain": "UUID"
+        }
+      ]
+    }
+  ]
+}
