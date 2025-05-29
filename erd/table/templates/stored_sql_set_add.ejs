@@ -1,0 +1,195 @@
+<%
+  const typeDeclares = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `${column.pname} ${column.type}`;
+    return col_text;
+  }).join('\n  ,');
+  const parameters = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `p_${column.pname} ${column.type} DEFAULT NULL`;
+    return col_text;
+  }).join('\n  ,');
+  const insertColumns = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `${column.pname}`;
+    return col_text;
+  }).join('\n      ,');
+  const values = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    if (column.pname === 'uuid') {
+      return 'COALESCE(p_test_uuid, uv_uuid_v7())';
+    } else if (column.default && column.notNull) {
+      return `COALESCE(p_${column.pname}, ${column.default})`;
+    } else {
+      return `p_${column.pname}`;
+    }
+  }).join('\n      ,');
+  const returns = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `${column.pname}`;
+    return col_text;
+  }).join('\n      ,');
+  const updates = table.columns.filter(column => column.pname !== 'uuid' && column.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `${column.pname} = COALESCE(p_${column.pname}, ${column.pname})`;
+    return col_text;
+  }).join('\n      ,');
+  const commentParameters = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `p_${column.pname} : ${column.lname}`;
+    return col_text;
+  }).join('\n--   ');
+  const commentReturns = table.columns.filter(c => c.type !== 'BIGSERIAL').map((column) => {
+    let col_text = `${column.pname} : ${column.lname}`;
+    return col_text;
+  }).join('\n--   ');
+  let onConflict = '';
+  if (table.metadata && table.metadata['unique_key']) {
+    const uniqueKey = table.metadata['unique_key']
+    const keys = uniqueKey['keys'];
+    onConflict = `ON CONFLICT (${keys.join(", ")}) `;
+    if (uniqueKey['do'] && uniqueKey['do'] === 'update') {
+      const except = keys.concat(uniqueKey['except'] || []).concat(['uuid']);
+      const ups = table.columns.filter(it => !except.includes(it.pname)).map(it => `${it.pname} = EXCLUDED.${it.pname}`).join('\n      ,');
+      onConflict = onConflict + 'DO UPDATE SET' + "\n      " + ups;
+    } else {
+      onConflict = onConflict + 'DO NOTHING';
+    }
+  }
+  
+
+  function addPartitions(table) {
+    if (!table.metadata) {
+      return {
+        ...table,
+        partitions: []
+      }
+    }
+
+    const { partitions } = table.metadata ?? {}
+    return {
+      ...table,
+      partitions: partitions || []
+    }
+  }
+
+  const childTables = 
+  tables = _
+    .chain(tables)
+    .map(addPartitions)
+    .value()
+    .filter(otherTable => {
+    if (otherTable.partitions.length === 0) {
+      return false
+    }
+    const partition = otherTable.partitions[0]
+    return partition.parent === table.pname && partition.column.endsWith('_uuid')
+  })
+%>DROP TYPE IF EXISTS type_generated_set_add_<%= table.pname %> CASCADE;
+CREATE TYPE type_generated_set_add_<%= table.pname %> AS (
+  <%- typeDeclares %>
+  ,created_uuid UUID
+  ,updated_uuid UUID
+  ,deleted_uuid UUID
+  ,created_at TIMESTAMPTZ
+  ,updated_at TIMESTAMPTZ
+  ,deleted_at TIMESTAMPTZ
+  ,created_pg TEXT
+  ,updated_pg TEXT
+  ,deleted_pg TEXT
+  ,bk TEXT
+);
+
+-- <%= table.lname %> 登録/更新
+-- 引数
+--   <%- commentParameters %>
+--   p_now : 現在時間
+--   p_pg : 実行プログラム名
+--   p_operator_uuid : 実行者UUID
+--   p_test_uuid : テスト用UUID
+-- 戻り値
+--   <%- commentReturns %>
+--   created_uuid : 登録者UUID
+--   updated_uuid : 更新者UUID
+--   deleted_uuid : 更新者UUID
+--   created_at : 登録日時
+--   updated_at : 更新日時
+--   deleted_at : 更新日時
+--   created_pg : 登録プログラム名
+--   updated_pg : 更新プログラム名
+--   deleted_pg : 更新プログラム名
+--   bk : 備考
+-- 例外
+--   なし
+CREATE OR REPLACE FUNCTION generated_set_add_<%= table.pname %> (
+  <%- parameters %>
+  ,p_now TIMESTAMPTZ DEFAULT NULL
+  ,p_pg TEXT DEFAULT NULL
+  ,p_operator_uuid UUID DEFAULT NULL
+  ,p_test_uuid UUID DEFAULT NULL
+  ,p_bk TEXT DEFAULT NULL
+) RETURNS SETOF type_generated_set_add_<%= table.pname %> AS $FUNCTION$
+DECLARE
+  w_now TIMESTAMPTZ := COALESCE(p_now, NOW());
+  w_pg TEXT := COALESCE(p_pg, 'generated_set_add_<%= table.pname %>');
+  w_operator_uuid UUID := COALESCE(p_operator_uuid, '00000000-0000-0000-0000-000000000000');
+  w_record type_generated_set_add_<%= table.pname %>;
+BEGIN
+  IF p_uuid IS NULL THEN
+    INSERT INTO public.<%= table.pname %> (
+      <%- insertColumns %>
+      ,created_uuid
+      ,updated_uuid
+      ,created_at
+      ,updated_at
+      ,created_pg
+      ,updated_pg
+      ,bk
+    ) VALUES (
+      <%- values %>
+      ,w_operator_uuid
+      ,w_operator_uuid
+      ,w_now
+      ,w_now
+      ,w_pg
+      ,w_pg
+      ,p_bk
+    ) <%= onConflict %>
+    RETURNING
+      <%- returns %>
+      ,created_uuid
+      ,updated_uuid
+      ,deleted_uuid
+      ,created_at
+      ,updated_at
+      ,deleted_at
+      ,created_pg
+      ,updated_pg
+      ,deleted_pg
+      ,bk
+    INTO
+      w_record
+    ;
+    <%_ if (childTables.length > 0) { _%>
+    PERFORM mileage_generated_set_make_child_tables_<%= table.pname %>(p_uuid := w_record.uuid);
+    <%_ } _%>
+    RETURN NEXT w_record;
+  ELSE
+    RETURN QUERY
+    UPDATE public.<%= table.pname %> SET
+      <%- updates %>
+      ,updated_uuid = w_operator_uuid
+      ,updated_at = w_now
+      ,updated_pg = w_pg
+      ,bk = COALESCE(p_bk, bk)
+    WHERE
+      uuid = p_uuid
+    RETURNING
+      <%- returns %>
+      ,created_uuid
+      ,updated_uuid
+      ,deleted_uuid
+      ,created_at
+      ,updated_at
+      ,deleted_at
+      ,created_pg
+      ,updated_pg
+      ,deleted_pg
+      ,bk
+    ;
+  END IF;
+END;
+$FUNCTION$ LANGUAGE plpgsql;

@@ -4,6 +4,7 @@ CREATE TABLE public.users (
   ,user_code TEXT NOT NULL DEFAULT '' -- ユーザーコード
   ,name TEXT NOT NULL DEFAULT '' -- 名前
   ,mail TEXT NOT NULL DEFAULT '' -- メール
+  ,last_login_at TIMESTAMPTZ -- 最終ログイン日時
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID
@@ -23,6 +24,7 @@ CREATE TABLE garbage.users (
   ,user_code TEXT NOT NULL DEFAULT '' -- ユーザーコード
   ,name TEXT NOT NULL DEFAULT '' -- 名前
   ,mail TEXT NOT NULL DEFAULT '' -- メール
+  ,last_login_at TIMESTAMPTZ -- 最終ログイン日時
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID

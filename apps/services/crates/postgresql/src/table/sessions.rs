@@ -1,4 +1,4 @@
-use crate::Pool;
+use sqlx::PgPool;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -152,7 +152,7 @@ pub struct Sessions {
 }
 
 impl Sessions {
-    pub async fn insert(&self, pg_pool: &Pool) -> Result<Self, sqlx::Error> {
+    pub async fn insert(&self, pg_pool: &PgPool) -> Result<Self, sqlx::Error> {
         let res: Self = sqlx::query_as(INSERT_SQL)
             .bind(self.uuid)
             .bind(self.user_uuid)
@@ -171,7 +171,7 @@ impl Sessions {
         Ok(res)
     }
 
-    pub async fn update(&self, pg_pool: &Pool) -> Result<Self, sqlx::Error> {
+    pub async fn update(&self, pg_pool: &PgPool) -> Result<Self, sqlx::Error> {
         let res: Self = sqlx::query_as(UPDATE_SQL)
             .bind(self.uuid)
             .bind(self.user_uuid)
@@ -190,11 +190,11 @@ impl Sessions {
         Ok(res)
     }
 
-    pub async fn delete(&self, pg_pool: &Pool) -> Result<Self, sqlx::Error> {
+    pub async fn delete(&self, pg_pool: &PgPool) -> Result<Self, sqlx::Error> {
         Self::delete_one(pg_pool, &self.uuid).await
     }
 
-    pub async fn delete_one(pg_pool: &Pool, uuid: &Uuid) -> Result<Self, sqlx::Error> {
+    pub async fn delete_one(pg_pool: &PgPool, uuid: &Uuid) -> Result<Self, sqlx::Error> {
         let res: Self = sqlx::query_as(DELETE_SQL)
             .bind(uuid)
             .fetch_one(pg_pool)
@@ -202,26 +202,26 @@ impl Sessions {
         Ok(res)
     }
 
-    pub async fn delete_all(pg_pool: &Pool) -> Result<(), sqlx::Error> {
+    pub async fn delete_all(pg_pool: &PgPool) -> Result<(), sqlx::Error> {
         let _ = sqlx::query(DELETE_ALL_SQL)
             .execute(pg_pool)
             .await?;
         Ok(())
     }
 
-    pub async fn select_all(pg_pool: &Pool) -> Result<Vec<Self>, sqlx::Error> {
+    pub async fn select_all(pg_pool: &PgPool) -> Result<Vec<Self>, sqlx::Error> {
         let builder = SessionsBuilder::default();
         Self::select(pg_pool, builder).await
     }
 
-    pub async fn select_one(pg_pool: &Pool, uuid: &Uuid) -> Result<Option<Self>, sqlx::Error> {
+    pub async fn select_one(pg_pool: &PgPool, uuid: &Uuid) -> Result<Option<Self>, sqlx::Error> {
         let mut builder = SessionsBuilder::default();
         builder.uuid(*uuid);
         let res = Self::select(pg_pool, builder).await?;
         Ok(res.first().cloned())
     }
 
-    pub async fn select(pg_pool: &Pool, builder: SessionsBuilder) -> Result<Vec<Self>, sqlx::Error> {
+    pub async fn select(pg_pool: &PgPool, builder: SessionsBuilder) -> Result<Vec<Self>, sqlx::Error> {
         let rows: Vec<Self> = sqlx::query_as(SELECT_SQL)
             .bind(builder.uuid)
             .bind(builder.user_uuid)

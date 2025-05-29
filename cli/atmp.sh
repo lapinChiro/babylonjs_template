@@ -82,6 +82,10 @@ atmp_command() {
             subcommand_script=$commands/typespec.sh
             ;;
 
+        postgres)
+            subcommand_script=$commands/postgres.sh
+            ;;
+
 
         # Help
         help)
@@ -140,6 +144,7 @@ Commands:
         log [-f] [SERVICE]          ログを出力する。
         url SERVICE                 指定したサービスへアクセスするURLを出力する。
         typespec                    Typespecのコード生成
+        postgres                    PostgreSQLに関するコマンドを実行する。
 
 END
 }
