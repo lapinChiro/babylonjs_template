@@ -19,7 +19,7 @@ atmp_command() {
     for i in "$repository_root"/cli/globals/*; do
         env_name=$(basename "$i")
         env_value=$(head -1 "$i")
-        eval "$env_name"="$env_value"
+        eval "export $env_name"="$env_value"
     done
 
     # コマンドファイルを取得

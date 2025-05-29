@@ -1,13 +1,13 @@
 pub mod custom;
 pub mod table;
 
-use common::config::Config;
 use crate::prelude::*;
+use common::config::Config;
 use sqlx::PgPool;
 
 pub mod prelude {
-    pub use crate::table::users::*;
     pub use crate::table::sessions::*;
+    pub use crate::table::users::*;
     pub use crate::table::*;
 }
 

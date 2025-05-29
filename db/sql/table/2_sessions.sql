@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS public.sessions CASCADE;
 CREATE TABLE public.sessions (
   uuid UUID NOT NULL DEFAULT uv_uuid_v7() -- UUID
   ,user_uuid UUID NOT NULL -- ユーザーUUID
+  ,expire_at TIMESTAMPTZ -- 破棄日時
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID
@@ -21,6 +22,7 @@ DROP TABLE IF EXISTS garbage.sessions CASCADE;
 CREATE TABLE garbage.sessions (
   uuid UUID NOT NULL DEFAULT uv_uuid_v7() -- UUID
   ,user_uuid UUID NOT NULL -- ユーザーUUID
+  ,expire_at TIMESTAMPTZ -- 破棄日時
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID

@@ -2,6 +2,7 @@ DROP TYPE IF EXISTS type_generated_set_add_sessions CASCADE;
 CREATE TYPE type_generated_set_add_sessions AS (
   uuid UUID
   ,user_uuid UUID
+  ,expire_at TIMESTAMPTZ
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID
@@ -18,6 +19,7 @@ CREATE TYPE type_generated_set_add_sessions AS (
 -- 引数
 --   p_uuid : UUID
 --   p_user_uuid : ユーザーUUID
+--   p_expire_at : 破棄日時
 --   p_now : 現在時間
 --   p_pg : 実行プログラム名
 --   p_operator_uuid : 実行者UUID
@@ -25,6 +27,7 @@ CREATE TYPE type_generated_set_add_sessions AS (
 -- 戻り値
 --   uuid : UUID
 --   user_uuid : ユーザーUUID
+--   expire_at : 破棄日時
 --   created_uuid : 登録者UUID
 --   updated_uuid : 更新者UUID
 --   deleted_uuid : 更新者UUID
@@ -40,6 +43,7 @@ CREATE TYPE type_generated_set_add_sessions AS (
 CREATE OR REPLACE FUNCTION generated_set_add_sessions (
   p_uuid UUID DEFAULT NULL
   ,p_user_uuid UUID DEFAULT NULL
+  ,p_expire_at TIMESTAMPTZ DEFAULT NULL
   ,p_now TIMESTAMPTZ DEFAULT NULL
   ,p_pg TEXT DEFAULT NULL
   ,p_operator_uuid UUID DEFAULT NULL
@@ -56,6 +60,7 @@ BEGIN
     INSERT INTO public.sessions (
       uuid
       ,user_uuid
+      ,expire_at
       ,created_uuid
       ,updated_uuid
       ,created_at
@@ -66,6 +71,7 @@ BEGIN
     ) VALUES (
       COALESCE(p_test_uuid, uv_uuid_v7())
       ,p_user_uuid
+      ,p_expire_at
       ,w_operator_uuid
       ,w_operator_uuid
       ,w_now
@@ -77,6 +83,7 @@ BEGIN
     RETURNING
       uuid
       ,user_uuid
+      ,expire_at
       ,created_uuid
       ,updated_uuid
       ,deleted_uuid
@@ -95,6 +102,7 @@ BEGIN
     RETURN QUERY
     UPDATE public.sessions SET
       user_uuid = COALESCE(p_user_uuid, user_uuid)
+      ,expire_at = COALESCE(p_expire_at, expire_at)
       ,updated_uuid = w_operator_uuid
       ,updated_at = w_now
       ,updated_pg = w_pg
@@ -104,6 +112,7 @@ BEGIN
     RETURNING
       uuid
       ,user_uuid
+      ,expire_at
       ,created_uuid
       ,updated_uuid
       ,deleted_uuid

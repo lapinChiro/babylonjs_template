@@ -5,7 +5,7 @@ use crate::error::ApiError;
 pub mod logins;
 
 pub const SESSION_PKCE_VERIFIER: &str = "pkce_verifier";
-pub const SESSION_USER_INFO: &str = "user_info";
+pub const SESSION_UUID: &str = "session_uuid";
 
 pub enum ResponseType {
     Data((String, serde_json::Value)),

@@ -25,9 +25,9 @@ BEGIN
   INTO 
     w_user_uuid
   FROM 
-    public.users AS t1
-  WHERE 
-    t1.user_code = p_user_code
+    generated_get_list_users(
+      p_user_code := p_user_code
+    ) AS t1
   ;
 
   -- ユーザーと登録または更新

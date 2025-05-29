@@ -5,7 +5,7 @@ SQL_DIR=$SCRIPT_DIR/../sql
 cat $SQL_DIR/01_prepare.sql > ./all.sql
 cat $SQL_DIR/lib/*.sql >> ./all.sql
 cat $SQL_DIR/table/*.sql >> ./all.sql
-cat $SQL_DIR/stored/gererated/*.sql >> ./all.sql
+cat $SQL_DIR/stored/generated/*.sql >> ./all.sql
 cat $SQL_DIR/stored/*.sql >> ./all.sql
 if [ -f $SQL_DIR/99_secret.sql ]; then
 cat $SQL_DIR/99_secret.sql >> ./all.sql

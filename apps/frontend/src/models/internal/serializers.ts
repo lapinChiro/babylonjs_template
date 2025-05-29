@@ -252,7 +252,7 @@ export function decodeBase64(value: string): Uint8Array | undefined {
     return input_ as any;
   }
     return {
-    name: input_.name,email: input_.email
+    name: input_.name,mail: input_.mail
   }!;
 }export function jsonLoginSessionResponseDataToApplicationTransform(
   input_?: any,
@@ -261,6 +261,6 @@ export function decodeBase64(value: string): Uint8Array | undefined {
     return input_ as any;
   }
     return {
-    name: input_.name,email: input_.email
+    name: input_.name,mail: input_.mail
   }!;
 }

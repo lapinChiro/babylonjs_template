@@ -63,7 +63,7 @@ model OAuthResult {
 
 model LoginSessionResponseData {
   name: string;
-  email: string;
+  mail: string;
 }
 
 model LoginSessionResponse {

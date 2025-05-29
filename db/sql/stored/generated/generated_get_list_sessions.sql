@@ -2,6 +2,7 @@ DROP TYPE IF EXISTS type_generated_get_list_sessions CASCADE;
 CREATE TYPE type_generated_get_list_sessions AS (
   uuid UUID
   ,user_uuid UUID
+  ,expire_at TIMESTAMPTZ
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID
@@ -18,9 +19,11 @@ CREATE TYPE type_generated_get_list_sessions AS (
 -- 引数
 --   p_uuid : UUID
 --   p_user_uuid : ユーザーUUID
+--   p_expire_at : 破棄日時
 -- 戻り値
 --   uuid : UUID
 --   user_uuid : ユーザーUUID
+--   expire_at : 破棄日時
 --   created_uuid : 登録者UUID
 --   updated_uuid : 更新者UUID
 --   deleted_uuid : 更新者UUID
@@ -36,6 +39,7 @@ CREATE TYPE type_generated_get_list_sessions AS (
 CREATE OR REPLACE FUNCTION generated_get_list_sessions (
   p_uuid UUID DEFAULT NULL
   ,p_user_uuid UUID DEFAULT NULL
+  ,p_expire_at TIMESTAMPTZ DEFAULT NULL
   ,p_limit BIGINT DEFAULT NULL
   ,p_offset BIGINT DEFAULT 0
   ,p_with_count_flag BOOLEAN DEFAULT FALSE
@@ -47,6 +51,7 @@ BEGIN
     SELECT
       t1.uuid
       ,t1.user_uuid
+      ,t1.expire_at
       ,t1.created_uuid
       ,t1.updated_uuid
       ,t1.deleted_uuid
@@ -77,12 +82,14 @@ BEGIN
     WHERE
       (p_uuid IS NULL OR t1.uuid = p_uuid)
       AND (p_user_uuid IS NULL OR t1.user_uuid = p_user_uuid)
+      AND (p_expire_at IS NULL OR t1.expire_at = p_expire_at)
     ;
   END IF;
 
   RETURN QUERY SELECT
     t1.uuid
     ,t1.user_uuid
+    ,t1.expire_at
     ,t1.created_uuid
     ,t1.updated_uuid
     ,t1.deleted_uuid
@@ -98,6 +105,7 @@ BEGIN
   WHERE
     (p_uuid IS NULL OR t1.uuid = p_uuid)
     AND (p_user_uuid IS NULL OR t1.user_uuid = p_user_uuid)
+    AND (p_expire_at IS NULL OR t1.expire_at = p_expire_at)
   ORDER BY t1.created_at
   LIMIT
     p_limit

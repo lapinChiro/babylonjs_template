@@ -30,7 +30,7 @@ onMounted(() => {
   <Login v-else-if="!authStore.isLoggedIn" />
   
   <div v-if="authStore.isLoggedIn && authStore.userName" class="user-info">
-    <p>ログイン中: {{ authStore.userName }} ({{ authStore.userEmail }})</p>
+    <p>ログイン中: {{ authStore.userName }} ({{ authStore.userMail }})</p>
   </div>
 
   <p>

@@ -1,14 +1,15 @@
-use sqlx::PgPool;
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 use derive_builder::Builder;
+use serde::{Deserialize, Serialize};
+use sqlx::PgPool;
 use sqlx::prelude::*;
+use uuid::Uuid;
 
 const SELECT_SQL: &str = r#"
 SELECT
     t1.uuid
     ,t1.user_uuid
+    ,t1.expire_at
     ,t1.created_uuid
     ,t1.updated_uuid
     ,t1.deleted_uuid
@@ -25,22 +26,24 @@ WHERE
     TRUE
     AND ($1 IS NULL OR t1.uuid = $1)
     AND ($2 IS NULL OR t1.user_uuid = $2)
-    AND ($3 IS NULL OR t1.created_uuid = $3)
-    AND ($4 IS NULL OR t1.updated_uuid = $4)
-    AND ($5 IS NULL OR t1.deleted_uuid = $5)
-    AND ($6 IS NULL OR t1.created_at = $6)
-    AND ($7 IS NULL OR t1.updated_at = $7)
-    AND ($8 IS NULL OR t1.deleted_at = $8)
-    AND ($9 IS NULL OR t1.created_pg = $9)
-    AND ($10 IS NULL OR t1.updated_pg = $10)
-    AND ($11 IS NULL OR t1.deleted_pg = $11)
-    AND ($12 IS NULL OR t1.bk = $12)
+    AND ($3 IS NULL OR t1.expire_at = $3)
+    AND ($4 IS NULL OR t1.created_uuid = $4)
+    AND ($5 IS NULL OR t1.updated_uuid = $5)
+    AND ($6 IS NULL OR t1.deleted_uuid = $6)
+    AND ($7 IS NULL OR t1.created_at = $7)
+    AND ($8 IS NULL OR t1.updated_at = $8)
+    AND ($9 IS NULL OR t1.deleted_at = $9)
+    AND ($10 IS NULL OR t1.created_pg = $10)
+    AND ($11 IS NULL OR t1.updated_pg = $11)
+    AND ($12 IS NULL OR t1.deleted_pg = $12)
+    AND ($13 IS NULL OR t1.bk = $13)
 "#;
 
 const INSERT_SQL: &str = r#"
 INSERT INTO public.sessions (
     uuid
     ,user_uuid
+    ,expire_at
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -64,9 +67,11 @@ INSERT INTO public.sessions (
     ,$10
     ,$11
     ,$12
+    ,$13
 ) RETURNING
     uuid
     ,user_uuid
+    ,expire_at
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -82,21 +87,23 @@ INSERT INTO public.sessions (
 const UPDATE_SQL: &str = r#"
 UPDATE public.sessions AS t1 SET
     user_uuid = $2
-    ,created_uuid = $3
-    ,updated_uuid = $4
-    ,deleted_uuid = $5
-    ,created_at = $6
-    ,updated_at = $7
-    ,deleted_at = $8
-    ,created_pg = $9
-    ,updated_pg = $10
-    ,deleted_pg = $11
-    ,bk = $12
+    ,expire_at = $3
+    ,created_uuid = $4
+    ,updated_uuid = $5
+    ,deleted_uuid = $6
+    ,created_at = $7
+    ,updated_at = $8
+    ,deleted_at = $9
+    ,created_pg = $10
+    ,updated_pg = $11
+    ,deleted_pg = $12
+    ,bk = $13
 WHERE
     t1.uuid = $1
 RETURNING
     uuid
     ,user_uuid
+    ,expire_at
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -116,6 +123,7 @@ WHERE
 RETURNING
     uuid
     ,user_uuid
+    ,expire_at
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -139,6 +147,7 @@ DELETE FROM public.sessions AS t1
 pub struct Sessions {
     pub uuid: Uuid,
     pub user_uuid: Uuid,
+    pub expire_at: Option<DateTime<Utc>>,
     pub created_uuid: Option<Uuid>,
     pub updated_uuid: Option<Uuid>,
     pub deleted_uuid: Option<Uuid>,
@@ -156,6 +165,7 @@ impl Sessions {
         let res: Self = sqlx::query_as(INSERT_SQL)
             .bind(self.uuid)
             .bind(self.user_uuid)
+            .bind(self.expire_at)
             .bind(self.created_uuid)
             .bind(self.updated_uuid)
             .bind(self.deleted_uuid)
@@ -175,6 +185,7 @@ impl Sessions {
         let res: Self = sqlx::query_as(UPDATE_SQL)
             .bind(self.uuid)
             .bind(self.user_uuid)
+            .bind(self.expire_at)
             .bind(self.created_uuid)
             .bind(self.updated_uuid)
             .bind(self.deleted_uuid)
@@ -203,9 +214,7 @@ impl Sessions {
     }
 
     pub async fn delete_all(pg_pool: &PgPool) -> Result<(), sqlx::Error> {
-        let _ = sqlx::query(DELETE_ALL_SQL)
-            .execute(pg_pool)
-            .await?;
+        let _ = sqlx::query(DELETE_ALL_SQL).execute(pg_pool).await?;
         Ok(())
     }
 
@@ -221,10 +230,14 @@ impl Sessions {
         Ok(res.first().cloned())
     }
 
-    pub async fn select(pg_pool: &PgPool, builder: SessionsBuilder) -> Result<Vec<Self>, sqlx::Error> {
+    pub async fn select(
+        pg_pool: &PgPool,
+        builder: SessionsBuilder,
+    ) -> Result<Vec<Self>, sqlx::Error> {
         let rows: Vec<Self> = sqlx::query_as(SELECT_SQL)
             .bind(builder.uuid)
             .bind(builder.user_uuid)
+            .bind(builder.expire_at)
             .bind(builder.created_uuid)
             .bind(builder.updated_uuid)
             .bind(builder.deleted_uuid)

@@ -37,7 +37,6 @@ where
 
 impl Config {
     pub fn new() -> Self {
-        dotenv::dotenv().ok();
         let max_connections = get_value("MAX_CONNECTIONS", 10);
         let acquire_timeout = get_value("ACQUIRE_TIMEOUT", 300);
         let idle_timeout = get_value("IDLE_TIMEOUT", 600);

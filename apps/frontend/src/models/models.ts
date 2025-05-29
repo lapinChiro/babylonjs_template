@@ -41,5 +41,5 @@ export interface LoginSessionResponse {
 }
 export interface LoginSessionResponseData {
   name: string
-  email: string;
+  mail: string;
 }

@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
   const isLoading = ref(false)
   const userName = ref<string | null>(null)
-  const userEmail = ref<string | null>(null)
+  const userMail = ref<string | null>(null)
 
   const createLoginClient = () => {
     const clientOptions = getClientOptionsWithCredentials({
@@ -34,10 +34,10 @@ export const useAuthStore = defineStore('auth', () => {
       
       if (isLoggedIn.value && result.data) {
         userName.value = result.data.name
-        userEmail.value = result.data.email
+        userMail.value = result.data.mail
       } else {
         userName.value = null
-        userEmail.value = null
+        userMail.value = null
       }
       
       return isLoggedIn.value
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
       console.error('Session check error:', error)
       isLoggedIn.value = false
       userName.value = null
-      userEmail.value = null
+      userMail.value = null
       return false
     } finally {
       isLoading.value = false
@@ -75,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
       if (result.resultCode === "success") {
         isLoggedIn.value = false
         userName.value = null
-        userEmail.value = null
+        userMail.value = null
         window.location.href = '/'
       }
       return result
@@ -106,7 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoggedIn,
     isLoading,
     userName,
-    userEmail,
+    userMail,
     checkSession,
     login,
     logout,

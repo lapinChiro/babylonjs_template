@@ -85,6 +85,11 @@
           "lname": "ユーザー",
           "pname": "user",
           "domain": "UUID"
+        },
+        {
+          "lname": "破棄",
+          "pname": "expire",
+          "domain": "日時"
         }
       ]
     }

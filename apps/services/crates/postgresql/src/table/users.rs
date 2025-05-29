@@ -1,9 +1,9 @@
-use sqlx::PgPool;
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 use derive_builder::Builder;
+use serde::{Deserialize, Serialize};
+use sqlx::PgPool;
 use sqlx::prelude::*;
+use uuid::Uuid;
 
 const SELECT_SQL: &str = r#"
 SELECT
@@ -236,9 +236,7 @@ impl Users {
     }
 
     pub async fn delete_all(pg_pool: &PgPool) -> Result<(), sqlx::Error> {
-        let _ = sqlx::query(DELETE_ALL_SQL)
-            .execute(pg_pool)
-            .await?;
+        let _ = sqlx::query(DELETE_ALL_SQL).execute(pg_pool).await?;
         Ok(())
     }
 

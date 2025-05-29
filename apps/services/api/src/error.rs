@@ -12,6 +12,12 @@ pub enum ApiError {
 
     #[error("Url {0}")]
     GoogleLogin(#[from] google_login::error::GoogleLoginError),
+
+    #[error("Sql {0}")]
+    Sql(#[from] sqlx::Error),
+
+    #[error("Login {0}")]
+    Login(String),
 }
 
 impl ApiError {
@@ -20,6 +26,10 @@ impl ApiError {
             ApiError::Invalid(err) => (
                 axum::http::StatusCode::BAD_REQUEST,
                 axum::Json(json!({"result_code": "invalid", "message": err.to_string()})),
+            ),
+            ApiError::Login(err) => (
+                axum::http::StatusCode::BAD_REQUEST,
+                axum::Json(json!({"result_code": "login failed", "message": err.to_string()})),
             ),
             ApiError::Session(err) => (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
@@ -30,6 +40,10 @@ impl ApiError {
                 axum::Json(
                     json!({"result_code": "google_login_error", "message": err.to_string()}),
                 ),
+            ),
+            ApiError::Sql(err) => (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                axum::Json(json!({"result_code": "sql_error", "message": err.to_string()})),
             ),
         }
     }

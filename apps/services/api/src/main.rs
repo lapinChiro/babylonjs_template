@@ -1,7 +1,9 @@
 use std::sync::Arc;
 
 use axum::{
-    http::{Method, StatusCode}, routing::{delete, get, post}, Extension, Json, Router
+    Extension, Json, Router,
+    http::{Method, StatusCode},
+    routing::{delete, get, post},
 };
 use common::config::Config;
 use google_login::Oauth2Client;
@@ -58,7 +60,10 @@ async fn main() {
         .route("/logins", get(controllers::logins::new::execute))
         .route("/logins", post(controllers::logins::create::execute))
         .route("/logins", delete(controllers::logins::delete::execute))
-        .route("/logins/session", get(controllers::logins::session::execute))
+        .route(
+            "/logins/session",
+            get(controllers::logins::session::execute),
+        )
         .with_state(app_state)
         .layer(cors_layer)
         .layer(session_layer);
