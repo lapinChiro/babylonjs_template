@@ -64,6 +64,8 @@ async fn main() {
             "/logins/session",
             get(controllers::logins::session::execute),
         )
+        .route("/memos", get(controllers::memos::list::execute))
+        .route("/memos", post(controllers::memos::create::execute))
         .with_state(app_state)
         .layer(cors_layer)
         .layer(session_layer);

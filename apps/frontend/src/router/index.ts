@@ -16,6 +16,11 @@ const routes: RouteRecordRaw[] = [
     path: '/oauth',
     name: 'oauth',
     component: () => import('../views/OAuthView.vue')
+  },
+  {
+    path: '/memos',
+    name: 'memos',
+    component: () => import('../views/MemoListView.vue')
   }
 ]
 
