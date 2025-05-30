@@ -43,3 +43,16 @@ export interface LoginSessionResponseData {
   name: string
   mail: string;
 }
+export interface MemoDetailResponse {
+  resultCode: string
+  data: MemoData;
+}
+export interface MemoData {
+  uuid: string | null
+  title: string
+  content: string;
+}
+export interface MemoListResponse {
+  resultCode: string
+  list: Array<MemoData>;
+}

@@ -1,8 +1,12 @@
 use axum::response::{IntoResponse, Redirect};
+use tower_sessions::Session;
+use uuid::Uuid;
 
 use crate::error::ApiError;
+use postgresql::custom::app_set_check_login_session;
 
 pub mod logins;
+pub mod memos;
 
 pub const SESSION_PKCE_VERIFIER: &str = "pkce_verifier";
 pub const SESSION_UUID: &str = "session_uuid";
@@ -52,4 +56,20 @@ pub fn make_response(res: Result<ResponseType, ApiError>) -> impl IntoResponse {
         Ok(response_type) => response_type.make_response().into_response(),
         Err(err) => err.make_response().into_response(),
     }
+}
+
+
+pub async fn get_session(pg_pool: &sqlx::PgPool, session: &Session) -> Result<app_set_check_login_session::DbOutput, ApiError> {
+    let Some(session_uuid) = session.get::<Uuid>(SESSION_UUID).await? else {
+        return Err(ApiError::Invalid("Session not found".to_string()));
+    };
+
+    let params = app_set_check_login_session::DbInput {
+        session_uuid,
+        ..Default::default()
+    };
+    let list = app_set_check_login_session::execute(pg_pool, params).await?;
+    list.first()
+        .cloned()
+        .ok_or_else(|| ApiError::Login("Session not found".to_string()))
 }

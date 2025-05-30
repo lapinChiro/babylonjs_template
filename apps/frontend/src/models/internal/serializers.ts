@@ -1,4 +1,4 @@
-import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
+import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MemoData, MemoDetailResponse, MemoListResponse, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
 
 export function decodeBase64(value: string): Uint8Array | undefined {
   if(!value) {
@@ -53,9 +53,11 @@ export function decodeBase64(value: string): Uint8Array | undefined {
   }
 
   return new Date(date * 1000);
+}export function createPayloadToTransport(payload: MemoData) {
+  return jsonMemoDataToTransportTransform(payload)!;
 }export function oauthPayloadToTransport(payload: OAuthResult) {
   return jsonOAuthResultToTransportTransform(payload)!;
-}export function createPayloadToTransport(payload: Widget) {
+}export function createPayloadToTransport_2(payload: Widget) {
   return jsonWidgetToTransportTransform(payload)!;
 }export function updatePayloadToTransport(payload: MergePatchUpdate) {
   return jsonMergePatchUpdateToTransportTransform(payload)!;
@@ -263,4 +265,84 @@ export function decodeBase64(value: string): Uint8Array | undefined {
     return {
     name: input_.name,mail: input_.mail
   }!;
+}export function jsonMemoDetailResponseToTransportTransform(
+  input_?: MemoDetailResponse | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    result_code: input_.resultCode,data: jsonMemoDataToTransportTransform(input_.data)
+  }!;
+}export function jsonMemoDetailResponseToApplicationTransform(
+  input_?: any,
+): MemoDetailResponse {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    resultCode: input_.result_code,data: jsonMemoDataToApplicationTransform(input_.data)
+  }!;
+}export function jsonMemoDataToTransportTransform(
+  input_?: MemoData | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    uuid: input_.uuid,title: input_.title,content: input_.content
+  }!;
+}export function jsonMemoDataToApplicationTransform(input_?: any): MemoData {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    uuid: input_.uuid,title: input_.title,content: input_.content
+  }!;
+}export function jsonMemoListResponseToTransportTransform(
+  input_?: MemoListResponse | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    result_code: input_.resultCode,list: jsonArrayMemoDataToTransportTransform(input_.list)
+  }!;
+}export function jsonMemoListResponseToApplicationTransform(
+  input_?: any,
+): MemoListResponse {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    resultCode: input_.result_code,list: jsonArrayMemoDataToApplicationTransform(input_.list)
+  }!;
+}export function jsonArrayMemoDataToTransportTransform(
+  items_?: Array<MemoData> | null,
+): any {
+  if(!items_) {
+    return items_ as any;
+  }
+  const _transformedArray = [];
+
+  for (const item of items_ ?? []) {
+    const transformedItem = jsonMemoDataToTransportTransform(item as any);
+    _transformedArray.push(transformedItem);
+  }
+
+  return _transformedArray as any;
+}export function jsonArrayMemoDataToApplicationTransform(
+  items_?: any,
+): Array<MemoData> {
+  if(!items_) {
+    return items_ as any;
+  }
+  const _transformedArray = [];
+
+  for (const item of items_ ?? []) {
+    const transformedItem = jsonMemoDataToApplicationTransform(item as any);
+    _transformedArray.push(transformedItem);
+  }
+
+  return _transformedArray as any;
 }

@@ -1,9 +1,9 @@
-use chrono::{DateTime, Utc};
-use derive_builder::Builder;
-use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-use sqlx::prelude::*;
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use derive_builder::Builder;
+use sqlx::prelude::*;
 
 const SELECT_SQL: &str = r#"
 SELECT
@@ -214,7 +214,9 @@ impl Sessions {
     }
 
     pub async fn delete_all(pg_pool: &PgPool) -> Result<(), sqlx::Error> {
-        let _ = sqlx::query(DELETE_ALL_SQL).execute(pg_pool).await?;
+        let _ = sqlx::query(DELETE_ALL_SQL)
+            .execute(pg_pool)
+            .await?;
         Ok(())
     }
 
@@ -230,10 +232,7 @@ impl Sessions {
         Ok(res.first().cloned())
     }
 
-    pub async fn select(
-        pg_pool: &PgPool,
-        builder: SessionsBuilder,
-    ) -> Result<Vec<Self>, sqlx::Error> {
+    pub async fn select(pg_pool: &PgPool, builder: SessionsBuilder) -> Result<Vec<Self>, sqlx::Error> {
         let rows: Vec<Self> = sqlx::query_as(SELECT_SQL)
             .bind(builder.uuid)
             .bind(builder.user_uuid)
