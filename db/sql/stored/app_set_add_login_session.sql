@@ -53,6 +53,7 @@ BEGIN
   FROM
     generated_set_add_sessions(
       p_user_uuid := w_user_uuid
+      ,p_expire_at := w_now + INTERVAL '1 day'
       ,p_now := w_now
       ,p_pg := w_pg
       ,p_operator_uuid := w_operator_uuid
