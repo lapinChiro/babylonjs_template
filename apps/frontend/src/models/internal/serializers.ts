@@ -55,11 +55,13 @@ export function decodeBase64(value: string): Uint8Array | undefined {
   return new Date(date * 1000);
 }export function createPayloadToTransport(payload: MemoData) {
   return jsonMemoDataToTransportTransform(payload)!;
+}export function updatePayloadToTransport(payload: MemoData) {
+  return jsonMemoDataToTransportTransform(payload)!;
 }export function oauthPayloadToTransport(payload: OAuthResult) {
   return jsonOAuthResultToTransportTransform(payload)!;
 }export function createPayloadToTransport_2(payload: Widget) {
   return jsonWidgetToTransportTransform(payload)!;
-}export function updatePayloadToTransport(payload: MergePatchUpdate) {
+}export function updatePayloadToTransport_2(payload: MergePatchUpdate) {
   return jsonMergePatchUpdateToTransportTransform(payload)!;
 }export function jsonWidgetListToTransportTransform(
   input_?: WidgetList | null,
@@ -290,14 +292,14 @@ export function decodeBase64(value: string): Uint8Array | undefined {
     return input_ as any;
   }
     return {
-    uuid: input_.uuid,title: input_.title,content: input_.content
+    title: input_.title,content: input_.content
   }!;
 }export function jsonMemoDataToApplicationTransform(input_?: any): MemoData {
   if(!input_) {
     return input_ as any;
   }
     return {
-    uuid: input_.uuid,title: input_.title,content: input_.content
+    title: input_.title,content: input_.content
   }!;
 }export function jsonMemoListResponseToTransportTransform(
   input_?: MemoListResponse | null,

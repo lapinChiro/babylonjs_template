@@ -1,4 +1,5 @@
 use axum::response::{IntoResponse, Redirect};
+use serde::Serialize;
 use tower_sessions::Session;
 use uuid::Uuid;
 
@@ -27,8 +28,11 @@ impl ResponseType {
         Self::List((result_code.to_owned(), list))
     }
 
-    pub fn new_data(result_code: &str, data: serde_json::Value) -> Self {
-        Self::Data((result_code.to_owned(), data))
+    pub fn new_data<T>(result_code: &str, data: T) -> Self 
+    where 
+        T: Serialize
+    {
+        Self::Data((result_code.to_owned(), serde_json::to_value(data).unwrap()))
     }
 
     pub fn new_redirect(path: &str) -> Self {

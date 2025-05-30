@@ -86,7 +86,6 @@ interface Login {
 }
 
 model MemoData {
-  uuid: string| null;
   title: string;
   content: string;
 }
@@ -113,11 +112,13 @@ model MemoDetailResponse {
 @tag("Memo")
 interface Memo {
   /** 詳細 */
-  @get description(@path uuid: string): MemoDetailResponse | Error;
+  @get read(@path uuid: string): MemoDetailResponse | Error;
   /** 一覧 */
   @get list(): MemoListResponse | Error;
   /** 作成 */
   @post create(@body body: MemoData): PlainResult | Error;
+  /** 更新 */
+  @post update(@path id: string, @body body: MemoData): PlainResult | Error;
   /** 削除 */
   @delete remove(@path uuid: string): PlainResult | Error;
 }

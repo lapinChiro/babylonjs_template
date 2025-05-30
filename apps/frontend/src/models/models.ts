@@ -48,7 +48,6 @@ export interface MemoDetailResponse {
   data: MemoData;
 }
 export interface MemoData {
-  uuid: string | null
   title: string
   content: string;
 }
