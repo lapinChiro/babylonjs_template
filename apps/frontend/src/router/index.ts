@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
     path: '/memos',
     name: 'memos',
     component: () => import('../views/MemoListView.vue')
+  },
+  {
+    path: '/memos/new',
+    name: 'memo-create',
+    component: () => import('../views/MemoCreateView.vue')
   }
 ]
 

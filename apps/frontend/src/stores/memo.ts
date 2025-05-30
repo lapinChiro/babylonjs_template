@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { TemplateServiceClient } from '../templateServiceClient'
-import type { MemoData } from '../models/models'
+import type { MemoData, MemoItem } from '../models/models'
 import { getClientOptionsWithCredentials } from '../utils/credentialsPolicy'
 
 export const useMemoStore = defineStore('memo', () => {
-  const memos = ref<MemoData[]>([])
+  const memos = ref<MemoItem[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 

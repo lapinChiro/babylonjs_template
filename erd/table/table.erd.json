@@ -123,6 +123,7 @@
         {
           "lname": "親メモ",
           "pname": "parent_memo",
+          "notNull": false,
           "domain": "UUID"
         }
       ]

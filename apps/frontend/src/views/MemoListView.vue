@@ -28,6 +28,16 @@ function editMemo(uuid: string) {
   router.push(`/memos/${uuid}/edit`)
 }
 
+function formatDate(utsms: bigint): string {
+  const date = new Date(Number(utsms))
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}/${month}/${day} ${hours}:${minutes}`
+}
+
 onMounted(() => {
   if (!authStore.isLoggedIn) {
     router.push('/login')
@@ -59,19 +69,34 @@ onMounted(() => {
       メモがありません
     </div>
 
-    <div v-else class="memo-grid">
-      <div v-for="memo in memoStore.memos" :key="memo.uuid!" class="memo-card">
-        <h3 class="memo-title">{{ memo.title }}</h3>
-        <p class="memo-content">{{ memo.content }}</p>
-        <div class="memo-actions">
-          <button @click="editMemo(memo.uuid!)" class="btn-edit">
-            編集
-          </button>
-          <button @click="deleteMemo(memo.uuid!)" class="btn-delete">
-            削除
-          </button>
-        </div>
-      </div>
+    <div v-else class="memo-table-container">
+      <table class="memo-table">
+        <thead>
+          <tr>
+            <th class="th-title">タイトル</th>
+            <th class="th-content">内容</th>
+            <th class="th-created">作成日時</th>
+            <th class="th-updated">更新日時</th>
+            <th class="th-actions">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="memo in memoStore.memos" :key="memo.uuid">
+            <td class="td-title">{{ memo.title }}</td>
+            <td class="td-content">{{ memo.content }}</td>
+            <td class="td-created">{{ formatDate(memo.createdUtsms) }}</td>
+            <td class="td-updated">{{ formatDate(memo.updatedUtsms) }}</td>
+            <td class="td-actions">
+              <button @click="editMemo(memo.uuid)" class="btn-edit">
+                編集
+              </button>
+              <button @click="deleteMemo(memo.uuid)" class="btn-delete">
+                削除
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -125,48 +150,97 @@ onMounted(() => {
   color: #dc3545;
 }
 
-.memo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.memo-card {
+.memo-table-container {
+  overflow-x: auto;
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1.5rem;
-  transition: box-shadow 0.3s;
 }
 
-.memo-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.memo-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.memo-title {
-  font-size: 1.25rem;
-  margin: 0 0 1rem 0;
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.memo-table thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.memo-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
   white-space: nowrap;
 }
 
-.memo-content {
-  color: #666;
-  margin: 0 0 1rem 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.5;
+.memo-table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+  transition: background-color 0.2s;
 }
 
-.memo-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
+.memo-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.memo-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.memo-table td {
+  padding: 1rem;
+  color: #333;
+}
+
+.th-title {
+  width: 20%;
+  min-width: 150px;
+}
+
+.th-content {
+  width: 40%;
+  min-width: 200px;
+}
+
+.th-created,
+.th-updated {
+  width: 15%;
+  min-width: 120px;
+}
+
+.th-actions {
+  width: 10%;
+  min-width: 120px;
+  text-align: center;
+}
+
+.td-title {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.td-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400px;
+  color: #666;
+}
+
+.td-created,
+.td-updated {
+  font-size: 0.9rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.td-actions {
+  text-align: center;
+  white-space: nowrap;
 }
 
 .btn-edit, .btn-delete {
@@ -215,8 +289,24 @@ onMounted(() => {
     justify-content: center;
   }
   
-  .memo-grid {
-    grid-template-columns: 1fr;
+  .memo-table {
+    font-size: 0.875rem;
+  }
+  
+  .memo-table th,
+  .memo-table td {
+    padding: 0.5rem;
+  }
+  
+  .th-content,
+  .td-content {
+    display: none;
+  }
+  
+  .btn-edit,
+  .btn-delete {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
   }
 }
 </style>

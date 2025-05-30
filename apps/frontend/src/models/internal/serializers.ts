@@ -1,4 +1,4 @@
-import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MemoData, MemoDetailResponse, MemoListResponse, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
+import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MemoData, MemoDetailResponse, MemoItem, MemoListResponse, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
 
 export function decodeBase64(value: string): Uint8Array | undefined {
   if(!value) {
@@ -306,7 +306,7 @@ export function decodeBase64(value: string): Uint8Array | undefined {
     return input_ as any;
   }
     return {
-    result_code: input_.resultCode,list: jsonArrayMemoDataToTransportTransform(input_.list)
+    result_code: input_.resultCode,list: jsonArrayMemoItemToTransportTransform(input_.list)
   }!;
 }export function jsonMemoListResponseToApplicationTransform(
   input_?: any,
@@ -315,10 +315,10 @@ export function decodeBase64(value: string): Uint8Array | undefined {
     return input_ as any;
   }
     return {
-    resultCode: input_.result_code,list: jsonArrayMemoDataToApplicationTransform(input_.list)
+    resultCode: input_.result_code,list: jsonArrayMemoItemToApplicationTransform(input_.list)
   }!;
-}export function jsonArrayMemoDataToTransportTransform(
-  items_?: Array<MemoData> | null,
+}export function jsonArrayMemoItemToTransportTransform(
+  items_?: Array<MemoItem> | null,
 ): any {
   if(!items_) {
     return items_ as any;
@@ -326,23 +326,39 @@ export function decodeBase64(value: string): Uint8Array | undefined {
   const _transformedArray = [];
 
   for (const item of items_ ?? []) {
-    const transformedItem = jsonMemoDataToTransportTransform(item as any);
+    const transformedItem = jsonMemoItemToTransportTransform(item as any);
     _transformedArray.push(transformedItem);
   }
 
   return _transformedArray as any;
-}export function jsonArrayMemoDataToApplicationTransform(
+}export function jsonArrayMemoItemToApplicationTransform(
   items_?: any,
-): Array<MemoData> {
+): Array<MemoItem> {
   if(!items_) {
     return items_ as any;
   }
   const _transformedArray = [];
 
   for (const item of items_ ?? []) {
-    const transformedItem = jsonMemoDataToApplicationTransform(item as any);
+    const transformedItem = jsonMemoItemToApplicationTransform(item as any);
     _transformedArray.push(transformedItem);
   }
 
   return _transformedArray as any;
+}export function jsonMemoItemToTransportTransform(
+  input_?: MemoItem | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    uuid: input_.uuid,title: input_.title,content: input_.content,created_utsms: input_.createdUtsms,updated_utsms: input_.updatedUtsms
+  }!;
+}export function jsonMemoItemToApplicationTransform(input_?: any): MemoItem {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    uuid: input_.uuid,title: input_.title,content: input_.content,createdUtsms: input_.created_utsms,updatedUtsms: input_.updated_utsms
+  }!;
 }

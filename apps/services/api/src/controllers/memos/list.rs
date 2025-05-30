@@ -20,9 +20,17 @@ pub async fn execute(State(state): State<Arc<AppState>>, session: Session) -> im
 async fn inner(session: Session, pg_pool: &sqlx::PgPool) -> Result<ResponseType, ApiError> {
     let user = get_session(&pg_pool, &session).await?;
     let list = execute_db(&pg_pool, user.user_uuid).await?;
-    Ok(ResponseType::new_data(
+    Ok(ResponseType::new_list(
         "success",
-        json!(list),
+        list.into_iter()
+            .map(|item| json!({
+                "uuid": item.uuid,
+                "title": item.title,
+                "content": item.content,
+                "created_utsms": item.created_at.timestamp_millis(),
+                "updated_utsms": item.updated_at.timestamp_millis(),
+            }))
+            .collect::<Vec<_>>(),
     ))
 }
 

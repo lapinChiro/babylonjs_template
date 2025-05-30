@@ -165,7 +165,7 @@ pub struct Memos {
     pub user_uuid: Uuid,
     pub title: String,
     pub content: String,
-    pub parent_memo_uuid: Uuid,
+    pub parent_memo_uuid: Option<Uuid>,
     pub created_uuid: Option<Uuid>,
     pub updated_uuid: Option<Uuid>,
     pub deleted_uuid: Option<Uuid>,

@@ -54,5 +54,13 @@ export interface MemoData {
 }
 export interface MemoListResponse {
   resultCode: string
-  list: Array<MemoData>;
+  list: Array<MemoItem>;
+}
+
+export interface MemoItem {
+  uuid: string
+  title: string
+  content: string
+  createdUtsms: bigint
+  updatedUtsms: bigint;
 }

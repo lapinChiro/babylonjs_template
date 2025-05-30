@@ -4,7 +4,7 @@ CREATE TABLE public.memos (
   ,user_uuid UUID NOT NULL -- ユーザーUUID
   ,title TEXT NOT NULL DEFAULT '' -- タイトル
   ,content TEXT NOT NULL DEFAULT '' -- 内容
-  ,parent_memo_uuid UUID NOT NULL -- 親メモUUID
+  ,parent_memo_uuid UUID -- 親メモUUID
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID
@@ -26,7 +26,7 @@ CREATE TABLE garbage.memos (
   ,user_uuid UUID NOT NULL -- ユーザーUUID
   ,title TEXT NOT NULL DEFAULT '' -- タイトル
   ,content TEXT NOT NULL DEFAULT '' -- 内容
-  ,parent_memo_uuid UUID NOT NULL -- 親メモUUID
+  ,parent_memo_uuid UUID -- 親メモUUID
   ,created_uuid UUID
   ,updated_uuid UUID
   ,deleted_uuid UUID

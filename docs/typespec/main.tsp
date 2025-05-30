@@ -91,9 +91,17 @@ model MemoData {
   content: string;
 }
 
+model MemoItem {
+  uuid: string;
+  title: string;
+  content: string;
+  created_utsms: int64;
+  updated_utsms: int64;
+}
+
 model MemoListResponse {
   result_code: string;
-  list: MemoData[];
+  list: MemoItem[];
 }
 
 model MemoDetailResponse {

@@ -27,7 +27,8 @@ async fn inner(
 
     let uuid = payload
         .get("uuid")
-        .and_then(|v| v.as_str());
+        .and_then(|v| v.as_str())
+        .and_then(|s| Uuid::parse_str(s).ok());
 
     let title = payload
         .get("title")
@@ -61,7 +62,7 @@ pub struct DbOutput {
     pub uuid: Uuid,
 }
 
-async fn execute_db(pg_pool: &sqlx::PgPool, uuid: Option<&str>, title: &str, content: &str, user_uuid: Uuid) -> Result<DbOutput, sqlx::Error> {
+async fn execute_db(pg_pool: &sqlx::PgPool, uuid: Option<Uuid>, title: &str, content: &str, user_uuid: Uuid) -> Result<DbOutput, sqlx::Error> {
     let res: DbOutput = sqlx::query_as(SQL)
         .bind(uuid)
         .bind(title)

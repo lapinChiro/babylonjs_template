@@ -12,6 +12,7 @@ pub const SESSION_PKCE_VERIFIER: &str = "pkce_verifier";
 pub const SESSION_UUID: &str = "session_uuid";
 
 pub enum ResponseType {
+    List((String, Vec<serde_json::Value>)),
     Data((String, serde_json::Value)),
     Redirect(String),
     NoData(String),
@@ -20,6 +21,10 @@ pub enum ResponseType {
 impl ResponseType {
     pub fn new_no_data(result_code: &str) -> Self {
         Self::NoData(result_code.to_owned())
+    }
+
+    pub fn new_list(result_code: &str, list: Vec<serde_json::Value>) -> Self {
+        Self::List((result_code.to_owned(), list))
     }
 
     pub fn new_data(result_code: &str, data: serde_json::Value) -> Self {
@@ -36,6 +41,13 @@ impl ResponseType {
                 let response = serde_json::json!({
                     "result_code": key,
                     "data": data,
+                });
+                axum::Json(response).into_response()
+            }
+            Self::List((key, list)) => {
+                let response = serde_json::json!({
+                    "result_code": key,
+                    "list": list,
                 });
                 axum::Json(response).into_response()
             }
