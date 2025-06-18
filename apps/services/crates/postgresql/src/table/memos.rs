@@ -8,10 +8,10 @@ use sqlx::prelude::*;
 const SELECT_SQL: &str = r#"
 SELECT
     t1.uuid
-    ,t1.user_code
-    ,t1.name
-    ,t1.mail
-    ,t1.last_login_at
+    ,t1.user_uuid
+    ,t1.title
+    ,t1.content
+    ,t1.parent_memo_uuid
     ,t1.created_uuid
     ,t1.updated_uuid
     ,t1.deleted_uuid
@@ -23,14 +23,14 @@ SELECT
     ,t1.deleted_pg
     ,t1.bk
 FROM
-    public.users AS t1
+    public.memos AS t1
 WHERE
     TRUE
     AND ($1 IS NULL OR t1.uuid = $1)
-    AND ($2 IS NULL OR t1.user_code = $2)
-    AND ($3 IS NULL OR t1.name = $3)
-    AND ($4 IS NULL OR t1.mail = $4)
-    AND ($5 IS NULL OR t1.last_login_at = $5)
+    AND ($2 IS NULL OR t1.user_uuid = $2)
+    AND ($3 IS NULL OR t1.title = $3)
+    AND ($4 IS NULL OR t1.content = $4)
+    AND ($5 IS NULL OR t1.parent_memo_uuid = $5)
     AND ($6 IS NULL OR t1.created_uuid = $6)
     AND ($7 IS NULL OR t1.updated_uuid = $7)
     AND ($8 IS NULL OR t1.deleted_uuid = $8)
@@ -44,12 +44,12 @@ WHERE
 "#;
 
 const INSERT_SQL: &str = r#"
-INSERT INTO public.users (
+INSERT INTO public.memos (
     uuid
-    ,user_code
-    ,name
-    ,mail
-    ,last_login_at
+    ,user_uuid
+    ,title
+    ,content
+    ,parent_memo_uuid
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -78,10 +78,10 @@ INSERT INTO public.users (
     ,$15
 ) RETURNING
     uuid
-    ,user_code
-    ,name
-    ,mail
-    ,last_login_at
+    ,user_uuid
+    ,title
+    ,content
+    ,parent_memo_uuid
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -95,11 +95,11 @@ INSERT INTO public.users (
 "#;
 
 const UPDATE_SQL: &str = r#"
-UPDATE public.users AS t1 SET
-    user_code = $2
-    ,name = $3
-    ,mail = $4
-    ,last_login_at = $5
+UPDATE public.memos AS t1 SET
+    user_uuid = $2
+    ,title = $3
+    ,content = $4
+    ,parent_memo_uuid = $5
     ,created_uuid = $6
     ,updated_uuid = $7
     ,deleted_uuid = $8
@@ -114,10 +114,10 @@ WHERE
     t1.uuid = $1
 RETURNING
     uuid
-    ,user_code
-    ,name
-    ,mail
-    ,last_login_at
+    ,user_uuid
+    ,title
+    ,content
+    ,parent_memo_uuid
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -131,15 +131,15 @@ RETURNING
 "#;
 
 const DELETE_SQL: &str = r#"
-DELETE FROM public.users AS t1
+DELETE FROM public.memos AS t1
 WHERE
     t1.uuid = $1
 RETURNING
     uuid
-    ,user_code
-    ,name
-    ,mail
-    ,last_login_at
+    ,user_uuid
+    ,title
+    ,content
+    ,parent_memo_uuid
     ,created_uuid
     ,updated_uuid
     ,deleted_uuid
@@ -153,19 +153,19 @@ RETURNING
 "#;
 
 const DELETE_ALL_SQL: &str = r#"
-DELETE FROM public.users AS t1
+DELETE FROM public.memos AS t1
 "#;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Builder, Default, FromRow)]
 #[builder(setter(into))]
 #[builder(default)]
 #[builder(field(public))]
-pub struct Users {
+pub struct Memos {
     pub uuid: Uuid,
-    pub user_code: String,
-    pub name: String,
-    pub mail: String,
-    pub last_login_at: Option<DateTime<Utc>>,
+    pub user_uuid: Uuid,
+    pub title: String,
+    pub content: String,
+    pub parent_memo_uuid: Option<Uuid>,
     pub created_uuid: Option<Uuid>,
     pub updated_uuid: Option<Uuid>,
     pub deleted_uuid: Option<Uuid>,
@@ -178,14 +178,14 @@ pub struct Users {
     pub bk: Option<String>,
 }
 
-impl Users {
+impl Memos {
     pub async fn insert(&self, pg_pool: &PgPool) -> Result<Self, sqlx::Error> {
         let res: Self = sqlx::query_as(INSERT_SQL)
             .bind(self.uuid)
-            .bind(&self.user_code)
-            .bind(&self.name)
-            .bind(&self.mail)
-            .bind(self.last_login_at)
+            .bind(self.user_uuid)
+            .bind(&self.title)
+            .bind(&self.content)
+            .bind(self.parent_memo_uuid)
             .bind(self.created_uuid)
             .bind(self.updated_uuid)
             .bind(self.deleted_uuid)
@@ -204,10 +204,10 @@ impl Users {
     pub async fn update(&self, pg_pool: &PgPool) -> Result<Self, sqlx::Error> {
         let res: Self = sqlx::query_as(UPDATE_SQL)
             .bind(self.uuid)
-            .bind(&self.user_code)
-            .bind(&self.name)
-            .bind(&self.mail)
-            .bind(self.last_login_at)
+            .bind(self.user_uuid)
+            .bind(&self.title)
+            .bind(&self.content)
+            .bind(self.parent_memo_uuid)
             .bind(self.created_uuid)
             .bind(self.updated_uuid)
             .bind(self.deleted_uuid)
@@ -243,24 +243,24 @@ impl Users {
     }
 
     pub async fn select_all(pg_pool: &PgPool) -> Result<Vec<Self>, sqlx::Error> {
-        let builder = UsersBuilder::default();
+        let builder = MemosBuilder::default();
         Self::select(pg_pool, builder).await
     }
 
     pub async fn select_one(pg_pool: &PgPool, uuid: &Uuid) -> Result<Option<Self>, sqlx::Error> {
-        let mut builder = UsersBuilder::default();
+        let mut builder = MemosBuilder::default();
         builder.uuid(*uuid);
         let res = Self::select(pg_pool, builder).await?;
         Ok(res.first().cloned())
     }
 
-    pub async fn select(pg_pool: &PgPool, builder: UsersBuilder) -> Result<Vec<Self>, sqlx::Error> {
+    pub async fn select(pg_pool: &PgPool, builder: MemosBuilder) -> Result<Vec<Self>, sqlx::Error> {
         let rows: Vec<Self> = sqlx::query_as(SELECT_SQL)
             .bind(builder.uuid)
-            .bind(&builder.user_code)
-            .bind(&builder.name)
-            .bind(&builder.mail)
-            .bind(builder.last_login_at)
+            .bind(builder.user_uuid)
+            .bind(&builder.title)
+            .bind(&builder.content)
+            .bind(builder.parent_memo_uuid)
             .bind(builder.created_uuid)
             .bind(builder.updated_uuid)
             .bind(builder.deleted_uuid)

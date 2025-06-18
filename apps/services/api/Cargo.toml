@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 axum = { workspace = true }
 common = { path = "../crates/common" }
+chrono = { workspace = true }
 logs = { path = "../crates/logs" }
 google_login = { path = "../crates/google_login" }
 postgresql = { path = "../crates/postgresql" }

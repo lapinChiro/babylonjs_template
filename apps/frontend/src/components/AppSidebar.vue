@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 </script>
 
 <template>
@@ -14,6 +11,10 @@ const router = useRouter()
       <router-link to="/about" class="nav-item">
         <i class="icon">ℹ️</i>
         <span>About</span>
+      </router-link>
+      <router-link to="/memos" class="nav-item">
+        <i class="icon">📝</i>
+        <span>メモ</span>
       </router-link>
     </nav>
   </aside>

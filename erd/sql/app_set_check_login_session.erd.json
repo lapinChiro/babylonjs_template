@@ -40,6 +40,11 @@
         },
         "parameters": [
           {
+            "lname": "ユーザ",
+            "pname": "user",
+            "domain": "UUID"
+          },
+          {
             "domain": "名前"
           },
           {

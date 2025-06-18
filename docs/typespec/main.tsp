@@ -84,3 +84,41 @@ interface Login {
   /** セッション確認 */
   @route("session") @get session(): LoginSessionResponse | Error;
 }
+
+model MemoData {
+  title: string;
+  content: string;
+}
+
+model MemoItem {
+  uuid: string;
+  title: string;
+  content: string;
+  created_utsms: int64;
+  updated_utsms: int64;
+}
+
+model MemoListResponse {
+  result_code: string;
+  list: MemoItem[];
+}
+
+model MemoDetailResponse {
+  result_code: string;
+  data: MemoData;
+}
+
+@route("/memos")
+@tag("Memo")
+interface Memo {
+  /** 詳細 */
+  @get read(@path uuid: string): MemoDetailResponse | Error;
+  /** 一覧 */
+  @get list(): MemoListResponse | Error;
+  /** 作成 */
+  @post create(@body body: MemoData): PlainResult | Error;
+  /** 更新 */
+  @post update(@path id: string, @body body: MemoData): PlainResult | Error;
+  /** 削除 */
+  @delete remove(@path uuid: string): PlainResult | Error;
+}

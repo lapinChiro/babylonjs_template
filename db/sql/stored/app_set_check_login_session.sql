@@ -1,6 +1,7 @@
 DROP TYPE IF EXISTS type_app_set_check_login_session CASCADE;
 CREATE TYPE type_app_set_check_login_session AS (
-  name TEXT
+  user_uuid UUID
+  ,name TEXT
   ,mail TEXT
 );
 
@@ -43,7 +44,8 @@ BEGIN
 
   RETURN QUERY
     SELECT
-      t1.name
+      t1.uuid
+      ,t1.name
       ,t1.mail
     FROM
       public.users AS t1

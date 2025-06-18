@@ -1,8 +1,8 @@
 use chrono::prelude::*;
 use derive_builder::Builder;
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
 use sqlx::prelude::*;
+use sqlx::PgPool;
 use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Builder, Default, PartialEq, Eq)]
@@ -21,8 +21,9 @@ pub struct DbInput {
 #[builder(default)]
 #[builder(field(public))]
 pub struct DbOutput {
+    pub user_uuid: Uuid,
     pub name: String,
-    pub mail: String,
+    pub mail: String
 }
 
 const SQL: &str = r#"
@@ -55,7 +56,7 @@ mod tests {
 
     // RUST_LOG=info REALM_CODE=test cargo test -p postgresql test_postgresql_app_set_check_login_session -- --nocapture --test-threads=1
     #[tokio::test]
-    async fn test_postgresql_app_set_check_login_session() -> anyhow::Result<()> {
+    async fn test_postgresql_app_set_check_login_session () -> anyhow::Result<()> {
         let pg_pool = setup().await?;
 
         let _builder = UsersBuilder::default();

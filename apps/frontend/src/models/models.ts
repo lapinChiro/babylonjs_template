@@ -43,3 +43,23 @@ export interface LoginSessionResponseData {
   name: string
   mail: string;
 }
+export interface MemoDetailResponse {
+  resultCode: string
+  data: MemoData;
+}
+export interface MemoData {
+  title: string
+  content: string;
+}
+export interface MemoListResponse {
+  resultCode: string
+  list: Array<MemoItem>;
+}
+
+export interface MemoItem {
+  uuid: string
+  title: string
+  content: string
+  createdUtsms: bigint
+  updatedUtsms: bigint;
+}

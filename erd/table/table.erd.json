@@ -92,6 +92,41 @@
           "domain": "日時"
         }
       ]
+    },
+    {
+      "lname": "メモ",
+      "pname": "memos",
+      "fks": [
+        {
+          "columns": ["ユーザーUUID"],
+          "table": "ユーザー",
+          "foreignColumns": ["UUID"]
+        }
+      ],
+      "columns": [
+        {
+          "domain": "UUID",
+          "pk": true,
+          "default": "uv_uuid_v7()"
+        },
+        {
+          "lname": "ユーザー",
+          "pname": "user",
+          "domain": "UUID"
+        },
+        {
+          "domain": "タイトル"
+        },
+        {
+          "domain": "内容"
+        },
+        {
+          "lname": "親メモ",
+          "pname": "parent_memo",
+          "notNull": false,
+          "domain": "UUID"
+        }
+      ]
     }
   ]
 }

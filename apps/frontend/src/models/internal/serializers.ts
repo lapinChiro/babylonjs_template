@@ -1,4 +1,4 @@
-import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
+import { AnalyzeResult, LoginSessionResponse, LoginSessionResponseData, MemoData, MemoDetailResponse, MemoItem, MemoListResponse, MergePatchUpdate, OAuthLogin, OAuthLoginData, OAuthResult, PlainResult, Widget, WidgetList } from "../models.js";
 
 export function decodeBase64(value: string): Uint8Array | undefined {
   if(!value) {
@@ -53,11 +53,15 @@ export function decodeBase64(value: string): Uint8Array | undefined {
   }
 
   return new Date(date * 1000);
+}export function createPayloadToTransport(payload: MemoData) {
+  return jsonMemoDataToTransportTransform(payload)!;
+}export function updatePayloadToTransport(payload: MemoData) {
+  return jsonMemoDataToTransportTransform(payload)!;
 }export function oauthPayloadToTransport(payload: OAuthResult) {
   return jsonOAuthResultToTransportTransform(payload)!;
-}export function createPayloadToTransport(payload: Widget) {
+}export function createPayloadToTransport_2(payload: Widget) {
   return jsonWidgetToTransportTransform(payload)!;
-}export function updatePayloadToTransport(payload: MergePatchUpdate) {
+}export function updatePayloadToTransport_2(payload: MergePatchUpdate) {
   return jsonMergePatchUpdateToTransportTransform(payload)!;
 }export function jsonWidgetListToTransportTransform(
   input_?: WidgetList | null,
@@ -262,5 +266,101 @@ export function decodeBase64(value: string): Uint8Array | undefined {
   }
     return {
     name: input_.name,mail: input_.mail
+  }!;
+}export function jsonMemoDetailResponseToTransportTransform(
+  input_?: MemoDetailResponse | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    result_code: input_.resultCode,data: jsonMemoDataToTransportTransform(input_.data)
+  }!;
+}export function jsonMemoDetailResponseToApplicationTransform(
+  input_?: any,
+): MemoDetailResponse {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    resultCode: input_.result_code,data: jsonMemoDataToApplicationTransform(input_.data)
+  }!;
+}export function jsonMemoDataToTransportTransform(
+  input_?: MemoData | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    title: input_.title,content: input_.content
+  }!;
+}export function jsonMemoDataToApplicationTransform(input_?: any): MemoData {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    title: input_.title,content: input_.content
+  }!;
+}export function jsonMemoListResponseToTransportTransform(
+  input_?: MemoListResponse | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    result_code: input_.resultCode,list: jsonArrayMemoItemToTransportTransform(input_.list)
+  }!;
+}export function jsonMemoListResponseToApplicationTransform(
+  input_?: any,
+): MemoListResponse {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    resultCode: input_.result_code,list: jsonArrayMemoItemToApplicationTransform(input_.list)
+  }!;
+}export function jsonArrayMemoItemToTransportTransform(
+  items_?: Array<MemoItem> | null,
+): any {
+  if(!items_) {
+    return items_ as any;
+  }
+  const _transformedArray = [];
+
+  for (const item of items_ ?? []) {
+    const transformedItem = jsonMemoItemToTransportTransform(item as any);
+    _transformedArray.push(transformedItem);
+  }
+
+  return _transformedArray as any;
+}export function jsonArrayMemoItemToApplicationTransform(
+  items_?: any,
+): Array<MemoItem> {
+  if(!items_) {
+    return items_ as any;
+  }
+  const _transformedArray = [];
+
+  for (const item of items_ ?? []) {
+    const transformedItem = jsonMemoItemToApplicationTransform(item as any);
+    _transformedArray.push(transformedItem);
+  }
+
+  return _transformedArray as any;
+}export function jsonMemoItemToTransportTransform(
+  input_?: MemoItem | null,
+): any {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    uuid: input_.uuid,title: input_.title,content: input_.content,created_utsms: input_.createdUtsms,updated_utsms: input_.updatedUtsms
+  }!;
+}export function jsonMemoItemToApplicationTransform(input_?: any): MemoItem {
+  if(!input_) {
+    return input_ as any;
+  }
+    return {
+    uuid: input_.uuid,title: input_.title,content: input_.content,createdUtsms: input_.created_utsms,updatedUtsms: input_.updated_utsms
   }!;
 }
