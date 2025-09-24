@@ -13,5 +13,5 @@ export MY_DIR=xxxx
 export TARGET_TEMPLATE=xxxx
 
 
-npx giget gh:UniqueVision/sc.app_template/template/$TARGET_TEMPLATE $MY_DIR
+npx giget gh:UniqueVision/sc.app_template/templates/$TARGET_TEMPLATE $MY_DIR
 ```
