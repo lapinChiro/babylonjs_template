@@ -1,0 +1,86 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:17
+    container_name: rails8_postgres
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - rails8_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # Rails Backend
+  backend:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.backend
+    container_name: rails8_backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/backend:/rails/backend:delegated
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/dev
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=dev
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_SSL=false
+      - JWT_SECRET=dev-secret-key-change-in-production
+      - JWT_EXPIRES_IN=86400
+    networks:
+      - rails8_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      bash -c "
+        bundle exec rails db:prepare &&
+        bundle exec rails db:seed &&
+        bundle exec rails server -b 0.0.0.0
+      "
+
+  # Vue Frontend
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.frontend
+    container_name: rails8_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/frontend:/rails/frontend:delegated
+      - /rails/frontend/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:3005/api
+      - VITE_API_TIMEOUT=120000
+      - VITE_APP_VERSION=0.0.0
+      - VITE_ENVIRONMENT=development
+      - VITE_ENABLE_DEBUG=true
+      - VITE_ENABLE_PREFETCH=true
+      - VITE_ENABLE_PRELOAD=false
+      - VITE_CHUNK_SIZE_LIMIT=500
+    networks:
+      - rails8_network
+
+networks:
+  rails8_network:
+    driver: bridge
+
+volumes:
+  postgres-data:

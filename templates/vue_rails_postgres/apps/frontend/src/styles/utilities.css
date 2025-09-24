@@ -1,0 +1,76 @@
+/* Optimized Utility Classes - Tailwind CSS v4 */
+
+@layer components {
+  /* Common Button Actions */
+  .button-action {
+    @apply transition-all duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .button-destructive-action {
+    @apply size-8 p-0 text-destructive hover:text-destructive hover:scale-105 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Common Layout Patterns */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center;
+  }
+
+  /* Card Container */
+  .card-container {
+    @apply border rounded-lg overflow-hidden shadow-lg;
+  }
+
+  /* Responsive Container */
+  .responsive-flex-container {
+    @apply flex flex-col sm:flex-row items-center justify-center gap-4;
+  }
+}
+
+@layer utilities {
+  /* Transition Speed Standards */
+  .transition-fast {
+    @apply transition-all duration-150 ease-out;
+  }
+
+  .transition-normal {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .transition-slow {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Enhanced Focus Ring */
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+}
+
+/* Print Utilities - 印刷時のスタイル制御 */
+@media print {
+  @layer utilities {
+    .print-visible {
+      display: block !important;
+    }
+
+    .print-hidden {
+      display: none !important;
+    }
+
+    .print-text-black {
+      color: black !important;
+    }
+
+    .print-bg-transparent {
+      background: transparent !important;
+    }
+  }
+}

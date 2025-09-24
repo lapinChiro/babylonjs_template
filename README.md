@@ -1,24 +1,17 @@
-# app_template
+# アプリのテンプレート集
 
-## frontend
-### init
-mkdir apps
-npm create vite@latest
+## 導入方法
 
-### tailwindcss
-npm install tailwindcss @tailwindcss/vite
+```sh
+# scope: repoの権限を付けたGitHub Classic Token
+export GIGET_AUTH=ghp_xxxxxclassicxxxx
 
-### 実行
-```
-cd development
-docker compose exec frontend bash
-npm run dev
-```
+# インポート先のディレクトリ
+export MY_DIR=xxxx
 
-## backend
-### 実行
-```
-cd development
-docker compose exec api bash
-bacon run-long
+# 使用したいテンプレート名（vue_axum_postgres, vue_hono_postgres, vue_rails_postgresから選択）
+export TARGET_TEMPLATE=xxxx
+
+
+npx giget gh:UniqueVision/sc.app_template/template/$TARGET_TEMPLATE $MY_DIR
 ```

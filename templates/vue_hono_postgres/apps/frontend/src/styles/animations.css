@@ -1,0 +1,22 @@
+/* Animation Styles - Tailwind CSS v4 */
+
+/* Vue Transition Classes - UserList.vueで使用 */
+/*
+ * Vueのトランジションシステムで必要なため保持
+ * Tailwindクラスで部分的に置き換え済み
+ */
+@layer utilities {
+  .list-enter-active,
+  .list-leave-active {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .list-enter-from,
+  .list-leave-to {
+    @apply opacity-0 -translate-x-8;
+  }
+
+  .list-move {
+    @apply transition-transform duration-300 ease-in-out;
+  }
+}

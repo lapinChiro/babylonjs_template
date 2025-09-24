@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "id": "admin",
+      "name": "管理者",
+      "email": "admin@test.com",
+      "password": "password123"
+    }
+  ],
+  "sessions": []
+}

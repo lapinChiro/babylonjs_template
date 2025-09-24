@@ -1,0 +1,46 @@
+/* Accessibility Styles - Tailwind CSS v4 */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .button, .btn, button, [role="button"] {
+    border: 2px solid currentColor !important;
+    background-color: transparent !important;
+  }
+
+  /* Ensure sufficient contrast for interactive elements */
+  .card-container, .border {
+    border-width: 2px !important;
+    border-color: currentColor !important;
+  }
+}
+
+/* Motion reduction support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable hover animations for reduced motion */
+  .hover\:scale-105:hover,
+  .hover\:scale-110:hover {
+    transform: none !important;
+  }
+}
+
+/* Focus management improvements */
+@layer utilities {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50;
+    @apply bg-background text-foreground p-2 rounded border-2 border-ring;
+  }
+
+  /* Enhanced screen reader only content */
+  .sr-only-focusable {
+    @apply sr-only focus:not-sr-only;
+  }
+}

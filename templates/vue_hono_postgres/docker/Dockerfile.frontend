@@ -1,0 +1,17 @@
+# Development environment for frontend
+FROM node:22.18.0-bookworm-slim
+
+# Set working directory
+WORKDIR /workspace/apps/frontend
+
+# Copy package files for dependency installation
+COPY apps/frontend/package*.json ./
+
+# Install dependencies (cached layer)
+RUN npm ci --prefer-offline --no-audit
+
+# Expose port for Vite dev server
+EXPOSE 5173
+
+# Default command
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
