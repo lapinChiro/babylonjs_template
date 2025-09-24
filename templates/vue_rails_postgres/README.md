@@ -1,4 +1,4 @@
-# hono_postgres
+# vue_rails_postgres
 
 ## NOTE
 
@@ -29,10 +29,6 @@ PGPASSWORD=password psql -h  localhost -p 5435 -U postgres -d dev
 ```
 
 ### URL
-
-### OpenAPI
-
-<http://localhost:3000/swagger-ui>
 
 ### フロントエンド
 

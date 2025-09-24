@@ -1,4 +1,4 @@
-# hono_postgres
+# vue_hono_postgres
 
 ## NOTE
 
