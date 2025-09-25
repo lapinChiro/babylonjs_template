@@ -68,6 +68,7 @@ async fn main() {
         .route("/memos/{memo_uuid}", get(controllers::memos::read::execute))
         .route("/memos", post(controllers::memos::create::execute))
         .route("/memos/{memo_uuid}", post(controllers::memos::update::execute))
+        .route("/memos/{memo_uuid}", delete(controllers::memos::delete::execute))
         .with_state(app_state)
         .layer(cors_layer)
         .layer(session_layer);
