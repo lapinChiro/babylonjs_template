@@ -7,19 +7,19 @@
 #### コンテナ起動
 
 ```sh
-docker compose -f docker/compose.yml up -d
+docker compose up -d
 ```
 
 #### コンテナ停止
 
 ```sh
-docker compose -f docker/compose.yml stop
+docker compose stop
 ```
 
 #### コンテナ削除
 
 ```sh
-docker compose -f docker/compose.yml down -v
+docker compose down -v
 ```
 
 #### DBアクセス

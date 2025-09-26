@@ -67,7 +67,7 @@ services:
       - /rails/frontend/node_modules
     environment:
       - NODE_ENV=development
-      - VITE_API_BASE_URL=http://localhost:3005/api
+      - VITE_API_BASE_URL=http://localhost:3000/api
       - VITE_API_TIMEOUT=120000
       - VITE_APP_VERSION=0.0.0
       - VITE_ENVIRONMENT=development
