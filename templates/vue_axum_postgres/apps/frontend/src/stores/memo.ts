@@ -90,7 +90,7 @@ export const useMemoStore = defineStore('memo', () => {
     error.value = null
     
     try {
-      const response = await client.memoClient.description(uuid)
+      const response = await client.memoClient.read(uuid)
       return response.data
     } catch (err) {
       console.error('Failed to get memo:', err)
