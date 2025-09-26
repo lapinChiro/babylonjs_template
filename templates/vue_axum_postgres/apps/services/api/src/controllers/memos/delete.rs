@@ -18,20 +18,17 @@ pub async fn execute(Path(memo_uuid): Path<Uuid>, State(state): State<Arc<AppSta
 
 async fn inner(session: Session, pg_pool: &sqlx::PgPool, memo_uuid: Uuid) -> Result<ResponseType, ApiError> {
     let user = get_session(&pg_pool, &session).await?;
-    let data = execute_db(&pg_pool, user.user_uuid, memo_uuid).await?;
-    Ok(ResponseType::new_data(
-        "success",
-        data,
-    ))
+    let _ = execute_db(&pg_pool, memo_uuid, user.user_uuid).await?;
+    Ok(ResponseType::new_no_data("success"))
 }
 
 const SQL: &str = r#"
 SELECT
     t1.uuid
 FROM
-    generated_get_delete_memos(
+    generated_set_delete_memos(
         p_uuid := $1
-        ,p_user_uuid := $2
+        ,p_operator_uuid := $2
     ) AS t1
 "#;
 
@@ -40,10 +37,10 @@ pub struct DbOutput {
     pub uuid: Uuid,
 }
 
-async fn execute_db(pg_pool: &sqlx::PgPool, user_uuid: Uuid, memo_uuid: Uuid) -> Result<DbOutput, sqlx::Error> {
+async fn execute_db(pg_pool: &sqlx::PgPool, memo_uuid: Uuid, user_uuid: Uuid) -> Result<DbOutput, sqlx::Error> {
     let res: DbOutput = sqlx::query_as(SQL)
-        .bind(user_uuid)
         .bind(memo_uuid)
+        .bind(user_uuid)
         .fetch_one(pg_pool)
         .await?;
     Ok(res)
