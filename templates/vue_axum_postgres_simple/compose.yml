@@ -20,7 +20,6 @@ services:
       dockerfile: docker/Dockerfile.api
     depends_on:
       - postgres
-      - valkey
     environment:
       CARGO_TARGET_DIR: /tmp/target
       RUST_BACKTRACE: 1
@@ -33,10 +32,6 @@ services:
       MAX_CONNECTIONS: 10
       ACQUIRE_TIMEOUT: 300
       IDLE_TIMEOUT: 600
-      REDIS__URL: redis://valkey
-      REDIS__POOL__MAX_SIZE: 16
-      REDIS__POOL__TIMEOUTS__WAIT__SECS: 2
-      REDIS__POOL__TIMEOUTS__WAIT__NANOS: 0
     volumes:
       - ./apps/backend:/app
       - cargo_cache:/usr/local/cargo/registry
@@ -47,15 +42,8 @@ services:
       - 3000:3000
     security_opt:
       - seccomp:unconfined
-    command: /bin/bash -c "bacon --headless --job run-long"
+    command: bacon --headless --job run-long
     
-  valkey:
-    image: valkey/valkey:8.1.1
-    ports:
-      - 6380:6379
-    volumes:
-      - valkey_data:/data
-
   postgres:
     image: postgres:17.5
     environment:
@@ -72,6 +60,5 @@ services:
 
 volumes:
   postgres_data:
-  valkey_data:
   cargo_cache:
   target_cache:
