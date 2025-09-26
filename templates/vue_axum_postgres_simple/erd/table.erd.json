@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "version": "1.0.0"
+  },
+  "includes": [
+    "_domain.erd.json"
+  ],
+  "templates": {
+    "table": [
+      {
+        "template": "erd/templates/table_ddl.ejs",
+        "file": "db/sql/table/generated/${index}_${pname}.sql",
+        "refresh": true
+      },
+      {
+        "template": "erd/templates/table_rs.ejs",
+        "file": "apps/backend/crates/postgresql/src/table/generated/${pname}.rs",
+        "refresh": true
+      }
+    ]
+  },
+  "tables": [
+    {
+      "lname": "ユーザー",
+      "pname": "users",
+      "columns": [
+        {
+          "domain": "UUID",
+          "pk": true,
+          "default": "uv_uuid_v7()"
+        },
+        {
+          "lname": "ユーザー",
+          "pname": "user",
+          "domain": "コード"
+        },
+        {
+          "lname": "名前",
+          "pname": "name",
+          "domain": "名前",
+          "overrideDomainName": true
+        },
+        {
+          "domain": "メール"
+        },
+        {
+          "lname": "最終ログイン",
+          "pname": "last_login",
+          "domain": "日時"
+        }
+      ]
+    }
+  ]
+}

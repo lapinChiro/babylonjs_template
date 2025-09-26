@@ -1,0 +1,32 @@
+# This is a configuration file for the bacon tool
+# More info at https://github.com/Canop/bacon
+
+default_job = "run"
+
+[jobs.run]
+command = ["cargo", "run"]
+need_stdout = true
+need_stderr = true
+watch = ["src", "Cargo.toml", "crates"]
+on_success = "job:continue"
+on_failure = "job:wait"
+
+[jobs.clippy]
+command = ["cargo", "clippy", "--color", "always"]
+need_stdout = false
+
+[jobs.check]
+command = ["cargo", "check", "--color", "always"]
+need_stdout = false
+
+[jobs.test]
+command = ["cargo", "test", "--color", "always"]
+need_stdout = false
+
+[jobs.run-long]
+command = ["cargo", "run"]
+need_stdout = true
+need_stderr = true
+watch = ["src", "Cargo.toml", "crates"]
+on_success = "job:continue"
+on_failure = "job:wait"

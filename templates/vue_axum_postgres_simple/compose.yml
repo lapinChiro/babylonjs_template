@@ -1,0 +1,77 @@
+services:
+  frontend:
+    image: node:22-alpine
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:3000
+      - NODE_OPTIONS=--max-old-space-size=2048
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+    ports:
+      - 5173:5173
+    tty: true
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    depends_on:
+      - postgres
+      - valkey
+    environment:
+      CARGO_TARGET_DIR: /tmp/target
+      RUST_BACKTRACE: 1
+      RUST_TEST_THREADS: 1
+      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+      PGHOST: postgres
+      PGUSER: user
+      PGPASSWORD: pass
+      PGDATABASE: web
+      MAX_CONNECTIONS: 10
+      ACQUIRE_TIMEOUT: 300
+      IDLE_TIMEOUT: 600
+      REDIS__URL: redis://valkey
+      REDIS__POOL__MAX_SIZE: 16
+      REDIS__POOL__TIMEOUTS__WAIT__SECS: 2
+      REDIS__POOL__TIMEOUTS__WAIT__NANOS: 0
+    volumes:
+      - ./apps/backend:/app
+      - cargo_cache:/usr/local/cargo/registry
+      - target_cache:/tmp/target
+    tty: true
+    working_dir: /app
+    ports:
+      - 3000:3000
+    security_opt:
+      - seccomp:unconfined
+    command: /bin/bash -c "bacon --headless --job run-long"
+    
+  valkey:
+    image: valkey/valkey:8.1.1
+    ports:
+      - 6380:6379
+    volumes:
+      - valkey_data:/data
+
+  postgres:
+    image: postgres:17.5
+    environment:
+      - POSTGRES_DB=web
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    working_dir: /db
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db:/db
+      - ./db/bin/apply_sql.sh:/docker-entrypoint-initdb.d/apply_sql.sh
+
+volumes:
+  postgres_data:
+  valkey_data:
+  cargo_cache:
+  target_cache:

@@ -1,0 +1,17 @@
+[package]
+name = "postgresql"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+common = { path = "../common" }
+chrono = { workspace = true }
+derive_builder = { workspace = true }
+serde = { workspace = true }
+sqlx = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+env_logger = { workspace = true }
+tokio = { workspace = true }
