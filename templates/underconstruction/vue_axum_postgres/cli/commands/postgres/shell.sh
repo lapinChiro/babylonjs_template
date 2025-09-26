@@ -11,7 +11,7 @@ _shell() {
 shell() {
     PGUSER=user \
     PGHOST=localhost \
-    PGPORT=5433 \
+    PGPORT=5435 \
     PGDATABASE=web \
     PGPASSWORD=pass \
     PAGER=${PAGER:-cat} \

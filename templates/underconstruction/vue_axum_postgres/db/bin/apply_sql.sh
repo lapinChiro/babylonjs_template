@@ -11,6 +11,6 @@ if [ -f $SQL_DIR/99_secret.sql ]; then
 cat $SQL_DIR/99_secret.sql >> ./all.sql
 fi
 
-PGPASSWORD=${PGPASS-pass} psql --set "ON_ERROR_STOP=1" -p ${PGPORT:-5433} -h ${PGHOST:-localhost} -U ${PGUSER:-user} ${PGDATABASE:-web} -f ./all.sql
+PGPASSWORD=${PGPASS-pass} psql --set "ON_ERROR_STOP=1" -p ${PGPORT:-5435} -h ${PGHOST:-localhost} -U ${PGUSER:-user} ${PGDATABASE:-web} -f ./all.sql
 
 rm ./all.sql

@@ -6,7 +6,7 @@ services:
     environment:
       - API_URL=http://api:3000
     volumes:
-      - ../apps/frontend:/app
+      - ./apps/frontend:/app
     ports:
       - 5173:5173
     tty: true
@@ -15,10 +15,9 @@ services:
   api:
     build: 
       context: .
-      dockerfile: Dockerfile.api
+      dockerfile: ./development/Dockerfile.api
     depends_on:
       - postgres
-      - valkey
     environment:
       CARGO_TARGET_DIR: /tmp/target
       RUST_BACKTRACE: 1
@@ -31,15 +30,11 @@ services:
       MAX_CONNECTIONS: 10
       ACQUIRE_TIMEOUT: 300
       IDLE_TIMEOUT: 600
-      REDIS__URL: redis://valkey
-      REDIS__POOL__MAX_SIZE: 16
-      REDIS__POOL__TIMEOUTS__WAIT__SECS: 2
-      REDIS__POOL__TIMEOUTS__WAIT__NANOS: 0
       LOGIN_CLIENT_ID: ${LOGIN_CLIENT_ID:-xxx}
       LOGIN_CLIENT_SECRET: ${LOGIN_CLIENT_SECRET:-xxx}
       LOGIN_CALLBACK_URL: ${LOGIN_CALLBACK_URL:-http://localhost:5173/oauth}
     volumes:
-      - ../apps/services:/app
+      - ./apps/services:/app
       - cargo_cache:/usr/local/cargo/registry
       - target_cache:/tmp/target
     tty: true
@@ -49,13 +44,6 @@ services:
     security_opt:
       - seccomp:unconfined
     command: /bin/bash -c "bacon run-long"
-    
-  valkey:
-    image: valkey/valkey:8.1.1
-    ports:
-      - 6380:6379
-    volumes:
-      - valkey_data:/data
 
   postgres:
     image: postgres:17.5
@@ -65,13 +53,12 @@ services:
       - POSTGRES_PASSWORD=pass
     working_dir: /db
     ports:
-      - 5433:5432
+      - 5435:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../db:/db
 
 volumes:
   postgres_data:
-  valkey_data:
   cargo_cache:
   target_cache:
