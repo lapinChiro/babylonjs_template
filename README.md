@@ -23,3 +23,9 @@ npx giget gh:UniqueVision/sc.app_template/templates/$TARGET_TEMPLATE $MY_DIR
 動作未検証です。
 Googleログイン前提になっているなど、利用時に修正しなければいけない内容が残されています。
 compose.ymlのパスとポート番号は対応済みですが、正しく採点できない可能性があります。
+
+以下の設定で入手可能です
+
+```sh
+export TARGET_TEMPLATE=underconstruction/vue_axum_postgres
+```
