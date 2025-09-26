@@ -18,7 +18,11 @@ npx giget gh:UniqueVision/sc.app_template/templates/$TARGET_TEMPLATE $MY_DIR
 
 ## 要確認
 
-### underconstruction/vue_axum_postgresについて
+### axumを利用するテンプレートについて
+
+現在、axumを利用するテンプレートを評価することができません
+
+#### underconstruction/vue_axum_postgresについて
 
 動作未検証です。
 Googleログイン前提になっているなど、利用時に修正しなければいけない内容が残されています。
@@ -28,4 +32,16 @@ compose.ymlのパスとポート番号は対応済みですが、正しく採点
 
 ```sh
 export TARGET_TEMPLATE=underconstruction/vue_axum_postgres
+```
+
+#### underconstruction/vue_axum_postgres_simpleについて
+
+動作未検証です。
+Googleログイン前提になっているなど、利用時に修正しなければいけない内容が残されています。
+compose.ymlのパスとポート番号は対応済みですが、正しく採点できない可能性があります。
+
+以下の設定で入手可能です
+
+```sh
+export TARGET_TEMPLATE=underconstruction/vue_axum_postgres_simple
 ```
