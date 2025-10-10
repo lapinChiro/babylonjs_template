@@ -9,7 +9,20 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+
+export interface Images {
+  created_at: Generated<Timestamp>;
+  file_key: string;
+  id: Generated<number>;
+  mime_type: string;
+  original_name: string;
+  size: Int8;
+  updated_at: Generated<Timestamp>;
+  user_id: number | null;
+}
 
 export interface Items {
   created_at: Generated<Timestamp>;
@@ -29,6 +42,7 @@ export interface Users {
 }
 
 export interface DB {
+  images: Images;
   items: Items;
   users: Users;
 }

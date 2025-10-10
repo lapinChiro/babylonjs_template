@@ -1,4 +1,5 @@
 import type { Kysely } from 'kysely'
+import { sql } from 'kysely';
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
@@ -9,10 +10,10 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('password_hash', 'varchar(255)', (col) => col.notNull())
     .addColumn('active', 'boolean', (col) => col.defaultTo(true).notNull())
     .addColumn('created_at', 'timestamp', (col) =>
-      col.defaultTo('now()').notNull()
+      col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
     .addColumn('updated_at', 'timestamp', (col) =>
-      col.defaultTo('now()').notNull()
+      col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
     .execute()
 

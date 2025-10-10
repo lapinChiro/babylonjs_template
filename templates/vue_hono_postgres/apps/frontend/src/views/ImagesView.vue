@@ -6,11 +6,11 @@
         <div class="flex items-center gap-6">
           <h1 class="text-2xl font-bold">サンプルシステム</h1>
           <nav class="hidden sm:flex items-center gap-1">
-            <Button variant="default" size="sm" class="gap-2">
+            <Button variant="ghost" size="sm" class="gap-2" @click="router.push('/items')">
               <Package class="size-4" />
               アイテム
             </Button>
-            <Button variant="ghost" size="sm" class="gap-2" @click="router.push('/images')">
+            <Button variant="default" size="sm" class="gap-2">
               <ImageIcon class="size-4" />
               画像
             </Button>
@@ -21,7 +21,7 @@
             {{ authStore.currentUser?.email }}
           </span>
           <DarkModeToggle />
-          <Button variant="outline" @click=" handleLogout " class="gap-2">
+          <Button variant="outline" @click="handleLogout" class="gap-2">
             <LogOut class="size-4" />
             <span class="hidden sm:inline">ログアウト</span>
           </Button>
@@ -31,16 +31,16 @@
 
     <!-- メインコンテンツ -->
     <main class="container mx-auto px-4 py-8">
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-7xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>アイテム一覧</CardTitle>
+            <CardTitle>画像一覧</CardTitle>
             <CardDescription>
-              システムに登録されているアイテムを管理します
+              システムに登録されている画像を管理します
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ItemList />
+            <ImageList />
           </CardContent>
         </Card>
       </div>
@@ -57,7 +57,7 @@ import { LogOut, Package, ImageIcon } from 'lucide-vue-next';
 import DarkModeToggle from '@/components/common/DarkModeToggle.vue';
 import { useAuthStore } from '@/stores';
 
-const ItemList = defineAsyncComponent(() => import('@/components/ItemList.vue'));
+const ImageList = defineAsyncComponent(() => import('@/components/ImageList.vue'));
 
 const router = useRouter();
 const authStore = useAuthStore();

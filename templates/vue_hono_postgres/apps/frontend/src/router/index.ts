@@ -14,6 +14,12 @@ const ItemsView = () => import(
   '@/views/ItemsView.vue'
 );
 
+const ImagesView = () => import(
+  /* webpackChunkName: "images" */
+  /* webpackPrefetch: true */
+  '@/views/ImagesView.vue'
+);
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -35,6 +41,15 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: true,
       title: 'アイテム管理'
+    }
+  },
+  {
+    path: '/images',
+    name: 'Images',
+    component: ImagesView,
+    meta: {
+      requiresAuth: true,
+      title: '画像管理'
     }
   },
   {

@@ -2,7 +2,6 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:17.6
-    container_name: postgres
     ports:
       - "5435:5432"
     environment:
@@ -26,7 +25,6 @@ services:
     build:
       context: ./
       dockerfile: ./docker/Dockerfile.frontend
-    container_name: frontend
     ports:
       - "5173:5173"
     volumes:
@@ -52,7 +50,6 @@ services:
     build:
       context: ./
       dockerfile: ./docker/Dockerfile.backend
-    container_name: backend
     ports:
       - "3000:3000"
     volumes:
@@ -73,11 +70,63 @@ services:
       # JWT settings
       - JWT_SECRET=dev-secret-key-change-in-production
       - JWT_EXPIRES_IN=24h
+      # MinIO settings (開発環境用)
+      - MINIO_ENDPOINT=minio
+      - MINIO_EXTERNAL_ENDPOINT=localhost
+      - MINIO_PORT=9000
+      - MINIO_USE_SSL=false
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin123
+      - MINIO_BUCKET=item-images
+      - MINIO_UPLOAD_URL_EXPIRY=600
+    # ⭐ Docker内から localhost をホストマシンに解決
+    extra_hosts:
+      - "localhost:host-gateway"
     networks:
       - app_network
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  # MinIO Object Storage
+  minio:
+    image: quay.io/minio/minio:latest
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+      MINIO_API_CORS_ALLOW_ORIGIN: "http://localhost:5173"
+      MINIO_SERVER_URL: "http://localhost:9000"  # presigned URLのベースURL
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # MinIO初期化（バケット自動作成）
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 minioadmin minioadmin123;
+      mc mb myminio/item-images --ignore-existing;
+      mc anonymous set download myminio/item-images;
+      exit 0;
+      "
+    networks:
+      - app_network
 
 networks:
   app_network:
@@ -85,3 +134,4 @@ networks:
 
 volumes:
   postgres-data:
+  minio-data:

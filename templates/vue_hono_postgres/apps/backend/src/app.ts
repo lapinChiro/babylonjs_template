@@ -1,7 +1,7 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { storeUserApi, storeItemApi, storeHealthApi, storeAuthApi } from './apis/index.js'
+import { storeUserApi, storeItemApi, storeHealthApi, storeAuthApi, storeImageApi } from './apis/index.js'
 
 export const app = new OpenAPIHono()
 
@@ -18,6 +18,7 @@ storeHealthApi(app)
 storeUserApi(app)
 storeItemApi(app)
 storeAuthApi(app)
+storeImageApi(app)
 
 
 // OpenAPI仕様書の生成
@@ -26,7 +27,7 @@ app.doc('/doc', {
   info: {
     version: '1.0.0',
     title: 'Project Manager API',
-    description: 'Vue + Hono + PostgreSQL プロジェクト管理API'
+    description: 'Vue + Hono + PostgreSQL'
   }
 })
 

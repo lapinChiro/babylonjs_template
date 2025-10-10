@@ -122,10 +122,6 @@ const handleSubmit = async () => {
 
     handleClose();
   } catch (err: any) {
-    console.log('ItemEditDialog caught error:', err);
-    console.log('Error status:', err.status);
-    console.log('Error message:', err.message);
-
     // バックエンドからのエラーメッセージを適切に表示
     if (err.message) {
       error.value = err.message;
