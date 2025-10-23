@@ -1,6 +1,6 @@
 # Modern TypeScript Full-Stack Template
 
-A modern, type-safe full-stack application template featuring React, Hono, and PostgreSQL with end-to-end type safety.
+A modern, type-safe full-stack application template featuring React, Hono, PostgreSQL, and MinIO with end-to-end type safety. Includes built-in item management and image upload functionality.
 
 ## Tech Stack
 
@@ -19,11 +19,13 @@ A modern, type-safe full-stack application template featuring React, Hono, and P
 - **tRPC** for type-safe client-server communication
 - **Better-Auth** for authentication
 - **Drizzle ORM** with PostgreSQL
+- **MinIO** for object storage
 - **Bun** runtime
 
-### Database
+### Database & Storage
 
 - **PostgreSQL 17** with Drizzle ORM
+- **MinIO** for scalable object storage
 - Auto-migration on server startup
 - Type-safe database operations
 
@@ -31,10 +33,26 @@ A modern, type-safe full-stack application template featuring React, Hono, and P
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (latest version)
-- PostgreSQL database
+- [Docker](https://www.docker.com/) and Docker Compose
+- (Alternative) [Bun](https://bun.sh/) for local development
 
-### Installation
+### Docker Setup (Recommended)
+
+1. Start all services with Docker Compose:
+
+```bash
+docker compose up
+```
+
+This will start:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
+- PostgreSQL: localhost:5432
+- MinIO: http://localhost:9000 (Console: http://localhost:9001)
+
+The database migrations and MinIO bucket setup will run automatically.
+
+### Local Development Setup
 
 1. Install dependencies:
 
@@ -42,19 +60,22 @@ A modern, type-safe full-stack application template featuring React, Hono, and P
 bun install
 ```
 
-2. Set up your database connection:
+2. Set up PostgreSQL and MinIO (or use Docker for these services):
 
 ```bash
-export DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+# Start only database and MinIO
+docker compose up db minio minio-init
 ```
 
-3. Generate and apply database migrations:
+3. Set up your environment variables (see `.env.example`)
+
+4. Generate and apply database migrations:
 
 ```bash
 bun db:generate
 ```
 
-4. Start development servers:
+5. Start development servers:
 
 ```bash
 bun dev
@@ -67,7 +88,20 @@ This will start:
 
 ## Development Commands
 
-### Root Commands
+### Docker Commands
+
+```bash
+docker compose up              # Start all services
+docker compose down            # Stop all services
+docker compose down -v         # Stop and remove volumes (fresh start)
+docker compose logs app        # View application logs
+docker compose logs db         # View database logs
+docker compose logs minio      # View MinIO logs
+docker compose exec app bun db:generate  # Generate migrations
+docker compose restart app     # Restart application
+```
+
+### Root Commands (Local Development)
 
 ```bash
 bun install           # Install all dependencies
@@ -105,6 +139,15 @@ bun typecheck         # Type check
 
 ## Key Features
 
+### Built-in Functionality
+
+- **Item Management**: Full CRUD operations for items with type-safe tRPC APIs
+- **Image Upload**: Drag-and-drop image upload with MinIO object storage
+  - 3-stage upload: presigned URL → MinIO → metadata confirmation
+  - Image preview and management
+  - Automatic URL generation for downloads
+  - Support for JPEG, PNG, GIF, WebP (max 10MB)
+
 ### Type Safety
 
 - **End-to-end type safety** with tRPC
@@ -117,13 +160,16 @@ bun typecheck         # Type check
 - **Better-Auth** integration
 - Secure session management
 - Ready-to-use auth components
+- Protected routes and API endpoints
 
-### Database
+### Database & Storage
 
 - **PostgreSQL** with Drizzle ORM
+- **MinIO** for scalable object storage
 - **Auto-migration** on development startup
 - **Type-safe queries** and schemas
 - **Migration versioning**
+- **Presigned URLs** for secure uploads/downloads
 
 ### UI/UX
 
@@ -132,6 +178,8 @@ bun typecheck         # Type check
 - **Tailwind CSS** styling
 - **Dark mode** support with next-themes
 - **Responsive design**
+- **Drag-and-drop** file upload
+- **Real-time progress** indicators
 
 ## Database Setup
 
@@ -161,6 +209,24 @@ Configure your database connection in your environment:
 DATABASE_URL="postgresql://username:password@localhost:5432/your_db"
 ```
 
+## Application Features
+
+### Items Management (`/items`)
+
+- Create, read, update, and delete items
+- Table view with sorting
+- Real-time updates with optimistic UI
+- Type-safe API calls with tRPC
+
+### Image Management (`/images`)
+
+- Upload images via drag-and-drop or file selector
+- Grid view with hover actions
+- Image preview dialog
+- Delete confirmation
+- Automatic thumbnail generation
+- Secure presigned URLs for uploads and downloads
+
 ## Production Deployment
 
 ### Building
@@ -177,7 +243,16 @@ cd packages/client && bun run build
 Required environment variables:
 
 - `DATABASE_URL` - PostgreSQL connection string
+- `MINIO_ENDPOINT` - MinIO endpoint (internal)
+- `MINIO_EXTERNAL_ENDPOINT` - MinIO endpoint (external/public)
+- `MINIO_PORT` - MinIO port
+- `MINIO_ACCESS_KEY` - MinIO access key
+- `MINIO_SECRET_KEY` - MinIO secret key
+- `MINIO_BUCKET` - MinIO bucket name
+- `MINIO_UPLOAD_URL_EXPIRY` - Upload URL expiry time (seconds)
 - Additional auth configuration as needed
+
+See `.env.example` for a complete list of environment variables.
 
 ## Contributing
 

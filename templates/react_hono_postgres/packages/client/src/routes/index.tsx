@@ -5,6 +5,9 @@ import { useEffect } from 'react'
 
 export const Route = createFileRoute('/')({
   component: HomeComponent,
+  beforeLoad: () => {
+    return { pageTitle: "ログイン" };
+  },
 })
 
 function HomeComponent() {
@@ -14,7 +17,7 @@ function HomeComponent() {
   useEffect(() => {
     if (session && !isPending) {
       navigate({
-        to: "/hello-world",
+        to: "/items",
       });
     }
   }, [session, isPending]);
@@ -23,9 +26,5 @@ function HomeComponent() {
     return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <SignUp />
-    </div>
-  )
+  return <SignUp />
 }

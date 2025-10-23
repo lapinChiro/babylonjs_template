@@ -1,4 +1,14 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  serial,
+  varchar,
+  integer,
+  bigint,
+  index,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -59,4 +69,42 @@ export const verification = pgTable("verification", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const items = pgTable(
+  "items",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => ({
+    nameIdx: index("idx_items_name").on(table.name),
+  })
+);
+
+export const images = pgTable(
+  "images",
+  {
+    id: serial("id").primaryKey(),
+    fileKey: varchar("file_key", { length: 255 }).notNull().unique(),
+    originalName: varchar("original_name", { length: 255 }).notNull(),
+    mimeType: varchar("mime_type", { length: 100 }).notNull(),
+    size: bigint("size", { mode: "number" }).notNull(),
+    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => ({
+    fileKeyIdx: index("idx_images_file_key").on(table.fileKey),
+    userIdIdx: index("idx_images_user_id").on(table.userId),
+    createdAtIdx: index("idx_images_created_at").on(table.createdAt),
+  })
+);
 

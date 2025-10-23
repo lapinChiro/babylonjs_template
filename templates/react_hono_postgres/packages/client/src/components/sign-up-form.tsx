@@ -1,11 +1,11 @@
 import { authClient } from "@/lib/auth-client";
-import { signInSchema, signUpSchema } from "@/lib/schemas";
+import { signInSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Copy, Check, Eye, EyeOff, ArrowDown } from "lucide-react";
+import { Copy, Check, Eye, EyeOff, ArrowDown, Loader2 } from "lucide-react";
 import Loader from "./loader";
 import { Button } from "./ui/button";
 import {
@@ -18,23 +18,27 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 type FormData = {
   email: string;
   password: string;
-  name?: string;
 };
 
 export default function AuthForm() {
   const navigate = useNavigate({
     from: "/",
   });
-  const [isSignUp, setIsSignUp] = useState(false);
   const { isPending } = authClient.useSession();
 
   // Demo account credentials
-  const demoEmail = "demo@example.com";
-  const demoPassword = "demo123456";
+  const demoEmail = "admin@test.com";
+  const demoPassword = "password123";
 
   // Demo account UI state
   const [showPassword, setShowPassword] = useState(false);
@@ -44,13 +48,29 @@ export default function AuthForm() {
   });
 
   const form = useForm<FormData>({
-    resolver: zodResolver(isSignUp ? signUpSchema : signInSchema),
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
       password: "",
-      name: "",
     },
   });
+
+  // Watch form values for validation
+  const email = form.watch("email");
+  const password = form.watch("password");
+
+  // Validation logic matching vue_hono_postgres
+  const isEmailValid = useMemo(() => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }, [email]);
+
+  const isPasswordValid = useMemo(() => {
+    return password.length >= 6;
+  }, [password]);
+
+  const isFormValid = useMemo(() => {
+    return isEmailValid && isPasswordValid;
+  }, [isEmailValid, isPasswordValid]);
 
   // Demo account helper functions
   const copyToClipboard = async (text: string, type: 'email' | 'password') => {
@@ -93,50 +113,26 @@ export default function AuthForm() {
   };
 
   const onSubmit = async (values: FormData) => {
-    if (isSignUp) {
-      await authClient.signUp.email(
-        {
-          email: values.email,
-          password: values.password,
-          name: values.name || "",
+    await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          toast.success("ログインしました");
+          navigate({
+            to: "/items",
+          });
         },
-        {
-          onSuccess: () => {
-            toast.success("Sign up successful");
-            navigate({
-              to: "/hello-world",
-            });
-          },
-          onError: (ctx) => {
-            form.setError("email", {
-              type: "manual",
-              message: ctx.error.message,
-            });
-          },
+        onError: (ctx) => {
+          form.setError("email", {
+            type: "manual",
+            message: ctx.error.message,
+          });
         },
-      );
-    } else {
-      await authClient.signIn.email(
-        {
-          email: values.email,
-          password: values.password,
-        },
-        {
-          onSuccess: () => {
-            toast.success("Sign in successful");
-            navigate({
-              to: "/hello-world",
-            });
-          },
-          onError: (ctx) => {
-            form.setError("email", {
-              type: "manual",
-              message: ctx.error.message,
-            });
-          },
-        },
-      );
-    }
+      },
+    );
   };
 
   if (isPending) {
@@ -144,14 +140,16 @@ export default function AuthForm() {
   }
 
   return (
-    <div className="mx-auto mt-10 max-w-md p-6">
-      <h1 className="mb-6 text-center text-3xl font-bold">
-        {isSignUp ? "Create Account" : "Welcome Back"}
-      </h1>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-6">
+        {/* ヘッダー */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold">サンプルシステム</h1>
+          <p className="text-muted-foreground">
+            メールアドレスとパスワードを入力してログインしてください
+          </p>
 
-      {/* Demo Account Section - Only show for Sign In - Moved to top */}
-      {!isSignUp && (
-        <div className="mb-6">
+          {/* デモアカウント情報 */}
           <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-3">
             <div className="text-sm font-medium text-blue-700 dark:text-blue-300 text-center">
               デモアカウント
@@ -239,70 +237,67 @@ export default function AuthForm() {
             </div>
           </div>
         </div>
-      )}
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {isSignUp && (
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="w-full">
-            {isSignUp ? "Sign Up" : "Sign In"}
-          </Button>
-        </form>
-      </Form>
-
-      <div className="mt-4 text-center">
-        <Button
-          variant="link"
-          onClick={() => {
-            setIsSignUp(!isSignUp);
-            form.reset();
-          }}
-          className="text-indigo-600 hover:text-indigo-800"
-        >
-          {isSignUp
-            ? "Already have an account? Sign In"
-            : "Need an account? Sign Up"}
-        </Button>
+        {/* ログインフォーム */}
+        <Card>
+          <CardHeader>
+            <CardTitle>ログイン</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>メールアドレス</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="メールアドレスを入力"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>パスワード</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="パスワードを入力"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={!isFormValid || form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ログイン中...
+                    </>
+                  ) : (
+                    "ログイン"
+                  )}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
