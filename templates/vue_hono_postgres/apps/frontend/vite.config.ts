@@ -5,6 +5,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: process.env.BASE_PATH ? `${process.env.BASE_PATH}/` : '/',
   plugins: [vue(), tailwindcss()],
   resolve: {
     alias: {
