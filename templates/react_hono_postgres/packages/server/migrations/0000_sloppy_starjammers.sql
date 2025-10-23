@@ -49,8 +49,8 @@ CREATE TABLE "verification" (
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 
--- Demo account for hackathon
--- Insert demo user (ON CONFLICT DO NOTHING to avoid duplicates if already exists)
+-- Demo account for development
+-- Password: password123 (hashed by Better-Auth)
 INSERT INTO "user" (
     "id",
     "name",
@@ -60,15 +60,13 @@ INSERT INTO "user" (
     "updated_at"
 ) VALUES (
     'demo-user-id-12345',
-    'デモユーザー',
-    'demo@example.com',
+    'Admin User',
+    'admin@test.com',
     true,
     now(),
     now()
 ) ON CONFLICT ("email") DO NOTHING;--> statement-breakpoint
 
--- Insert demo account with real hashed password (password: demo123456)
--- Using the actual hash format from Better-Auth
 INSERT INTO "account" (
     "id",
     "account_id",
@@ -82,7 +80,7 @@ INSERT INTO "account" (
     'demo-user-id-12345',
     'credential',
     'demo-user-id-12345',
-    '1ee7b70d04c5d2576c0b717cfcc683cd:ecea880d90701a3e10bcdc2297a2a74f729dc6c72ea7b0d8ad63e51600abf4db5266169a7648a72586599ee5a80686601bab5ce126da4ccbe337ca216ed6cbb1',
+    'ce9c4020a196915d8605eecdb29dfbb4:e2a410e34bc0a2ee15977d21f5ea92b7ffe56883fb7a540959bcb3e9cf93eb5a0f8e10047f39d615aebe7e331c52b481ebe799bfd3fe0f23d5283a87fcb23b4c',
     now(),
     now()
 ) ON CONFLICT ("id") DO NOTHING;
