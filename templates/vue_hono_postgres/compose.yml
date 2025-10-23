@@ -33,7 +33,6 @@ services:
     environment:
       - NODE_ENV=development
       # API設定
-      - VITE_API_BASE_URL=http://localhost:3000/api
       - VITE_API_TIMEOUT=120000
       # アプリケーション設定
       - VITE_APP_VERSION=0.0.0
@@ -43,6 +42,9 @@ services:
       - VITE_ENABLE_PREFETCH=true
       - VITE_ENABLE_PRELOAD=false
       - VITE_CHUNK_SIZE_LIMIT=500
+      - VITE_API_BASE_URL=http://${HOST:-localhost:3000}${BASE_PATH}/api
+      - HOST=${HOST}
+      - BASE_PATH=${BASE_PATH:-}
     networks:
       - app_network
 
@@ -80,6 +82,7 @@ services:
       - MINIO_BUCKET=item-images
       - MINIO_UPLOAD_URL_EXPIRY=600
     # ⭐ Docker内から localhost をホストマシンに解決
+      - BASE_PATH=${BASE_PATH:-}
     extra_hosts:
       - "localhost:host-gateway"
     networks:

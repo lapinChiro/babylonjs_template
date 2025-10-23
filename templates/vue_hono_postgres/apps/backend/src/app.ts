@@ -3,6 +3,8 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { storeUserApi, storeItemApi, storeHealthApi, storeAuthApi, storeImageApi } from './apis/index.js'
 
+const basePath = process.env.BASE_PATH || ''
+
 export const app = new OpenAPIHono()
 
 // Middleware
@@ -14,11 +16,15 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-storeHealthApi(app)
-storeUserApi(app)
-storeItemApi(app)
-storeAuthApi(app)
-storeImageApi(app)
+// API Routes - BASE_PATH 配下に配置
+// APIファイルのルート定義には既に /api が含まれているため、basePathにはBASE_PATHのみを設定
+const apiApp = app.basePath(basePath)
+
+storeHealthApi(apiApp)
+storeUserApi(apiApp)
+storeItemApi(apiApp)
+storeAuthApi(apiApp)
+storeImageApi(apiApp)
 
 
 // OpenAPI仕様書の生成

@@ -59,7 +59,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   // スクロール動作の最適化
   scrollBehavior(_to, _from, savedPosition) {
