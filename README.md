@@ -10,7 +10,7 @@ export GIGET_AUTH=ghp_xxxxxclassicxxxx
 # インポート先のディレクトリ
 export MY_DIR=xxxx
 
-# 使用したいテンプレート名（vue_hono_postgres, vue_rails_postgres, vue_axum_postgres_simple から選択）
+# 使用したいテンプレート名（vue_hono_postgres, react_hono_postgres, vue_rails_postgres から選択）
 export TARGET_TEMPLATE=xxxx
 
 npx giget gh:UniqueVision/sc.app_template/templates/$TARGET_TEMPLATE $MY_DIR
