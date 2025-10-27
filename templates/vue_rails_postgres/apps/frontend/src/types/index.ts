@@ -17,6 +17,15 @@ export type {
   UpdateItemInput
 } from './item.types';
 
+// 画像関連の型
+export type {
+  Image,
+  ImageResponse,
+  UploadUrlRequest,
+  UploadUrlResponse,
+  ConfirmUploadRequest
+} from './image.types';
+
 // 認証関連の型
 export type {
   LoginCredentials,

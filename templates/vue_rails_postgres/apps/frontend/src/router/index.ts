@@ -14,6 +14,12 @@ const ItemsView = () => import(
   '@/views/ItemsView.vue'
 );
 
+const ImagesView = () => import(
+  /* webpackChunkName: "images" */
+  /* webpackPrefetch: true */
+  '@/views/ImagesView.vue'
+);
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -38,13 +44,22 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/images',
+    name: 'Images',
+    component: ImagesView,
+    meta: {
+      requiresAuth: true,
+      title: '画像管理'
+    }
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/'
   }
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   // スクロール動作の最適化
   scrollBehavior(_to, _from, savedPosition) {

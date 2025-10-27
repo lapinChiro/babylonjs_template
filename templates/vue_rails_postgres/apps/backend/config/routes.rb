@@ -1,20 +1,30 @@
 Rails.application.routes.draw do
-  # Health check endpoint
-  get 'health', to: 'health#show'
+  scope Rails.application.config.relative_url_root || '/' do
+    # Health check endpoint
+    get 'health', to: 'health#show'
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+    # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+    # Can be used by load balancers and uptime monitors to verify that the app is live.
+    get "up" => "rails/health#show", as: :rails_health_check
 
-  # API routes
-  namespace :api do
-    # Auth endpoints
-    post 'auth/login', to: 'auth#login'
-    post 'auth/logout', to: 'auth#logout'
-    get 'auth/session', to: 'auth#session'
+    # API routes
+    namespace :api do
+      # Auth endpoints
+      post 'auth/login', to: 'auth#login'
+      post 'auth/logout', to: 'auth#logout'
+      get 'auth/session', to: 'auth#session'
 
-    # RESTful resources
-    resources :users
-    resources :items
+      # RESTful resources
+      resources :users
+      resources :items
+
+      # Image resources
+      resources :images, only: [:index, :show, :destroy] do
+        collection do
+          post 'upload-url', to: 'images#upload_url'
+          post 'confirm', to: 'images#confirm'
+        end
+      end
+    end
   end
 end
