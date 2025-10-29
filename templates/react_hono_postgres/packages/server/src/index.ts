@@ -42,6 +42,11 @@ app.use(
   }),
 );
 
+// Health check endpoints
+app.get("/", (c) => {
+  return c.text('Hello Hono!');
+});
+
 app.get(`${BASE_PATH}/healthCheck`, (c) => {
   return c.text("OK");
 });
