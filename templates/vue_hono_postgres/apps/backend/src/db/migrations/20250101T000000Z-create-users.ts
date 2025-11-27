@@ -30,7 +30,8 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db
     .insertInto('users')
     .values([
-      { name: 'Admin User', email: 'admin@test.com', password_hash: passwordHash, active: true }
+      { name: 'Test User 1', email: 'test1@example.com', password_hash: passwordHash, active: true },
+      { name: 'Test User 2', email: 'test2@example.com', password_hash: passwordHash, active: true }
     ])
     .execute()
 }

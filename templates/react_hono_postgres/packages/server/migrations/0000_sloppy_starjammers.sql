@@ -49,7 +49,7 @@ CREATE TABLE "verification" (
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 
--- Demo account for development
+-- Demo accounts for development
 -- Password: password123 (hashed by Better-Auth)
 INSERT INTO "user" (
     "id",
@@ -60,8 +60,8 @@ INSERT INTO "user" (
     "updated_at"
 ) VALUES (
     'demo-user-id-12345',
-    'Admin User',
-    'admin@test.com',
+    'Test User 1',
+    'test1@example.com',
     true,
     now(),
     now()
@@ -80,6 +80,40 @@ INSERT INTO "account" (
     'demo-user-id-12345',
     'credential',
     'demo-user-id-12345',
+    'ce9c4020a196915d8605eecdb29dfbb4:e2a410e34bc0a2ee15977d21f5ea92b7ffe56883fb7a540959bcb3e9cf93eb5a0f8e10047f39d615aebe7e331c52b481ebe799bfd3fe0f23d5283a87fcb23b4c',
+    now(),
+    now()
+) ON CONFLICT ("id") DO NOTHING;--> statement-breakpoint
+
+INSERT INTO "user" (
+    "id",
+    "name",
+    "email",
+    "email_verified",
+    "created_at",
+    "updated_at"
+) VALUES (
+    'demo-user-id-67890',
+    'Test User 2',
+    'test2@example.com',
+    true,
+    now(),
+    now()
+) ON CONFLICT ("email") DO NOTHING;--> statement-breakpoint
+
+INSERT INTO "account" (
+    "id",
+    "account_id",
+    "provider_id",
+    "user_id",
+    "password",
+    "created_at",
+    "updated_at"
+) VALUES (
+    'demo-account-id-67890',
+    'demo-user-id-67890',
+    'credential',
+    'demo-user-id-67890',
     'ce9c4020a196915d8605eecdb29dfbb4:e2a410e34bc0a2ee15977d21f5ea92b7ffe56883fb7a540959bcb3e9cf93eb5a0f8e10047f39d615aebe7e331c52b481ebe799bfd3fe0f23d5283a87fcb23b4c',
     now(),
     now()
