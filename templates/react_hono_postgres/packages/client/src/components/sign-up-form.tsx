@@ -37,7 +37,7 @@ export default function AuthForm() {
   const { isPending } = authClient.useSession();
 
   // Demo account credentials
-  const demoEmail = "admin@test.com";
+  const demoEmail = "test1@example.com";
   const demoPassword = "password123";
 
   // Demo account UI state

@@ -126,7 +126,7 @@ const error = ref('');
 const loading = ref(false);
 
 // デモアカウント情報
-const demoEmail = 'admin@test.com';
+const demoEmail = 'test1@example.com';
 const demoPassword = 'password123';
 
 // デモアカウント表示の状態
