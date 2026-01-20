@@ -10,6 +10,7 @@ import { useEffect } from "react";
 
 export interface RouterAppContext {
   trpcQueryUtils: typeof trpcQueryUtils;
+  pageTitle?: string;
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
