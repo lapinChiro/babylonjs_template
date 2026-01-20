@@ -1,12 +1,11 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: process.env.BASE_PATH ? `${process.env.BASE_PATH}/` : '/',
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -39,16 +38,11 @@ export default defineConfig({
       'vue-router',
       'pinia',
       '@vueuse/core',
-      'lucide-vue-next',
       'ofetch',
       'yup',
       'vee-validate',
       '@vee-validate/yup',
-      'tailwind-merge',
-      'class-variance-authority',
-      'clsx'
     ],
-    exclude: ['@tailwindcss/vite'],
     // アグレッシブな最適化
     entries: [
       './src/main.ts',
@@ -63,9 +57,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vue-vendor': ['vue', 'vue-router', 'pinia'],
-          'ui-vendor': ['lucide-vue-next', 'reka-ui', 'class-variance-authority', 'clsx', 'tailwind-merge'],
           'validation': ['vee-validate', '@vee-validate/yup', 'yup'],
-          'utils': ['@vueuse/core', 'ofetch', 'vue-sonner'],
+          'utils': ['@vueuse/core', 'ofetch'],
         },
         // チャンクファイル名の最適化
         chunkFileNames: (chunkInfo) => {
