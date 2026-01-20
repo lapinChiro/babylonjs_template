@@ -73,7 +73,6 @@
               <th>行番号</th>
               <th>画像</th>
               <th>ファイル名</th>
-              <th>サイズ</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -84,7 +83,6 @@
                 <img :src="image.url" :alt="image.original_name" width="50" height="50" />
               </td>
               <td>{{ image.original_name }}</td>
-              <td>{{ formatFileSize(image.size) }}</td>
               <td>
                 <button @click="handleDeleteImage(image.id)">削除</button>
               </td>
@@ -168,12 +166,4 @@ const handleDeleteImage = async (id: string) => {
   }
 };
 
-// Utility functions
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
-};
 </script>

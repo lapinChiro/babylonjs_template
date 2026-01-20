@@ -128,12 +128,6 @@ function DashboardPage() {
     deleteImageMutation.mutate({ id });
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-  };
-
   return (
     <div>
       <main>
@@ -155,7 +149,7 @@ function DashboardPage() {
           </div>
           {isLoadingItems ? (
             <div>読み込み中...</div>
-          ) : (
+          ) : items && items.length > 0 ? (
             <table>
               <thead>
                 <tr>
@@ -165,41 +159,35 @@ function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {items && items.length > 0 ? (
-                  items.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.name}</td>
-                      <td>
-                        <button
-                          onClick={() => handleDeleteItem(item.id)}
-                          disabled={deleteItemMutation.isPending}
-                        >
-                          削除
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3}>
-                      <p>アイテムが登録されていません</p>
+                {items.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>
+                      <button
+                        onClick={() => handleDeleteItem(item.id)}
+                        disabled={deleteItemMutation.isPending}
+                      >
+                        削除
+                      </button>
                     </td>
                   </tr>
-                )}
+                ))}
               </tbody>
             </table>
+          ) : (
+            <p>アイテムが登録されていません</p>
           )}
         </section>
 
         {/* Images Section */}
         <section>
+          <h2>画像一覧</h2>
           <div>
-            <h2>画像一覧</h2>
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/gif,image/webp"
+              accept="image/*"
               hidden
               onChange={handleFileSelect}
             />
@@ -207,33 +195,46 @@ function DashboardPage() {
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
             >
-              {isUploading ? "アップロード中..." : "画像アップロード"}
+              {isUploading ? "アップロード中..." : "アップロード"}
             </button>
           </div>
           {isLoadingImages ? (
             <div>読み込み中...</div>
           ) : images && images.length > 0 ? (
-            <div>
-              {images.map((image) => (
-                <div key={image.id}>
-                  <img
-                    src={image.url}
-                    alt={image.originalName}
-                    loading="lazy"
-                  />
-                  <div>
-                    <p>{image.originalName}</p>
-                    <p>{formatFileSize(image.size)}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDeleteImage(image.id)}
-                    disabled={deleteImageMutation.isPending}
-                  >
-                    削除
-                  </button>
-                </div>
-              ))}
-            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>行番号</th>
+                  <th>画像</th>
+                  <th>ファイル名</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {images.map((image, index) => (
+                  <tr key={image.id}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <img
+                        src={image.url}
+                        alt={image.originalName}
+                        width="50"
+                        height="50"
+                      />
+                    </td>
+                    <td>{image.originalName}</td>
+                    <td>
+                      <button
+                        onClick={() => handleDeleteImage(image.id)}
+                        disabled={deleteImageMutation.isPending}
+                      >
+                        削除
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <p>画像が登録されていません</p>
           )}

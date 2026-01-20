@@ -10,6 +10,7 @@ import ReactDOM from "react-dom/client";
 import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
 import { trpc } from "./utils/trpc";
+import "./index.css";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({

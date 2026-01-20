@@ -74,46 +74,35 @@ export default function AuthForm() {
 
   return (
     <div>
-      <div>
+      <h1>サンプルシステム</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <h1>サンプルシステム</h1>
-          <p>
-            メールアドレスとパスワードを入力してログインしてください
-          </p>
+          <label htmlFor="email">メールアドレス</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="メールアドレスを入力"
+            {...register("email")}
+          />
+          {errors.email && <div>{errors.email.message}</div>}
         </div>
-
         <div>
-          <h2>ログイン</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <label htmlFor="email">メールアドレス</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="メールアドレスを入力"
-                {...register("email")}
-              />
-              {errors.email && <p>{errors.email.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="password">パスワード</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="パスワードを入力"
-                {...register("password")}
-              />
-              {errors.password && <p>{errors.password.message}</p>}
-            </div>
-            <button
-              type="submit"
-              disabled={!isFormValid || isSubmitting}
-            >
-              {isSubmitting ? "ログイン中..." : "ログイン"}
-            </button>
-          </form>
+          <label htmlFor="password">パスワード</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="パスワードを入力"
+            {...register("password")}
+          />
+          {errors.password && <div>{errors.password.message}</div>}
         </div>
-      </div>
+        <button
+          type="submit"
+          disabled={!isFormValid || isSubmitting}
+        >
+          {isSubmitting ? "ログイン中..." : "ログイン"}
+        </button>
+      </form>
     </div>
   );
 }
