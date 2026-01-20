@@ -1,27 +1,7 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "sonner";
 import { trpc } from "@/utils/trpc";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 
 const nameSchema = z.object({
   name: z.string().min(1, "名前は必須です").max(100, "名前は100文字以内で入力してください"),
@@ -30,27 +10,29 @@ const nameSchema = z.object({
 type NameFormData = z.infer<typeof nameSchema>;
 
 interface EditNameDialogProps {
-  children: React.ReactNode;
   currentName: string;
+  onClose: () => void;
 }
 
-export default function EditNameDialog({ children, currentName }: EditNameDialogProps) {
-  const [open, setOpen] = useState(false);
+export default function EditNameDialog({ currentName, onClose }: EditNameDialogProps) {
   const utils = trpc.useUtils();
 
   const updateName = trpc.user.updateName.useMutation({
     onSuccess: () => {
-      toast.success("名前を更新しました");
+      alert("名前を更新しました");
       utils.user.getCurrentUser.invalidate();
-      setOpen(false);
-      form.reset();
+      onClose();
     },
     onError: (error) => {
-      toast.error(error.message);
+      alert(error.message);
     },
   });
 
-  const form = useForm<NameFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NameFormData>({
     resolver: zodResolver(nameSchema),
     defaultValues: {
       name: currentName,
@@ -62,54 +44,39 @@ export default function EditNameDialog({ children, currentName }: EditNameDialog
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>名前を変更</DialogTitle>
-          <DialogDescription>
-            表示される名前を変更できます。
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>名前</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="名前を入力" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+    <div>
+      <div>
+        <h2>名前を変更</h2>
+        <p>
+          表示される名前を変更できます。
+        </p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <label htmlFor="name">名前</label>
+            <input
+              id="name"
+              {...register("name")}
+              placeholder="名前を入力"
             />
-            <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setOpen(false);
-                  form.reset();
-                }}
-                disabled={updateName.isPending}
-              >
-                キャンセル
-              </Button>
-              <Button
-                type="submit"
-                disabled={updateName.isPending}
-              >
-                {updateName.isPending ? "更新中..." : "更新"}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+            {errors.name && <p>{errors.name.message}</p>}
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={updateName.isPending}
+            >
+              キャンセル
+            </button>
+            <button
+              type="submit"
+              disabled={updateName.isPending}
+            >
+              {updateName.isPending ? "更新中..." : "更新"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

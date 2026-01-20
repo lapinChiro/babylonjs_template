@@ -7,7 +7,6 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCQueryUtils } from "@trpc/react-query";
 import ReactDOM from "react-dom/client";
-import { toast } from "sonner";
 import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
 import { trpc } from "./utils/trpc";
@@ -15,14 +14,7 @@ import { trpc } from "./utils/trpc";
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
-      toast.error(error.message, {
-        action: {
-          label: "retry",
-          onClick: () => {
-            queryClient.invalidateQueries();
-          },
-        },
-      });
+      console.error(error.message);
     },
   }),
 });
