@@ -1,6 +1,5 @@
 import Header from "@/components/header";
 import Loader from "@/components/loader";
-import { Toaster } from "@/components/ui/sonner";
 import { trpcQueryUtils } from "@/main";
 import {
   Outlet,
@@ -8,10 +7,10 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
-import "../index.css";
 
 export interface RouterAppContext {
   trpcQueryUtils: typeof trpcQueryUtils;
+  pageTitle?: string;
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
@@ -42,7 +41,6 @@ function RootComponent() {
       <Header />
       {isFetching && <Loader />}
       <Outlet />
-      <Toaster richColors />
     </>
   );
 }

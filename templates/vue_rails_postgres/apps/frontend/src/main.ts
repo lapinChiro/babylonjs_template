@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { setupVeeValidate } from './utils/vee-validate-config'
 import router from './router'
-import './style.css'
+import './index.css'
 import App from './App.vue'
 
 // VeeValidateのグローバル設定

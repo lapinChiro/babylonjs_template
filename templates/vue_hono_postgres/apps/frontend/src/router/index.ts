@@ -1,24 +1,9 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores';
 
-// 遅延読み込みコンポーネント（Webpackマジックコメント付き）
-const LoginView = () => import(
-  /* webpackChunkName: "login" */
-  /* webpackPrefetch: true */
-  '@/views/LoginView.vue'
-);
-
-const ItemsView = () => import(
-  /* webpackChunkName: "items" */
-  /* webpackPrefetch: true */
-  '@/views/ItemsView.vue'
-);
-
-const ImagesView = () => import(
-  /* webpackChunkName: "images" */
-  /* webpackPrefetch: true */
-  '@/views/ImagesView.vue'
-);
+// 遅延読み込みコンポーネント
+const LoginView = () => import('@/views/LoginView.vue');
+const DashboardView = () => import('@/views/DashboardView.vue');
 
 const routes: RouteRecordRaw[] = [
   {
@@ -35,21 +20,12 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/items',
-    name: 'Items',
-    component: ItemsView,
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardView,
     meta: {
       requiresAuth: true,
-      title: 'アイテム管理'
-    }
-  },
-  {
-    path: '/images',
-    name: 'Images',
-    component: ImagesView,
-    meta: {
-      requiresAuth: true,
-      title: '画像管理'
+      title: 'ダッシュボード'
     }
   },
   {
@@ -61,7 +37,6 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  // スクロール動作の最適化
   scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
@@ -82,22 +57,21 @@ router.beforeEach(async (to, _from, next) => {
 
   const isLoggedIn = authStore.isLoggedIn;
 
-
   // 認証が必要なルートのガード
   if (to.meta.requiresAuth && !isLoggedIn) {
     next('/login');
     return;
   }
 
-  // ゲスト専用ルートのガード（ログイン済みユーザーがログインページにアクセスするのを防ぐ）
+  // ゲスト専用ルートのガード
   if (to.meta.requiresGuest && isLoggedIn) {
-    next('/items');
+    next('/dashboard');
     return;
   }
 
   // ページタイトルの設定
   if (to.meta.title) {
-    document.title = `${ to.meta.title } - サンプルシステム`;
+    document.title = `${to.meta.title} - サンプルシステム`;
   } else {
     document.title = 'サンプルシステム';
   }
