@@ -7,17 +7,7 @@
     <title>サンプルシステム</title>
   </head>
   <body>
-    <div id="app">
-      <div id="app-loader">読み込み中...</div>
-    </div>
+    <div id="app"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const loader = document.getElementById('app-loader');
-          if (loader) loader.remove();
-        }, 100);
-      });
-    </script>
   </body>
 </html>
