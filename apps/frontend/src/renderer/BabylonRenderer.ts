@@ -26,16 +26,22 @@ export class BabylonRenderer {
     this.requestedBackend = options.backend ?? 'webgl'
   }
 
+  // disposed をプロパティ直読でなくメソッド経由で参照する: TS の narrowing は await を跨いで
+  // 維持されるため、initialize() の await 後の再チェックが「常に false」と誤検出される。メソッド
+  // 戻り値は narrowing が持続しないためこれを回避する。
+  private isDisposed(): boolean {
+    return this.disposed
+  }
+
   async initialize(): Promise<RendererInfo> {
-    if (this.disposed) {
+    if (this.isDisposed()) {
       throw new Error('Cannot initialize a disposed renderer.')
     }
 
     const result = await createEngine(this.canvas, this.requestedBackend)
 
-    // 上の await 中に dispose() が呼ばれ得るが、TS は await を跨いでも narrowing を維持するため誤検出になる
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (this.disposed) {
+    // await 中に dispose() され得るため再チェックする
+    if (this.isDisposed()) {
       result.engine.dispose()
       throw new Error('Renderer was disposed during initialization.')
     }

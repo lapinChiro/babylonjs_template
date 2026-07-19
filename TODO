@@ -8,3 +8,4 @@
 - [ ] 本番デプロイ経路(CD)を設計する際、移植元 transient-schema-mismatch-policy rule(デプロイ過渡期の互換シム禁止・DB 制約による保存データ保証)の採用を再検討する
 - [ ] frontend の renderer 層(createEngine のフォールバック分岐・BabylonRenderer の dispose 冪等性)へのユニットテスト追加を検討する(Babylon の Engine を vi.mock する構成の設計が必要)
 - [ ] E2E テスト(初期化状態・engine backend・mesh 数・console error の検証。DESIGN.md §11 の方針)の導入を検討する
+- [ ] `apps/frontend/src/router/index.ts` のナビゲーションガードが非推奨の `next()` コールバック方式(行 71/77/88)を使っており、実機コンソールに `[VUE_ROUTER_R0025] next() is deprecated` 警告が出る。vue-router 推奨の戻り値方式(`next()`→`return`、`next('/login')`→`return '/login'`)へ書き換える。Phase 11(抑制コメント全廃)の実機確認中に発見・スコープ外のため未対応

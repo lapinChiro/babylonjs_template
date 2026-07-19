@@ -1,6 +1,7 @@
 import { defineConfig } from 'eslint/config'
 import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
+import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
 
 export default defineConfig(
   { ignores: ['dist/**'] },
@@ -17,10 +18,22 @@ export default defineConfig(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    plugins: {
+      '@eslint-community/eslint-comments': eslintComments,
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
+      // 抑制ディレクティブの使用自体を全面禁止する
+      '@eslint-community/eslint-comments/no-use': 'error',
+      // ts-expect-error / ts-ignore / ts-nocheck も全面禁止(ts-check は検査有効化なので許容)
+      '@typescript-eslint/ban-ts-comment': ['error', {
+        'ts-expect-error': true,
+        'ts-ignore': true,
+        'ts-nocheck': true,
+        'ts-check': false,
+      }],
     },
   },
   {
