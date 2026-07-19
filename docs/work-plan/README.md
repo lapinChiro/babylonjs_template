@@ -19,7 +19,7 @@
 - **`eslint-disable`(全形式)・`@ts-expect-error`・`@ts-ignore`・`@ts-nocheck` 等の抑制コメントは一切禁止**(ユーザー指示 2026-07-19)。誤検出と思われる場合もルール抑制ではなく実装側の書き換えで解決する。Phase 3 時点で存在する 2 箇所の `eslint-disable` は Phase 11(計画の一番最後)で適切な実装に置き換える
 - 移植元 `claude_settings/` は**読み取り専用の参照資料**として本作業では変更しない(全フェーズ完了・検収後に削除してよい)
 - root への package.json 追加(npm workspaces 化)は行わない。品質コマンドは各 app 内で完結させる
-- コミットはフェーズ内の指示に従い小さく行う(git commit はユーザー承認の運用なら都度確認)
+- **git 操作の特権分離(ユーザー指示 2026-07-19)**: `git stash` / `git checkout` / `git commit` / `git push` / `git reset` / `git rebase` / `git revert` / `git switch` は**ユーザーだけの特権**であり、エージェントは実行しない(正は `claude_settings/.claude/settings.json` の deny 一覧。Phase 6 で `.claude/settings.json` として移植される)。コミットポイントでは対象ファイルとコミットメッセージを提示し、ユーザーに実行を依頼する。コミットは従来どおりフェーズ内の指示に従い小さく分ける。**push 後の CI 結果はユーザーからの申告で確認する**(fail 時のみユーザーが申告し、そのフェーズの修正作業として対応する。エージェントは CI 確認を残作業・待ち状態として扱わない)
 
 ## 前提知識(全フェーズ共通のコンテキスト)
 
@@ -112,7 +112,7 @@
 - [x] **Phase 2**: backend ESLint 導入+0 エラー化 — `phase-02-backend-eslint.md`
 - [x] **Phase 3**: frontend ESLint 導入+0 エラー化 — `phase-03-frontend-eslint.md`
 - [x] **Phase 4**: frontend vitest 導入+シードテスト — `phase-04-frontend-vitest.md`
-- [ ] **Phase 5**: backend knip 導入+ quality スクリプト+ CI — `phase-05-knip-ci-quality-gate.md`
+- [x] **Phase 5**: backend knip 導入+ quality スクリプト+ CI — `phase-05-knip-ci-quality-gate.md`
 - [ ] **Phase 6**: Claude Code 基盤(settings.json / CLAUDE.md / coder / commands / modern-web-guidance) — `phase-06-claude-foundation.md`
 - [ ] **Phase 7**: rules 移植(20 ファイル) — `phase-07-rules.md`
 - [ ] **Phase 8**: 品質系 skills(quality-check / check-local / tdd / test-design / todo-audit / review-dev / refactoring-check) — `phase-08-quality-skills.md`

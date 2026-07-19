@@ -131,7 +131,7 @@ grep -rln "tz-storage-convention\|uuid-primary-key\|transient-schema-mismatch\|f
 
 - [ ] **Step 4: CLAUDE.md のルール索引(Phase 6 で作成)と rules の実体が一致しているか突合**(索引に載る rule 名・サマリが実体と一致。不一致があれば CLAUDE.md 側を修正)
 
-- [ ] **Step 5: コミット** `feat(claude): rules 20 ファイルを移植(品質系 3 rule は新ツールチェーンで書き直し)`
+- [ ] **Step 5: コミット依頼** 対象ファイルを提示し、ユーザーに `feat(claude): rules 20 ファイルを移植(品質系 3 rule は新ツールチェーンで書き直し)` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 

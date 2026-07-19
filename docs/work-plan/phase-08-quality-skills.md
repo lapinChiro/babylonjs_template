@@ -105,7 +105,7 @@ grep -rln "oxlint\|stryker\|PGlite\|storybook\|EXTERNAL_API_MODE\|promana" .clau
 
 期待: 0 件
 
-- [ ] コミット: `feat(claude): 品質系 skills 7 つを構築(quality-check/check-local は新ツールチェーンで書き直し)`
+- [ ] コミット依頼: 対象ファイルを提示し、ユーザーに `feat(claude): 品質系 skills 7 つを構築(quality-check/check-local は新ツールチェーンで書き直し)` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 

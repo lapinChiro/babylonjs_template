@@ -46,7 +46,7 @@ cd apps/backend && npm run quality
 
 - [ ] **Step 2: 検証** 試しに `// eslint-disable-next-line` を書いた一時ファイルで検出されることを確認し、削除する
 
-- [ ] **Step 3: コミット** `refactor: 抑制コメントを全廃し適切な実装に置き換え、再発を lint で防止`
+- [ ] **Step 3: コミット依頼** 対象ファイルを提示し、ユーザーに `refactor: 抑制コメントを全廃し適切な実装に置き換え、再発を lint で防止` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 

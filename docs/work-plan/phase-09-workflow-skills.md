@@ -77,7 +77,7 @@ ls .claude/skills/
 
 - [ ] Phase 8 の引き継ぎ事項にある「未存在参照」(あれば)が解消されたか確認
 - [ ] backlog-layer-model rule の paths(`plan.md` / `backlog/**` / `TODO`)が実体を得たので、`plan.md` を context に入れて rule が自動ロードされることを新セッションで簡易確認
-- [ ] コミット: `feat(claude): ワークフロー層 skills と plan.md/TODO/backlog を構築`
+- [ ] コミット依頼: 対象ファイルを提示し、ユーザーに `feat(claude): ワークフロー層 skills と plan.md/TODO/backlog を構築` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 

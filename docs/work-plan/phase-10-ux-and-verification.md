@@ -60,7 +60,7 @@ cd apps/backend && npm run quality > /tmp/backend-quality-final.txt 2>&1; echo "
 cd ../frontend && npm run quality > /tmp/frontend-quality-final.txt 2>&1; echo "exit=$?"
 ```
 
-期待: 両方 exit=0。Read で 0 エラー・0 警告確認。CI も green(`gh run list -L 1`)。
+期待: 両方 exit=0。Read で 0 エラー・0 警告確認。CI の結果はユーザー申告方式(fail 時のみ申告。README の Global Constraints 参照)。
 
 - [ ] **Step 6: rule-maintenance の全体統合チェックを 1 度実行**(`/rule-maintenance` を呼び、移植で構築した rule/skill 全体の重複・不整合を skill 自身の手順で点検させる — 設定群のセルフチェック)
 
@@ -68,7 +68,7 @@ cd ../frontend && npm run quality > /tmp/frontend-quality-final.txt 2>&1; echo "
 
 - [ ] README(本計画)の全フェーズ進捗チェックを完了にする
 - [ ] `claude_settings/` の扱いをユーザーに確認する(参照資料として残す / 削除する)。**勝手に削除しない**
-- [ ] コミット: `feat(claude): ux-design skill を追加し設定移植を完了`
+- [ ] コミット依頼: 対象ファイルを提示し、ユーザーに `feat(claude): ux-design skill を追加し設定移植を完了` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 - [ ] 最終報告: 構築した設定の全体像(rules 19 / skills 19 / commands 2 / agent 1 / CI)、破棄したものと理由(README マッピング表)、TODO への種入れ 6 件、今後の運用開始手順(/todo-replenishment または /backlog-replenishment から)をユーザーへ報告
 
 ## 受入基準
@@ -76,7 +76,7 @@ cd ../frontend && npm run quality > /tmp/frontend-quality-final.txt 2>&1; echo "
 - [ ] インベントリが README マッピング表と完全一致
 - [ ] リンクグラフに dangling なし・移植元残滓なし
 - [ ] ロード動作 5 項目すべて確認済み
-- [ ] 両 app quality + CI green
+- [ ] 両 app quality が exit 0(CI はユーザー申告方式 — fail 申告が無いことをもって green とみなす)
 
 ## 引き継ぎ事項(実行セッションが追記)
 

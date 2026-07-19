@@ -340,7 +340,7 @@ ls -la .claude/skills/modern-web-guidance/  # SKILL.md が見えること
 
 (vendored コーパスの内容は編集しない。移植元の symlink 構造を `ls -la claude_settings/.claude/skills/` で確認し、相対パスを同じ形に合わせる)
 
-- [ ] **Step 2: コミット** `feat(claude): Claude Code 基盤(settings/CLAUDE.md/coder/commands/modern-web-guidance)を構築`
+- [ ] **Step 2: コミット依頼** 対象ファイルを提示し、ユーザーに `feat(claude): Claude Code 基盤(settings/CLAUDE.md/coder/commands/modern-web-guidance)を構築` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 
