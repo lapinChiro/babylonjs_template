@@ -1,0 +1,10 @@
+# TODO
+
+三層モデルの最下層(未整理の課題置き場)。構造の正は `.claude/rules/backlog-layer-model.md`。
+
+- [ ] DB スキーマの timestamptz 化を検討する。現状は `timestamp`(TZ なし)で、複数 TZ のクライアント・サーバ TZ 変更に対して曖昧。移植元の tz-storage-convention rule(datetime=TIMESTAMPTZ / audit timestamp は DB 側生成)の採用可否を、migration 影響(3 テーブル)と合わせて判断する
+- [ ] PK の uuid 化(`gen_random_uuid()`)を検討する。現状は serial。テンプレートとして配布する際、推測可能な連番 ID を外部公開 API に露出する設計で良いかを判断する(採用時は移植元 uuid-primary-key-generation rule を復活)
+- [ ] lint への max-lines / max-lines-per-function 導入を検討する(導入時は移植元 file-size-limit-decomposition rule を復活し、行数稼ぎでなく凝集単位の分割で応える運用にする)
+- [ ] 本番デプロイ経路(CD)を設計する際、移植元 transient-schema-mismatch-policy rule(デプロイ過渡期の互換シム禁止・DB 制約による保存データ保証)の採用を再検討する
+- [ ] frontend の renderer 層(createEngine のフォールバック分岐・BabylonRenderer の dispose 冪等性)へのユニットテスト追加を検討する(Babylon の Engine を vi.mock する構成の設計が必要)
+- [ ] E2E テスト(初期化状態・engine backend・mesh 数・console error の検証。DESIGN.md §11 の方針)の導入を検討する

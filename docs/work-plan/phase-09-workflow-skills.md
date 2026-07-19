@@ -87,4 +87,21 @@ ls .claude/skills/
 
 ## 引き継ぎ事項(実行セッションが追記)
 
-- (未実行)
+- **10 skill 作成完了**: rule-writing / rule-maintenance / investigation(そのままコピー)、backlog-management / prd-template / prd-completion / review-prd / backlog-replenishment / todo-replenishment / track-management(適合)。prd-template / review-prd の `model: claude-fable-5` を維持。
+- **種ファイル作成完了**: `plan.md`(前向き計画 + 完了 PRD index、いずれも空)、`TODO`(破棄 rule 由来の検討事項 6 件を種入れ)、`backlog/.gitkeep`。
+- **計画との差異 / 追加判断**:
+  - **prd-template §3.1 の書き換え**: phase 文書指示どおり「本来あるべき実装」の判断基準を本プロジェクト構成に置換(vee-validate/yup ⇄ Zod の両層バリデーション / ApiError 変換・ユーザー可視エラー / 認証=JWT middleware / DB 制約 NOT NULL・UNIQUE・FK)。移植元は「認可」だったが本プロジェクトは認可が薄い(JWT 認証のみ)ため phase 文書指示の「認証(JWT middleware)」を採用。
+  - **prd-template のロールバック/スキーマ整合節の書き換え**: 「本番環境(prod)は 2026-05-07 以降稼働中」の前提記述を削除。migration は Kysely 前提(`npm run migrate:down` による reverse migration。実スクリプト名は backend package.json で確認)に書き換え。**破棄 rule への参照除去**: 移植元は `transient-schema-mismatch-policy` rule を参照していたが同 rule は破棄済み(20 rule に含まれない)のため、参照を除去し「DB 制約で保存データを不正化させない」旨を inline 記述に置換。grep cleanup パスも `infra/lib packages/*/src` を除去。
+  - **backlog-management / prd-completion の prod 記述除去**: 「prod デプロイ管理」追跡行の削除手順、「prod 反映済 PRD を追跡に残さない」等の prod 運用前提記述を削除(本プロジェクトは prod 未運用)。backlog-management の「同じ PRD ステータスを三重に書かない」注記は deploy 追跡が消えたため「スナップショット / 進行中 で二重に書かない」に縮約。
+  - **prd-completion の整合監査 provenance note 削除**: 移植元の日付付き改訂履歴(2026-06-14 制定 等)は本プロジェクトで起きた事実でないため削除。skill のスコープ根拠は本文の DRY 委譲記述で保持されるため知識喪失なし。
+  - **todo-replenishment**: プロジェクト目的を「Web 3D アプリケーションテンプレート(Vue 3 + Babylon.js + Hono + PostgreSQL + MinIO)」に置換。
+  - review-prd / backlog-replenishment / track-management / investigation / rule-writing / rule-maintenance は共通置換対象(prod / infra/lib / packages / プロジェクト目的)の残滓が無く、事実上そのままコピー。
+- **検証結果**:
+  - `.claude/skills/` は 18 エントリ(17 skill + modern-web-guidance symlink)。README マッピング表の Phase 9 行(10 skill)と一致。ux-design は Phase 10 のため未作成。
+  - 残滓 grep(`プロジェクト管理アプリ` / `infra/lib` / `packages/*` / `prod デプロイ` / `本番反映` / `本番環境 (prod)` / `2026-05-07`)= `.claude/skills/` 全体で 0 件。
+  - 新 10 skill の `../../rules/*.md` 参照(14 種)・`../<skill>/SKILL.md` 参照(3 種)は全て実在ファイルに解決。破棄 9 rule への参照 0 件。
+  - Phase 8 引き継ぎの「未存在参照」(Phase 9-10 で作る skill = review-prd / prd-template / prd-completion / backlog-management / backlog-replenishment / todo-replenishment / track-management / investigation / rule-writing / rule-maintenance)は本フェーズで全て実体化(ux-design のみ Phase 10 残)。
+- **未解決 / Phase 10 への申し送り**:
+  - backlog-layer-model rule の paths(`plan.md` / `backlog/**` / `TODO`)が実体を得た。rule レジストリはセッション開始時構築のため、**auto-load の実挙動確認は次セッション以降**(本セッションでは検証不可)。
+  - 種ファイル・skill 間参照の**最終整合検証は Phase 10**。本フェーズでは新 10 skill 内の参照解決のみ確認済み(全体横断の dangling 検査は Phase 10)。
+  - スコープ外の発見: 特になし。

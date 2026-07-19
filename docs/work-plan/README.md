@@ -116,7 +116,7 @@
 - [x] **Phase 6**: Claude Code 基盤(settings.json / CLAUDE.md / coder / commands / modern-web-guidance) — `phase-06-claude-foundation.md`
 - [x] **Phase 7**: rules 移植(20 ファイル) — `phase-07-rules.md`
 - [x] **Phase 8**: 品質系 skills(quality-check / check-local / tdd / test-design / todo-audit / review-dev / refactoring-check) — `phase-08-quality-skills.md`
-- [ ] **Phase 9**: ワークフロー層 skills + 種ファイル(plan.md / TODO / backlog/) — `phase-09-workflow-skills.md`
+- [x] **Phase 9**: ワークフロー層 skills + 種ファイル(plan.md / TODO / backlog/) — `phase-09-workflow-skills.md`
 - [ ] **Phase 10**: UX 層(ux-design)+ 全体整合性検証 — `phase-10-ux-and-verification.md`
 - [ ] **Phase 11**: 抑制コメント(eslint-disable 等)の全廃(D13) — `phase-11-remove-suppression-comments.md`
 
