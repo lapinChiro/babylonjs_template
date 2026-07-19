@@ -13,6 +13,8 @@
     "type-check": "vue-tsc --build --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview",
     "knip": "knip"
   },
@@ -34,9 +36,11 @@
     "@vue/tsconfig": "^0.9.1",
     "eslint": "^10.7.0",
     "eslint-plugin-vue": "^10.9.2",
+    "happy-dom": "^20.11.0",
     "knip": "^6.27.0",
     "typescript": "^6.0.3",
     "vite": "^8.1.5",
+    "vitest": "^4.1.10",
     "vue-tsc": "^3.3.7"
   }
 }

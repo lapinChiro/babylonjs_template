@@ -111,7 +111,7 @@
 - [x] **Phase 1**: tsconfig 強化(両 app)+ type-check/build スクリプト整備 — `phase-01-tsconfig.md`
 - [x] **Phase 2**: backend ESLint 導入+0 エラー化 — `phase-02-backend-eslint.md`
 - [x] **Phase 3**: frontend ESLint 導入+0 エラー化 — `phase-03-frontend-eslint.md`
-- [ ] **Phase 4**: frontend vitest 導入+シードテスト — `phase-04-frontend-vitest.md`
+- [x] **Phase 4**: frontend vitest 導入+シードテスト — `phase-04-frontend-vitest.md`
 - [ ] **Phase 5**: backend knip 導入+ quality スクリプト+ CI — `phase-05-knip-ci-quality-gate.md`
 - [ ] **Phase 6**: Claude Code 基盤(settings.json / CLAUDE.md / coder / commands / modern-web-guidance) — `phase-06-claude-foundation.md`
 - [ ] **Phase 7**: rules 移植(20 ファイル) — `phase-07-rules.md`
