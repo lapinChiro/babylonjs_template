@@ -114,7 +114,7 @@
 - [x] **Phase 4**: frontend vitest 導入+シードテスト — `phase-04-frontend-vitest.md`
 - [x] **Phase 5**: backend knip 導入+ quality スクリプト+ CI — `phase-05-knip-ci-quality-gate.md`
 - [x] **Phase 6**: Claude Code 基盤(settings.json / CLAUDE.md / coder / commands / modern-web-guidance) — `phase-06-claude-foundation.md`
-- [ ] **Phase 7**: rules 移植(20 ファイル) — `phase-07-rules.md`
+- [x] **Phase 7**: rules 移植(20 ファイル) — `phase-07-rules.md`
 - [ ] **Phase 8**: 品質系 skills(quality-check / check-local / tdd / test-design / todo-audit / review-dev / refactoring-check) — `phase-08-quality-skills.md`
 - [ ] **Phase 9**: ワークフロー層 skills + 種ファイル(plan.md / TODO / backlog/) — `phase-09-workflow-skills.md`
 - [ ] **Phase 10**: UX 層(ux-design)+ 全体整合性検証 — `phase-10-ux-and-verification.md`

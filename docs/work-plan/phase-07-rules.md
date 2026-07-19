@@ -12,28 +12,28 @@
 
 ### Task 1: そのままコピーする rule(5)
 
-- [ ] `analysis.md` / `debugging.md` / `verification.md` / `documentation.md` / `rule-retroactive-application.md` をコピー。コピー後に Read して移植元固有の参照が無いことを確認(事前調査では無し。verification.md の `local-quality-mirrors-ci` 参照は Task 3 で作るので維持)
+- [x] `analysis.md` / `debugging.md` / `verification.md` / `documentation.md` / `rule-retroactive-application.md` をコピー。コピー後に Read して移植元固有の参照が無いことを確認(事前調査では無し。verification.md の `local-quality-mirrors-ci` 参照は Task 3 で作るので維持)
 
 ### Task 2: glob・例示を調整してコピーする rule(12)
 
 各ファイルの具体的な変更点:
 
-- [ ] **task-tracking.md**: そのまま可(PRD-122 の背景事例は移植元の事故史だが、ルール制定根拠として価値があるため「移植元プロジェクトでの事例」と明記して保持)。`/tdd` ステップ0・quality-check への参照は Phase 8 で作るため維持
-- [ ] **documentation-drift-prevention.md**: `domain/` bundle・`design.rbac.md` 等の事例段落を「移植元プロジェクトでの崩壊事例」と明記して保持(原則の根拠)。§5 の悪い例の `/quality-check` 参照は維持(Phase 8 で作る)
-- [ ] **code-comment-quality.md**: paths を `apps/**/src/**`, `apps/**/scripts/**` に(`infra/**/lib/**`, `packages/**/src/**` を削除)
-- [ ] **coverage-floor-not-ceiling.md**: paths を `apps/*/src/**`, `**/src/**`, `backlog/**` に(`packages/*/src/**`, `apps/backend/tests/**` を削除。本プロジェクトのテストは `src/**/*.test.ts` 同居なので `tests/**` glob は不要)
-- [ ] **no-spec-distortion-for-tests.md**: paths を `apps/*/src/**/*.test.ts`, `src/**/*.test.ts` に
-- [ ] **todo-prioritization.md**: paths は `TODO`, `TODO.archive`, `backlog/**`, `plan.md`, `**/plan.md` のまま
-- [ ] **referent-before-label.md**: paths から `domain/**`, `TODO.dashboard`, `apps/docs/**/*.md` を削除(`backlog/**`, `report/**`, `plan.md`, `TODO` を残す)
-- [ ] **ux-evaluation.md**: paths を `apps/frontend/src/views/**`, `apps/frontend/src/components/**`, `**/src/views/**` に。`frontend-layout-spacing` への参照(破棄 rule)を削除し、レイアウトの節は「ページレイアウトの一貫性は既存 View の構造を踏襲する」に置換
-- [ ] **design-quality-gates.md**: paths から `infra/**/lib/**`, `packages/*/src/**` を削除。移植元ドメインの具体例(LEADER・teams・role 序列等)を本プロジェクトの例(例: 「WebGL/WebGPU の 2 backend を `createEngine` の単一 seam で吸収している構造」)に置換。`prd-template` §3.2 / `refactoring-check` への link 参照は維持(Phase 8-9 で作る)
-- [ ] **backlog-layer-model.md**: paths は `plan.md`, `backlog/**`, `TODO`, `TODO.archive`, `**/plan.md` のまま。内容はワークフロー資産なのでほぼ無変更(「prod デプロイ管理」への言及があれば削除 — 本プロジェクトに prod 運用はまだ無い)
-- [ ] **no-prd-references-in-code.md**: grep cleanup の対象パス列挙を `apps/*/src apps/*/tests apps/*/scripts` に(`infra/lib`, `packages/*/src` を削除)
-- [ ] **soft-vs-hard-delete-policy.md**: paths を `apps/backend/src/db/**` に(`repositories/**` は本プロジェクトに無い)。`tz-storage-convention` / `uuid-primary-key-generation`(破棄)への sibling 参照を削除
+- [x] **task-tracking.md**: そのまま可(PRD-122 の背景事例は移植元の事故史だが、ルール制定根拠として価値があるため「移植元プロジェクトでの事例」と明記して保持)。`/tdd` ステップ0・quality-check への参照は Phase 8 で作るため維持
+- [x] **documentation-drift-prevention.md**: `domain/` bundle・`design.rbac.md` 等の事例段落を「移植元プロジェクトでの崩壊事例」と明記して保持(原則の根拠)。§5 の悪い例の `/quality-check` 参照は維持(Phase 8 で作る)
+- [x] **code-comment-quality.md**: paths を `apps/**/src/**`, `apps/**/scripts/**` に(`infra/**/lib/**`, `packages/**/src/**` を削除)
+- [x] **coverage-floor-not-ceiling.md**: paths を `apps/*/src/**`, `**/src/**`, `backlog/**` に(`packages/*/src/**`, `apps/backend/tests/**` を削除。本プロジェクトのテストは `src/**/*.test.ts` 同居なので `tests/**` glob は不要)
+- [x] **no-spec-distortion-for-tests.md**: paths を `apps/*/src/**/*.test.ts`, `src/**/*.test.ts` に
+- [x] **todo-prioritization.md**: paths は `TODO`, `TODO.archive`, `backlog/**`, `plan.md`, `**/plan.md` のまま
+- [x] **referent-before-label.md**: paths から `domain/**`, `TODO.dashboard`, `apps/docs/**/*.md` を削除(`backlog/**`, `report/**`, `plan.md`, `TODO` を残す)
+- [x] **ux-evaluation.md**: paths を `apps/frontend/src/views/**`, `apps/frontend/src/components/**`, `**/src/views/**` に。`frontend-layout-spacing` への参照(破棄 rule)を削除し、レイアウトの節は「ページレイアウトの一貫性は既存 View の構造を踏襲する」に置換
+- [x] **design-quality-gates.md**: paths から `infra/**/lib/**`, `packages/*/src/**` を削除。移植元ドメインの具体例(LEADER・teams・role 序列等)を本プロジェクトの例(例: 「WebGL/WebGPU の 2 backend を `createEngine` の単一 seam で吸収している構造」)に置換。`prd-template` §3.2 / `refactoring-check` への link 参照は維持(Phase 8-9 で作る)
+- [x] **backlog-layer-model.md**: paths は `plan.md`, `backlog/**`, `TODO`, `TODO.archive`, `**/plan.md` のまま。内容はワークフロー資産なのでほぼ無変更(「prod デプロイ管理」への言及があれば削除 — 本プロジェクトに prod 運用はまだ無い)
+- [x] **no-prd-references-in-code.md**: grep cleanup の対象パス列挙を `apps/*/src apps/*/tests apps/*/scripts` に(`infra/lib`, `packages/*/src` を削除)
+- [x] **soft-vs-hard-delete-policy.md**: paths を `apps/backend/src/db/**` に(`repositories/**` は本プロジェクトに無い)。`tz-storage-convention` / `uuid-primary-key-generation`(破棄)への sibling 参照を削除
 
 ### Task 3: 書き直す rule(3)
 
-- [ ] **testing.md** — 以下の内容で新規作成(移植元の PGlite/ApiTester/Stryker 構成は全て捨て、本プロジェクトの実態のみ):
+- [x] **testing.md** — 以下の内容で新規作成(移植元の PGlite/ApiTester/Stryker 構成は全て捨て、本プロジェクトの実態のみ):
 
 ````markdown
 ---
@@ -74,7 +74,7 @@ paths:
 - skill: `/test-design`(テスト項目の洗い出し)/ `/quality-check`(実行手順)
 ````
 
-- [ ] **local-quality-mirrors-ci.md** — 以下の内容で新規作成(移植元の oxlint 事故史・git ls-files 機構を捨て、不変条件のみ):
+- [x] **local-quality-mirrors-ci.md** — 以下の内容で新規作成(移植元の oxlint 事故史・git ls-files 機構を捨て、不変条件のみ):
 
 ````markdown
 # Local quality check は CI と同じ条件・同じ file set で行う
@@ -108,18 +108,18 @@ paths:
 - `.claude/rules/verification.md`(判定基準の事前定義)
 ````
 
-- [ ] **dependencies.md** — 移植元を Read し、以下を変更して作成: (1) paths は `package.json`, `**/package.json` のまま (2) latest 採用・互換性確認(`npm install` + type-check)の方針は維持 (3) Storybook / `storybookTest` を使う特性テストの節を「ライブラリ差し替え・挙動影響のある upgrade は、対象モジュールの vitest 特性テスト(現挙動の固定)を先に書いてから行う(/tdd の拡張適用)」に書き換え (4) 本プロジェクト固有の注意として「バージョン方針の正は README.md(Node 24 系固定・PostgreSQL 18 系・npm latest 追従)」を追記
+- [x] **dependencies.md** — 移植元を Read し、以下を変更して作成: (1) paths は `package.json`, `**/package.json` のまま (2) latest 採用・互換性確認(`npm install` + type-check)の方針は維持 (3) Storybook / `storybookTest` を使う特性テストの節を「ライブラリ差し替え・挙動影響のある upgrade は、対象モジュールの vitest 特性テスト(現挙動の固定)を先に書いてから行う(/tdd の拡張適用)」に書き換え (4) 本プロジェクト固有の注意として「バージョン方針の正は README.md(Node 24 系固定・PostgreSQL 18 系・npm latest 追従)」を追記
 
 ### Task 4: 検証とコミット
 
-- [ ] **Step 1: 一覧と件数確認**
+- [x] **Step 1: 一覧と件数確認**
 
 ```bash
 ls .claude/rules/ | wc -l   # 期待: 20
 ls .claude/rules/
 ```
 
-- [ ] **Step 2: 破棄 rule への dangling 参照が無いことを確認**
+- [x] **Step 2: 破棄 rule への dangling 参照が無いことを確認**
 
 ```bash
 grep -rln "tz-storage-convention\|uuid-primary-key\|transient-schema-mismatch\|file-size-limit\|authz-update-schema\|admin-managed-read\|external-api-transport\|frontend-layout-spacing\|metrics-aggregation" .claude/ CLAUDE.md
@@ -127,19 +127,26 @@ grep -rln "tz-storage-convention\|uuid-primary-key\|transient-schema-mismatch\|f
 
 期待: 0 件(出たら該当参照を削除)。
 
-- [ ] **Step 3: paths glob が実在パスと整合するか確認**(各 rule の frontmatter の glob に対し、`ls` で対象ディレクトリの実在を確認。`backlog/` / `report/` / `plan.md` / `TODO` は Phase 9 で作るため未存在で可)
+- [x] **Step 3: paths glob が実在パスと整合するか確認**(各 rule の frontmatter の glob に対し、`ls` で対象ディレクトリの実在を確認。`backlog/` / `report/` / `plan.md` / `TODO` は Phase 9 で作るため未存在で可)
 
-- [ ] **Step 4: CLAUDE.md のルール索引(Phase 6 で作成)と rules の実体が一致しているか突合**(索引に載る rule 名・サマリが実体と一致。不一致があれば CLAUDE.md 側を修正)
+- [x] **Step 4: CLAUDE.md のルール索引(Phase 6 で作成)と rules の実体が一致しているか突合**(索引に載る rule 名・サマリが実体と一致。不一致があれば CLAUDE.md 側を修正)
 
-- [ ] **Step 5: コミット依頼** 対象ファイルを提示し、ユーザーに `feat(claude): rules 20 ファイルを移植(品質系 3 rule は新ツールチェーンで書き直し)` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
+- [x] **Step 5: コミット依頼** 対象ファイルを提示し、ユーザーに `feat(claude): rules 20 ファイルを移植(品質系 3 rule は新ツールチェーンで書き直し)` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 
-- [ ] `.claude/rules/` に 20 ファイル。破棄 9 rule は存在しない
-- [ ] 全 rule の相互リンクが `.claude/rules/` 内で解決する(dangling なし)
-- [ ] testing / local-quality-mirrors-ci / dependencies が本プロジェクトの実コマンド・実構成のみを参照している(oxlint / Stryker / PGlite / Storybook / knip-root の残滓なし)
-- [ ] CLAUDE.md のルール索引と実体が一致
+- [x] `.claude/rules/` に 20 ファイル。破棄 9 rule は存在しない
+- [x] 全 rule の相互リンクが `.claude/rules/` 内で解決する(dangling なし)
+- [x] testing / local-quality-mirrors-ci / dependencies が本プロジェクトの実コマンド・実構成のみを参照している(oxlint / Stryker / PGlite / Storybook / knip-root の残滓なし)
+- [x] CLAUDE.md のルール索引と実体が一致
 
 ## 引き継ぎ事項(実行セッションが追記)
 
-- (未実行)
+- 2026-07-19 実行。`.claude/rules/` に 20 ファイルを構築完了。計画との差異は下記 1 点のみで、成果物は計画どおり:
+  - **`rule-retroactive-application.md`(Task1「そのままコピー」)を一部一般化した**: 移植元の背景段落が破棄 rule `authz-update-schema-audit` と移植元アプリ固有スキーマ名(`UpdateProjectReviewSchema` 等)を含んでおり、verbatim コピーだと受入基準「破棄 9 rule への dangling 参照 0 件」に反する。組織学習の教訓(制定と施行の乖離)は保持したまま固有名詞を除去した一般化文に書き換えた。phase 文書は「事前調査では破棄 rule 参照なし」としていたが実際は 1 件存在したため、受入基準を優先。
+- Task2 の移植元アネクドート(task-tracking の PRD-122 / documentation-drift-prevention の design.rbac・`domain/` bundle 崩壊事例 / no-spec-distortion-for-tests の PRD-278)は計画どおり「移植元プロジェクトでの事例」と明記して保持。
+- `design-quality-gates.md` の移植元ドメイン例(LEADER・role 序列・semi-additive メトリクス)は本プロジェクトの実構造に置換: `createEngine` の WebGL/WebGPU 単一 seam(コア+アダプタ)/ Vue-Pinia reactive state と Babylon 毎フレーム描画状態の境界(偽の対称回避)/ renderer の initialize-dispose 非対称。
+- `ux-evaluation.md` の責務分界レイアウト節は「ページレイアウトの一貫性は既存 View の構造を踏襲する」に置換し `frontend-layout-spacing`(破棄)参照を全削除。
+- 検証結果: rules 20 件 / 破棄 9 rule への参照 0 件(`.claude/` + `CLAUDE.md`)/ 移植元ツールチェーン残滓(oxlint・Stryker・PGlite・Storybook・knip-root)0 件 / frontmatter は本プロジェクト実在パスのみ / 相互リンクは 20 rule 内で解決(`documentation-drift-prevention.md` の `audit.md` は例示コードフェンス内で実リンクではない)/ CLAUDE.md ルール索引(常時 8 + path-scope 12 = 20)と実体が一致。
+- 未解決事項: なし。skill への参照(`/tdd`・`/quality-check`・`../skills/*/SKILL.md` 等)は Phase 8〜10 で作成予定のため現時点で未解決リンクだが、これは計画上の既定挙動(参照整合の最終検証は Phase 10)。
+- **Phase 8 への申し送り(スコープ外の発見)**: `phase-08-quality-skills.md` の「共通原則」に「Phase 7 の 19 rule の範囲内のみ」とあるが、Phase 7 で実際に移植したのは **20 rule**(README 移植マッピング表と一致)。Phase 8 で skill が参照してよい rule 名の母集合は `.claude/rules/` の実 20 ファイル。phase-08 文書の「19」は Phase 8 実行時に「20」へ訂正推奨。

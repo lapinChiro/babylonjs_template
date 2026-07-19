@@ -347,7 +347,7 @@ ls -la .claude/skills/modern-web-guidance/  # SKILL.md が見えること
 - [x] `CLAUDE.md` / `.claude/settings.json` / `.claude/agents/coder.md` / `.claude/commands/{start_dev,create-next-prd}.md` が存在
 - [x] `.claude/skills/modern-web-guidance/SKILL.md` が symlink 経由で読める
 - [x] CLAUDE.md 記載のコマンド(`docker compose up --build -d`、各 npm script)が実在する(`package.json` と突合)
-- [ ] 新しいセッションを起動すると CLAUDE.md が読み込まれ、日本語応答・ワークフロー指示が効いている(簡易確認)— 本セッション内では検証不能のためユーザーへ依頼(引き継ぎ事項参照)
+- [x] 新しいセッションを起動すると CLAUDE.md が読み込まれ、日本語応答・ワークフロー指示が効いている(簡易確認)— Phase 7 開始セッション(2026-07-19)冒頭で確認済み。CLAUDE.md がロードされ日本語応答・ワークフロー(計画に従ったタスク登録・skill 索引)が有効
 
 ## 引き継ぎ事項(実行セッションが追記)
 
