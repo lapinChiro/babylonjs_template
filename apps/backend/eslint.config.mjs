@@ -11,8 +11,8 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: {
-          // eslint.config.mjs は tsconfig の include 外のため default project で lint する
-          allowDefaultProject: ['eslint.config.mjs'],
+          // eslint.config.mjs / knip.config.js は tsconfig の include 外のため default project で lint する
+          allowDefaultProject: ['eslint.config.mjs', 'knip.config.js'],
         },
         tsconfigRootDir: import.meta.dirname,
       },

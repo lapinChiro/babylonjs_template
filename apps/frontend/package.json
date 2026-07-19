@@ -16,7 +16,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "knip": "knip"
+    "knip": "knip",
+    "quality": "npm run lint && npm run type-check && npm run knip && npm run test && npm run build"
   },
   "dependencies": {
     "@babylonjs/core": "^9.17.0",
