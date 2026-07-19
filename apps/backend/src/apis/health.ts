@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
+import type { OpenAPIHono} from '@hono/zod-openapi';
+import { createRoute } from '@hono/zod-openapi'
 import { HealthResponseSchema } from '../schemas/common.js'
 
 export const storeHealthApi = (app: OpenAPIHono) => {

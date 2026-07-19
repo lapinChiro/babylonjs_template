@@ -3,7 +3,7 @@ import { app } from './app.js'
 import { migrateToLatest } from './db/migrate.js'
 import { ensureBucketExists } from './utils/minio.js'
 
-const port = parseInt(process.env.PORT || '3000')
+const port = parseInt(process.env.PORT ?? '3000')
 
 // Run migrations on startup
 async function startServer() {
@@ -22,8 +22,8 @@ async function startServer() {
     fetch: app.fetch,
     port
   }, (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`)
+    console.log(`Server is running on http://localhost:${String(info.port)}`)
   })
 }
 
-startServer()
+await startServer()

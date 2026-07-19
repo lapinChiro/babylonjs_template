@@ -2,11 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 
 const minioMocks = vi.hoisted(() => ({
   presignedPutObject: vi.fn(
-    async (_bucket: string, fileKey: string) => `http://localhost:9000/item-images/${fileKey}`,
+    (_bucket: string, fileKey: string) => Promise.resolve(`http://localhost:9000/item-images/${fileKey}`),
   ),
-  statObject: vi.fn(async () => {
-    throw new Error('Not found')
-  }),
+  statObject: vi.fn(() => Promise.reject(new Error('Not found'))),
 }))
 
 vi.mock('minio', () => ({
@@ -24,7 +22,7 @@ describe('MinIO Utils', () => {
       const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
       for (const type of validTypes) {
-        const result = await generateUploadUrl(`test.${type.split('/')[1]}`, type)
+        const result = await generateUploadUrl(`test.${type.split('/')[1] ?? ''}`, type)
         expect(result).toHaveProperty('uploadUrl')
         expect(result).toHaveProperty('fileKey')
       }

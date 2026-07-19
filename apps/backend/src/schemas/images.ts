@@ -7,10 +7,10 @@ export const ImageSchema = z.object({
   original_name: z.string().openapi({ example: 'vacation-photo.jpg' }),
   mime_type: z.string().openapi({ example: 'image/jpeg' }),
   size: z.number().openapi({ example: 2048576 }),
-  url: z.string().url().openapi({ example: 'https://minio.example.com/...' }),
+  url: z.url().openapi({ example: 'https://minio.example.com/...' }),
   user_id: z.string().nullable().openapi({ example: '1' }),
-  created_at: z.string().datetime().openapi({ example: '2025-01-10T15:30:45Z' }),
-  updated_at: z.string().datetime().openapi({ example: '2025-01-10T15:30:45Z' })
+  created_at: z.iso.datetime().openapi({ example: '2025-01-10T15:30:45Z' }),
+  updated_at: z.iso.datetime().openapi({ example: '2025-01-10T15:30:45Z' })
 }).openapi('Image');
 
 // アップロードURL要求スキーマ
@@ -27,7 +27,7 @@ export const UploadUrlRequestSchema = z.object({
 
 // アップロードURL応答スキーマ
 export const UploadUrlResponseSchema = z.object({
-  upload_url: z.string().url(),
+  upload_url: z.url(),
   file_key: z.string(),
   expires_in: z.number()
 }).openapi('UploadUrlResponse');

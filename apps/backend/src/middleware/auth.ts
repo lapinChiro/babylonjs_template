@@ -3,13 +3,29 @@ import { verifyJWT } from '../utils/auth.js'
 import { db } from '../db/connection.js'
 
 /**
+ * 認証済みユーザー情報(authMiddleware が context に設定する)
+ */
+export interface AuthUser {
+  id: number
+  name: string
+  email: string
+}
+
+declare module 'hono' {
+  interface ContextVariableMap {
+    // authMiddleware を通らないルートでは未設定のため undefined を含める
+    user: AuthUser | undefined
+  }
+}
+
+/**
  * Authentication middleware for protected routes
  * Verifies Bearer token and attaches user to context
  */
 export async function authMiddleware(c: Context, next: Next) {
   const authorization = c.req.header('Authorization')
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!authorization?.startsWith('Bearer ')) {
     return c.json({ success: false, error: 'Unauthorized' }, 401)
   }
 
@@ -34,6 +50,6 @@ export async function authMiddleware(c: Context, next: Next) {
   }
 
   // Attach user to context for use in route handlers
-  ;(c as any).set('user', user)
+  c.set('user', user)
   await next()
 }

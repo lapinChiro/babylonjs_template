@@ -21,26 +21,26 @@ const CONTENT_TYPE_EXTENSIONS: Record<AllowedContentType, string> = {
 // ⭐ MinIOクライアント初期化（バックエンド操作用）
 // Docker内部からMinIOサービスにアクセスするためのクライアント
 const minioClient = new Client({
-  endPoint: process.env.MINIO_ENDPOINT || 'minio',
-  port: parseInt(process.env.MINIO_PORT || '9000'),
+  endPoint: process.env.MINIO_ENDPOINT ?? 'minio',
+  port: parseInt(process.env.MINIO_PORT ?? '9000'),
   useSSL: process.env.MINIO_USE_SSL === 'true',
-  accessKey: process.env.MINIO_ACCESS_KEY || 'minioadmin',
-  secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin123',
+  accessKey: process.env.MINIO_ACCESS_KEY ?? 'minioadmin',
+  secretKey: process.env.MINIO_SECRET_KEY ?? 'minioadmin123',
 });
 
 // ⭐ presigned URL生成専用クライアント（外部アクセス用）
 // 重要: 署名にホスト名が含まれるため、最初から外部エンドポイントで署名を生成
 // これによりconvertToExternalUrlでのホスト名変換による署名無効化を回避
 const minioClientForPresignedUrls = new Client({
-  endPoint: process.env.MINIO_EXTERNAL_ENDPOINT || 'localhost',
-  port: parseInt(process.env.MINIO_EXTERNAL_PORT || process.env.MINIO_PORT || '9000'),
+  endPoint: process.env.MINIO_EXTERNAL_ENDPOINT ?? 'localhost',
+  port: parseInt(process.env.MINIO_EXTERNAL_PORT ?? process.env.MINIO_PORT ?? '9000'),
   useSSL: process.env.MINIO_USE_SSL === 'true',
-  accessKey: process.env.MINIO_ACCESS_KEY || 'minioadmin',
-  secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin123',
+  accessKey: process.env.MINIO_ACCESS_KEY ?? 'minioadmin',
+  secretKey: process.env.MINIO_SECRET_KEY ?? 'minioadmin123',
 });
 
-const BUCKET_NAME = process.env.MINIO_BUCKET || 'item-images';
-const UPLOAD_URL_EXPIRY = parseInt(process.env.MINIO_UPLOAD_URL_EXPIRY || '600');
+const BUCKET_NAME = process.env.MINIO_BUCKET ?? 'item-images';
+const UPLOAD_URL_EXPIRY = parseInt(process.env.MINIO_UPLOAD_URL_EXPIRY ?? '600');
 const DOWNLOAD_URL_EXPIRY = 60 * 60; // 1時間
 
 /**
@@ -135,12 +135,13 @@ export async function getFileMetadata(fileKey: string): Promise<{
 }> {
   try {
     const stat = await minioClient.statObject(BUCKET_NAME, fileKey);
+    const contentType: unknown = stat.metaData['content-type'];
     return {
       exists: true,
       size: stat.size,
-      contentType: stat.metaData?.['content-type'],
+      contentType: typeof contentType === 'string' ? contentType : undefined,
     };
-  } catch (error) {
+  } catch {
     return { exists: false };
   }
 }

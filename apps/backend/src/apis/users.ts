@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import type { OpenAPIHono} from '@hono/zod-openapi';
+import { createRoute } from '@hono/zod-openapi';
 import { authMiddleware } from '../middleware/auth.js';
 import { UserSchema, UserParamsSchema, UserListSchema, CreateUserSchema, UpdateUserSchema } from '../schemas/users.js';
 import { ErrorResponseSchema } from '../schemas/common.js';
@@ -247,11 +248,10 @@ const storeUpdateUserRoute = (app: OpenAPIHono) => {
       }
 
       // パスワードが含まれている場合はハッシュ化
-      const dataToUpdate: any = { ...updateData };
-      if (updateData.password) {
-        dataToUpdate.password_hash = await hashPassword(updateData.password);
-        delete dataToUpdate.password;
-      }
+      const { password, ...updateFields } = updateData;
+      const dataToUpdate = password
+        ? { ...updateFields, password_hash: await hashPassword(password) }
+        : updateFields;
 
       const updatedUser = await db
         .updateTable('users')

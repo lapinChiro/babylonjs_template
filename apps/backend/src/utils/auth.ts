@@ -1,7 +1,15 @@
 import bcrypt from 'bcrypt'
 import { sign, verify } from 'hono/jwt'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-change-in-production'
+const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-key-change-in-production'
+
+/**
+ * JWT に格納する認証ペイロード
+ */
+export interface AuthTokenPayload {
+  userId: number
+  email: string
+}
 
 /**
  * Hash a password using bcrypt
@@ -27,7 +35,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  * @param payload Token payload
  * @returns JWT token string
  */
-export async function generateJWT(payload: any): Promise<string> {
+export async function generateJWT(payload: AuthTokenPayload): Promise<string> {
   // Calculate expiration time (24 hours from now)
   const exp = Math.floor(Date.now() / 1000) + (24 * 60 * 60)
 
@@ -39,10 +47,14 @@ export async function generateJWT(payload: any): Promise<string> {
  * @param token JWT token string
  * @returns Decoded payload or null if invalid
  */
-export async function verifyJWT(token: string): Promise<any> {
+export async function verifyJWT(token: string): Promise<AuthTokenPayload | null> {
   try {
-    return await verify(token, JWT_SECRET, 'HS256')
-  } catch (error) {
+    const { userId, email } = await verify(token, JWT_SECRET, 'HS256')
+    if (typeof userId !== 'number' || typeof email !== 'string') {
+      return null
+    }
+    return { userId, email }
+  } catch {
     return null
   }
 }

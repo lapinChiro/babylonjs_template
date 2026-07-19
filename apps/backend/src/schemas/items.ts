@@ -4,8 +4,8 @@ import { z } from '@hono/zod-openapi'
 export const ItemSchema = z.object({
   id: z.string().openapi({ example: '1' }),
   name: z.string().openapi({ example: 'MacBook Pro' }),
-  created_at: z.string().datetime().openapi({ example: '2024-01-01T00:00:00Z' }),
-  updated_at: z.string().datetime().openapi({ example: '2024-01-01T00:00:00Z' })
+  created_at: z.iso.datetime().openapi({ example: '2024-01-01T00:00:00Z' }),
+  updated_at: z.iso.datetime().openapi({ example: '2024-01-01T00:00:00Z' })
 }).openapi('Item')
 
 // アイテム作成用スキーマ

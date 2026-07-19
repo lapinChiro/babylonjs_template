@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import type { OpenAPIHono} from '@hono/zod-openapi';
+import { createRoute } from '@hono/zod-openapi';
 import { db } from '../db/connection.js';
 import { verifyPassword, generateJWT } from '../utils/auth.js';
 import { authMiddleware } from '../middleware/auth.js';
@@ -61,7 +62,7 @@ const storeLoginRoute = (app: OpenAPIHono) => {
         .where('active', '=', true)
         .executeTakeFirst();
 
-      if (!user || !user.password_hash) {
+      if (!user?.password_hash) {
         return c.json({
           success: false,
           error: 'Invalid email or password'
@@ -116,7 +117,7 @@ const storeLogoutRoute = (app: OpenAPIHono) => {
   });
 
   // POST /api/auth/logout エンドポイント実装
-  app.openapi(logoutRoute, async (c) => {
+  app.openapi(logoutRoute, (c) => {
     // JWT is stateless, so we just return success
     // Client should remove the token from storage
     return c.json({
@@ -151,8 +152,14 @@ const storeSessionRoute = (app: OpenAPIHono) => {
   });
 
   // GET /api/auth/session エンドポイント実装
-  app.openapi(sessionRoute, async (c) => {
-    const user = (c as any).get('user') as { id: number; name: string; email: string; };
+  app.openapi(sessionRoute, (c) => {
+    const user = c.get('user');
+    if (!user) {
+      return c.json({
+        success: false,
+        error: 'Unauthorized'
+      }, 401);
+    }
     return c.json({
       success: true,
       data: {

@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import type { OpenAPIHono} from '@hono/zod-openapi';
+import { createRoute } from '@hono/zod-openapi';
 import { authMiddleware } from '../middleware/auth.js';
 import { ItemListSchema, ItemParamsSchema, ItemSchema, CreateItemSchema, UpdateItemSchema } from '../schemas/items.js';
 import { ErrorResponseSchema } from '../schemas/common.js';

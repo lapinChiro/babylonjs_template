@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import type { OpenAPIHono} from '@hono/zod-openapi';
+import { createRoute } from '@hono/zod-openapi';
 import { authMiddleware } from '../middleware/auth.js';
 import {
   ImageListSchema,
@@ -208,13 +209,15 @@ const storeConfirmUploadRoute = (app: OpenAPIHono) => {
   });
 
   app.openapi(confirmUploadRoute, async (c) => {
-    let { file_key, original_name, mime_type, size } = c.req.valid('json');
+    const body = c.req.valid('json');
+    const { file_key, original_name, mime_type } = body;
+    let size = body.size;
 
     try {
       // ⭐ ファイルの存在確認とメタデータ取得
       const metadata = await getFileMetadata(file_key);
 
-      if (!metadata.exists) {
+      if (!metadata.exists || metadata.size === undefined) {
         return c.json({
           success: false,
           message: 'File not found in storage'
@@ -223,12 +226,12 @@ const storeConfirmUploadRoute = (app: OpenAPIHono) => {
 
       // ⭐ サイズの二重チェック
       const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-      const actualSize = metadata.size!;
+      const actualSize = metadata.size;
 
       if (actualSize > MAX_SIZE) {
         // サイズ超過の場合はファイルを削除
         await deleteFile(file_key);
-        console.warn(`⚠️ File size exceeds limit: ${actualSize} bytes (max: ${MAX_SIZE})`);
+        console.warn(`⚠️ File size exceeds limit: ${String(actualSize)} bytes (max: ${String(MAX_SIZE)})`);
         return c.json({
           success: false,
           message: 'File size exceeds limit'
@@ -237,11 +240,11 @@ const storeConfirmUploadRoute = (app: OpenAPIHono) => {
 
       // クライアントが送信したサイズと実際のサイズを比較
       if (actualSize !== size) {
-        console.warn(`⚠️ Size mismatch for ${file_key}: expected ${size}, got ${actualSize}`);
+        console.warn(`⚠️ Size mismatch for ${file_key}: expected ${String(size)}, got ${String(actualSize)}`);
         size = actualSize; // 実際のサイズを使用
       }
 
-      const user = (c as any).get('user') as { id: number } | undefined;
+      const user = c.get('user');
       const userId = user?.id ?? null;
 
       const newImage = await db

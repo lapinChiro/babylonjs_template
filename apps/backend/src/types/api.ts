@@ -1,5 +1,5 @@
 // APIレスポンス共通型
-export type ApiResponse<T> = {
+export interface ApiResponse<T> {
   success?: boolean
   data?: T
   message?: string
@@ -7,7 +7,7 @@ export type ApiResponse<T> = {
 }
 
 // 実行時に利用可能な型定義（Zodスキーマから推論）
-export type User = {
+export interface User {
   id: string
   name: string
   email: string
@@ -15,12 +15,12 @@ export type User = {
   created_at: string
 }
 
-export type CreateUser = {
+export interface CreateUser {
   name: string
   email: string
 }
 
-export type UpdateUser = {
+export interface UpdateUser {
   name?: string
   email?: string
   active?: boolean

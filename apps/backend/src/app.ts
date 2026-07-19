@@ -3,7 +3,7 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { storeUserApi, storeItemApi, storeHealthApi, storeAuthApi, storeImageApi } from './apis/index.js'
 
-const basePath = process.env.BASE_PATH || ''
+const basePath = process.env.BASE_PATH ?? ''
 
 export const app = new OpenAPIHono()
 

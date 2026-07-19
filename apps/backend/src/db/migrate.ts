@@ -34,7 +34,7 @@ export async function migrateToLatest(): Promise<MigrationResultSet> {
   if (error) {
     console.error('Failed to migrate')
     console.error(error)
-    throw error
+    throw error instanceof Error ? error : new Error('Failed to migrate', { cause: error })
   }
 
   return { error, results }
@@ -63,14 +63,14 @@ export async function migrateDown(): Promise<MigrationResultSet> {
   if (error) {
     console.error('Failed to rollback')
     console.error(error)
-    throw error
+    throw error instanceof Error ? error : new Error('Failed to rollback', { cause: error })
   }
 
   return { error, results }
 }
 
 // Run migrations if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === `file://${process.argv[1] ?? ''}`) {
   const command = process.argv[2]
   
   try {

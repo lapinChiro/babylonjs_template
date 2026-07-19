@@ -2,7 +2,7 @@ import { z } from '@hono/zod-openapi';
 
 // ログイン用のリクエストスキーマ
 export const LoginRequestSchema = z.object({
-  email: z.string().email().openapi({
+  email: z.email().openapi({
     example: 'user@example.com',
     description: 'ユーザーのメールアドレス'
   }),
@@ -23,7 +23,7 @@ export const LoginResponseSchema = z.object({
     user: z.object({
       id: z.number().openapi({ example: 1 }),
       name: z.string().openapi({ example: 'John Doe' }),
-      email: z.string().email().openapi({ example: 'user@example.com' })
+      email: z.email().openapi({ example: 'user@example.com' })
     })
   })
 }).openapi('LoginResponse');
@@ -41,7 +41,7 @@ export const SessionResponseSchema = z.object({
     user: z.object({
       id: z.number().openapi({ example: 1 }),
       name: z.string().openapi({ example: 'John Doe' }),
-      email: z.string().email().openapi({ example: 'user@example.com' })
+      email: z.email().openapi({ example: 'user@example.com' })
     })
   })
 }).openapi('SessionResponse');
