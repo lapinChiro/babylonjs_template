@@ -3,7 +3,6 @@ import { authMiddleware } from '../middleware/auth.js';
 import { ItemListSchema, ItemParamsSchema, ItemSchema, CreateItemSchema, UpdateItemSchema } from '../schemas/items.js';
 import { ErrorResponseSchema } from '../schemas/common.js';
 import { db } from '../db/connection.js';
-import { hashPassword } from '../utils/auth.js'
 
 export const storeItemApi = (app: OpenAPIHono) => {
   app.use('/api/items/*', authMiddleware);

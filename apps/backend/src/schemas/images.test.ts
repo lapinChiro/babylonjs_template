@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { UploadUrlRequestSchema } from './images';
+import { UploadUrlRequestSchema } from './images.js';
 
 describe('Image Schemas', () => {
   describe('UploadUrlRequestSchema', () => {

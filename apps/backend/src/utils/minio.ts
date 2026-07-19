@@ -63,7 +63,7 @@ export async function ensureBucketExists(): Promise<void> {
  * ⭐ アップロード用署名付きURL生成（バリデーション強化）
  */
 export async function generateUploadUrl(
-  filename: string,
+  _filename: string,
   contentType: string
 ): Promise<{ uploadUrl: string; fileKey: string }> {
   // ⭐ Content-Typeバリデーション

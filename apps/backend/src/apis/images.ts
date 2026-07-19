@@ -161,7 +161,7 @@ const storeRequestUploadUrlRoute = (app: OpenAPIHono) => {
   });
 
   app.openapi(requestUploadUrlRoute, async (c) => {
-    const { filename, content_type, size } = c.req.valid('json');
+    const { filename, content_type } = c.req.valid('json');
 
     try {
       const { uploadUrl, fileKey } = await generateUploadUrl(filename, content_type);

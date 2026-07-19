@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt'
 import { sign, verify } from 'hono/jwt'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-change-in-production'
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h'
 
 /**
  * Hash a password using bcrypt

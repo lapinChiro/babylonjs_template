@@ -16,7 +16,7 @@ vi.mock('minio', () => ({
   },
 }))
 
-import { generateUploadUrl, getFileMetadata } from './minio'
+import { generateUploadUrl, getFileMetadata } from './minio.js'
 
 describe('MinIO Utils', () => {
   describe('Content-Type Validation', () => {
