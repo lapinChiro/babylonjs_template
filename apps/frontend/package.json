@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vue-tsc -b && vite build",
+    "type-check": "vue-tsc --build --noEmit",
     "preview": "vite preview",
     "knip": "knip"
   },
