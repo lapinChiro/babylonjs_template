@@ -21,7 +21,7 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
       return response.data;
     }
 
-    throw new ApiError(response.error || 'ログインに失敗しました');
+    throw new ApiError(response.error ?? 'ログインに失敗しました');
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
@@ -60,7 +60,7 @@ export async function checkSession(): Promise<SessionResponse | null> {
     }
 
     return null;
-  } catch (error) {
+  } catch {
     // Session check failure is not critical - don't remove token here
     // Token removal should be handled by auth store logic
     return null;

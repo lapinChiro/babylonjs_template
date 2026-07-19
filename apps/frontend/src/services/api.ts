@@ -5,7 +5,7 @@
 import { ofetch } from 'ofetch';
 
 // API Base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001/api';
 
 // Token storage key
 const TOKEN_KEY = 'auth:token';
@@ -47,6 +47,32 @@ export class ApiError extends Error {
 }
 
 /**
+ * unknown なエラーから表示用メッセージを取り出す
+ * Error 以外・空メッセージの場合は fallback を返す
+ */
+export function toErrorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error && err.message !== '') {
+    return err.message;
+  }
+  return fallback;
+}
+
+/**
+ * API のエラーレスポンスボディからメッセージを取り出す
+ */
+function extractErrorMessage(data: unknown): string | undefined {
+  if (typeof data === 'object' && data !== null) {
+    if ('error' in data && typeof data.error === 'string' && data.error !== '') {
+      return data.error;
+    }
+    if ('message' in data && typeof data.message === 'string' && data.message !== '') {
+      return data.message;
+    }
+  }
+  return undefined;
+}
+
+/**
  * Create ofetch instance with default configuration
  */
 export const api = ofetch.create({
@@ -55,50 +81,48 @@ export const api = ofetch.create({
   // Add authentication header if token exists
   onRequest(ctx) {
     const token = getStoredToken();
-    if (token) {
-      const headers = ctx.options.headers || {};
-      (ctx.options.headers as any) = {
-        ...headers,
-        Authorization: `Bearer ${token}`,
-      };
+    if (token !== null) {
+      ctx.options.headers.set('Authorization', `Bearer ${token}`);
     }
   },
 
   // Handle response errors
   onResponseError(ctx) {
     const { response } = ctx;
-    const error = response._data;
+    const data: unknown = response._data;
+    const message = extractErrorMessage(data);
 
     // Handle authentication errors
     if (response.status === 401) {
       // セッション確認のリクエストの場合はトークンを削除しない
-      const isSessionCheck = ctx.request.toString().includes('/auth/session');
+      const requestUrl = typeof ctx.request === 'string' ? ctx.request : ctx.request.url;
+      const isSessionCheck = requestUrl.includes('/auth/session');
 
       if (!isSessionCheck) {
         removeStoredToken();
       }
 
       throw new ApiError(
-        error?.error || '認証エラーが発生しました',
+        message ?? '認証エラーが発生しました',
         response.status,
-        error
+        data
       );
     }
 
     // Handle conflict errors (duplicate email, etc.)
     if (response.status === 409) {
       throw new ApiError(
-        error?.error || error?.message || 'リソースの競合が発生しました',
+        message ?? 'リソースの競合が発生しました',
         response.status,
-        error
+        data
       );
     }
 
     // Handle other errors
     throw new ApiError(
-      error?.error || error?.message || 'エラーが発生しました',
+      message ?? 'エラーが発生しました',
       response.status,
-      error
+      data
     );
   },
 });

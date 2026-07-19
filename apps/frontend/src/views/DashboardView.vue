@@ -2,8 +2,15 @@
   <div class="app-shell">
     <header class="app-header">
       <div class="app-header__inner">
-        <RouterLink class="brand" to="/dashboard" aria-label="Babylon Stack ホーム">
-          <span class="brand__mark" aria-hidden="true">B</span>
+        <RouterLink
+          class="brand"
+          to="/dashboard"
+          aria-label="Babylon Stack ホーム"
+        >
+          <span
+            class="brand__mark"
+            aria-hidden="true"
+          >B</span>
           <span>
             <strong>Babylon Stack</strong>
             <small>Vue · Hono · PostgreSQL</small>
@@ -12,7 +19,11 @@
 
         <div class="account">
           <span class="account__email">{{ authStore.currentUser?.email }}</span>
-          <button class="button button--ghost" type="button" @click="handleLogout">
+          <button
+            class="button button--ghost"
+            type="button"
+            @click="handleLogout"
+          >
             ログアウト
           </button>
         </div>
@@ -22,13 +33,18 @@
     <main class="dashboard">
       <section class="hero">
         <div class="hero__copy">
-          <p class="eyebrow">REAL-TIME 3D TEMPLATE</p>
-          <h1>Webアプリと3D体験を、<br />ひとつの型安全な基盤から。</h1>
+          <p class="eyebrow">
+            REAL-TIME 3D TEMPLATE
+          </p>
+          <h1>Webアプリと3D体験を、<br>ひとつの型安全な基盤から。</h1>
           <p>
             VueのUI、Babylon.jsのレンダリング、Hono API、PostgreSQLを分離しながら、
             すぐに拡張できるテンプレートです。
           </p>
-          <div class="tech-list" aria-label="採用技術">
+          <div
+            class="tech-list"
+            aria-label="採用技術"
+          >
             <span>Vue 3</span>
             <span>Babylon.js</span>
             <span>Hono</span>
@@ -39,11 +55,18 @@
         <BabylonCanvas class="hero__viewer" />
       </section>
 
-      <section class="workspace" aria-labelledby="workspace-title">
+      <section
+        class="workspace"
+        aria-labelledby="workspace-title"
+      >
         <div class="section-heading">
           <div>
-            <p class="eyebrow">CONNECTED DATA</p>
-            <h2 id="workspace-title">アプリケーション機能</h2>
+            <p class="eyebrow">
+              CONNECTED DATA
+            </p>
+            <h2 id="workspace-title">
+              アプリケーション機能
+            </h2>
           </div>
           <p>既存の認証・CRUD・オブジェクトストレージ機能もそのまま利用できます。</p>
         </div>
@@ -58,14 +81,20 @@
               <span class="count-badge">{{ itemsStore.filteredItems.length }} 件</span>
             </div>
 
-            <form class="inline-form" @submit.prevent="handleAddItem">
-              <label class="sr-only" for="new-item">アイテム名</label>
+            <form
+              class="inline-form"
+              @submit.prevent="handleAddItem"
+            >
+              <label
+                class="sr-only"
+                for="new-item"
+              >アイテム名</label>
               <input
                 id="new-item"
                 v-model="newItemName"
                 type="text"
                 placeholder="アイテム名を入力"
-              />
+              >
               <button
                 class="button button--primary"
                 type="submit"
@@ -75,23 +104,41 @@
               </button>
             </form>
 
-            <p v-if="itemsStore.error" class="feedback feedback--error">
+            <p
+              v-if="itemsStore.error"
+              class="feedback feedback--error"
+            >
               {{ itemsStore.error }}
             </p>
-            <p v-if="itemsStore.loading && itemsStore.filteredItems.length === 0" class="feedback">
+            <p
+              v-if="itemsStore.loading && itemsStore.filteredItems.length === 0"
+              class="feedback"
+            >
               読み込み中…
             </p>
-            <div v-else-if="itemsStore.filteredItems.length > 0" class="table-wrap">
+            <div
+              v-else-if="itemsStore.filteredItems.length > 0"
+              class="table-wrap"
+            >
               <table>
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">名前</th>
-                    <th scope="col"><span class="sr-only">操作</span></th>
+                    <th scope="col">
+                      #
+                    </th>
+                    <th scope="col">
+                      名前
+                    </th>
+                    <th scope="col">
+                      <span class="sr-only">操作</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in itemsStore.filteredItems" :key="item.id">
+                  <tr
+                    v-for="(item, index) in itemsStore.filteredItems"
+                    :key="item.id"
+                  >
                     <td>{{ String(index + 1).padStart(2, '0') }}</td>
                     <td>{{ item.name }}</td>
                     <td class="table-actions">
@@ -107,7 +154,12 @@
                 </tbody>
               </table>
             </div>
-            <p v-else class="empty-state">アイテムが登録されていません。</p>
+            <p
+              v-else
+              class="empty-state"
+            >
+              アイテムが登録されていません。
+            </p>
           </article>
 
           <article class="panel">
@@ -125,29 +177,50 @@
               accept="image/jpeg,image/png,image/gif,image/webp"
               hidden
               @change="handleFileSelect"
-            />
+            >
             <button
               class="upload-zone"
               type="button"
               :disabled="imagesStore.uploading"
               @click="triggerFileInput"
             >
-              <span class="upload-zone__icon" aria-hidden="true">↑</span>
+              <span
+                class="upload-zone__icon"
+                aria-hidden="true"
+              >↑</span>
               <span>
                 <strong>{{ imagesStore.uploading ? 'アップロード中…' : '画像をアップロード' }}</strong>
                 <small>JPEG / PNG / GIF / WebP · 最大10MB</small>
               </span>
             </button>
 
-            <p v-if="imagesStore.error" class="feedback feedback--error">
+            <p
+              v-if="imagesStore.error"
+              class="feedback feedback--error"
+            >
               {{ imagesStore.error }}
             </p>
-            <p v-if="imagesStore.loading && imagesStore.sortedImages.length === 0" class="feedback">
+            <p
+              v-if="imagesStore.loading && imagesStore.sortedImages.length === 0"
+              class="feedback"
+            >
               読み込み中…
             </p>
-            <div v-else-if="imagesStore.sortedImages.length > 0" class="asset-list">
-              <div v-for="image in imagesStore.sortedImages" :key="image.id" class="asset-row">
-                <img :src="image.url" :alt="image.original_name" width="48" height="48" />
+            <div
+              v-else-if="imagesStore.sortedImages.length > 0"
+              class="asset-list"
+            >
+              <div
+                v-for="image in imagesStore.sortedImages"
+                :key="image.id"
+                class="asset-row"
+              >
+                <img
+                  :src="image.url"
+                  :alt="image.original_name"
+                  width="48"
+                  height="48"
+                >
                 <span class="asset-row__name">{{ image.original_name }}</span>
                 <button
                   class="text-button text-button--danger"
@@ -158,7 +231,12 @@
                 </button>
               </div>
             </div>
-            <p v-else class="empty-state">画像が登録されていません。</p>
+            <p
+              v-else
+              class="empty-state"
+            >
+              画像が登録されていません。
+            </p>
           </article>
         </div>
       </section>

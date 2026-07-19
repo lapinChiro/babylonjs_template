@@ -16,7 +16,10 @@
         :class="{ 'babylon-viewer__overlay--error': status === 'error' }"
         role="status"
       >
-        <span class="babylon-viewer__status-mark" aria-hidden="true" />
+        <span
+          class="babylon-viewer__status-mark"
+          aria-hidden="true"
+        />
         <span>{{ statusMessage }}</span>
       </div>
     </div>
@@ -96,7 +99,7 @@ onMounted(async () => {
 
     const renderer = new BabylonRenderer(canvas, { backend: requestedBackend })
     rendererRef.value = renderer
-    resizeObserver = new ResizeObserver(() => renderer.resize())
+    resizeObserver = new ResizeObserver(() => { renderer.resize(); })
     resizeObserver.observe(canvas)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 

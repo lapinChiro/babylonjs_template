@@ -33,6 +33,8 @@ export class BabylonRenderer {
 
     const result = await createEngine(this.canvas, this.requestedBackend)
 
+    // 上の await 中に dispose() が呼ばれ得るが、TS は await を跨いでも narrowing を維持するため誤検出になる
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (this.disposed) {
       result.engine.dispose()
       throw new Error('Renderer was disposed during initialization.')

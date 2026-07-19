@@ -74,7 +74,7 @@ async function uploadToMinio(
       let errorText = '';
       try {
         errorText = await response.text();
-      } catch (e) {
+      } catch {
         // テキスト取得失敗時は無視
       }
 

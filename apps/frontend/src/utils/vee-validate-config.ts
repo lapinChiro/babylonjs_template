@@ -4,6 +4,16 @@ import { configure } from 'vee-validate';
  * VeeValidateグローバル設定
  */
 
+/**
+ * ルールパラメータのうち表示できる値(文字列・数値)のみ文字列化する
+ */
+function paramText(value: unknown, fallback: string): string {
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value);
+  }
+  return fallback;
+}
+
 // VeeValidateの設定
 export function setupVeeValidate() {
   configure({
@@ -14,10 +24,14 @@ export function setupVeeValidate() {
     validateOnModelUpdate: true, // v-model更新時にバリデーション
 
     // エラーメッセージの生成
-    generateMessage: (context: any) => {
+    generateMessage: (context) => {
+      // params は配列形式の場合もあるため、オブジェクト形式のみ参照する
+      const rawParams = context.rule?.params;
+      const params: Record<string, unknown> =
+        rawParams !== undefined && !Array.isArray(rawParams) ? rawParams : {};
+
       // カスタムメッセージがある場合はそれを使用
-      const params = context.rule?.params as Record<string, any>;
-      if (params?.message) {
+      if (typeof params.message === 'string' && params.message !== '') {
         return params.message;
       }
 
@@ -34,21 +48,21 @@ export function setupVeeValidate() {
         website: 'ウェブサイト'
       };
 
-      const fieldName = fieldNames[context.field] || context.field;
+      const fieldName = fieldNames[context.field] ?? context.field;
 
       // ルール別のメッセージ
       const messages: Record<string, string> = {
         required: `${fieldName}は必須項目です`,
         email: '正しいメールアドレス形式で入力してください',
-        min: `${fieldName}は${params?.min || 0}文字以上で入力してください`,
-        max: `${fieldName}は${params?.max || 0}文字以内で入力してください`,
+        min: `${fieldName}は${paramText(params.min, '0')}文字以上で入力してください`,
+        max: `${fieldName}は${paramText(params.max, '0')}文字以内で入力してください`,
         confirmed: `${fieldName}が一致しません`,
         url: '正しいURL形式で入力してください',
         numeric: '数値を入力してください',
         integer: '整数を入力してください'
       };
 
-      return messages[context.rule?.name || ''] || `${fieldName}の入力値が正しくありません`;
+      return messages[context.rule?.name ?? ''] ?? `${fieldName}の入力値が正しくありません`;
     }
   });
 }

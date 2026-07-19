@@ -67,7 +67,7 @@ export default defineConfig({
         },
         // チャンクファイル名の最適化
         chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() ?? 'chunk' : 'chunk';
           return `js/[name]-${facadeModuleId}-[hash].js`;
         },
         assetFileNames: 'assets/[name]-[hash].[ext]',

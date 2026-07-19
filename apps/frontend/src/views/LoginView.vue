@@ -1,8 +1,14 @@
 <template>
   <main class="auth-page">
     <section class="auth-panel">
-      <div class="brand" aria-label="Babylon Stack">
-        <span class="brand__mark" aria-hidden="true">B</span>
+      <div
+        class="brand"
+        aria-label="Babylon Stack"
+      >
+        <span
+          class="brand__mark"
+          aria-hidden="true"
+        >B</span>
         <span>
           <strong>Babylon Stack</strong>
           <small>Vue · Hono · PostgreSQL</small>
@@ -10,9 +16,14 @@
       </div>
 
       <h1>ログイン</h1>
-      <p class="auth-panel__lead">アカウント情報を入力して、3Dワークスペースを開きます。</p>
+      <p class="auth-panel__lead">
+        アカウント情報を入力して、3Dワークスペースを開きます。
+      </p>
 
-      <form class="auth-form" @submit.prevent="handleSubmit">
+      <form
+        class="auth-form"
+        @submit.prevent="handleSubmit"
+      >
         <div class="auth-field">
           <label for="email">メールアドレス</label>
           <input
@@ -22,7 +33,7 @@
             autocomplete="email"
             placeholder="you@example.com"
             required
-          />
+          >
         </div>
 
         <div class="auth-field">
@@ -34,10 +45,16 @@
             autocomplete="current-password"
             placeholder="6文字以上"
             required
-          />
+          >
         </div>
 
-        <p v-if="error" class="auth-error" role="alert">{{ error }}</p>
+        <p
+          v-if="error"
+          class="auth-error"
+          role="alert"
+        >
+          {{ error }}
+        </p>
 
         <button
           class="button button--primary"
@@ -49,7 +66,10 @@
       </form>
     </section>
 
-    <aside class="auth-visual" aria-label="テンプレートの概要">
+    <aside
+      class="auth-visual"
+      aria-label="テンプレートの概要"
+    >
       <div class="auth-visual__content">
         <span>BROWSER-NATIVE 3D</span>
         <h2>Interface meets immersive space.</h2>

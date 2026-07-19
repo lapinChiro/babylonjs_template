@@ -1,6 +1,15 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores';
 
+// ルートメタ情報の型付け(vue-router 公式の module augmentation パターン)
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean;
+    requiresGuest?: boolean;
+    title?: string;
+  }
+}
+
 // 遅延読み込みコンポーネント
 const LoginView = () => import('@/views/LoginView.vue');
 const DashboardView = () => import('@/views/DashboardView.vue');

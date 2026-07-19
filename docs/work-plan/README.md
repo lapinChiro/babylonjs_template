@@ -16,6 +16,7 @@
 - npm パッケージは追加時点の latest を採用(README.md のバージョン方針を踏襲)。`npm install -D <pkg>@latest` で解決し、lock に固定する
 - 品質基準: 全変更に対し **0 エラー・0 警告**(TypeScript / lint / テスト / ビルド)。テストの削除・弱体化でエラーを消すことは禁止
 - `any` 禁止・非 null assertion (`!`) 禁止は lint でエラー強制する。`as` による narrowing 禁止はルール文書+レビューで担保(lint 強制は `as const` 等を巻き込むため)
+- **`eslint-disable`(全形式)・`@ts-expect-error`・`@ts-ignore`・`@ts-nocheck` 等の抑制コメントは一切禁止**(ユーザー指示 2026-07-19)。誤検出と思われる場合もルール抑制ではなく実装側の書き換えで解決する。Phase 3 時点で存在する 2 箇所の `eslint-disable` は Phase 11(計画の一番最後)で適切な実装に置き換える
 - 移植元 `claude_settings/` は**読み取り専用の参照資料**として本作業では変更しない(全フェーズ完了・検収後に削除してよい)
 - root への package.json 追加(npm workspaces 化)は行わない。品質コマンドは各 app 内で完結させる
 - コミットはフェーズ内の指示に従い小さく行う(git commit はユーザー承認の運用なら都度確認)
@@ -52,6 +53,7 @@
 | D10 | skills / commands の model 固定(review 系 = claude-fable-5、coder/start_dev = claude-opus-4-8)は維持 | 移植元の運用実績を踏襲。変更する理由がない |
 | D11 | `modern-web-guidance` は vendored コーパスごと `.agents/skills/` へコピーし symlink も再現(内容は編集しない) | 完全に汎用。Babylon.js の Canvas/UI 作業でむしろ有用 |
 | D12 | 現 DB スキーマ(serial PK / timestamp 型)は本作業では変更しない。timestamptz 化・uuid PK 化は TODO へ記録 | スキーマ変更は設定構築と独立した意思決定。retroactive 適用のスコープ爆発を防ぐ |
+| D13 | 抑制コメント(`eslint-disable` / `@ts-expect-error` / `@ts-ignore` 等)は全面禁止。既存分は最終フェーズ(Phase 11)で適切な実装に置き換え、以降のフェーズでは新規使用しない | lint は信頼性の高い静的解析の一翼であり、抑制コメントはそれを根本から覆すため(ユーザー指示 2026-07-19) |
 
 ## 移植マッピング表(全ファイルの処遇)
 
@@ -104,11 +106,11 @@
 
 ## フェーズ一覧と進捗
 
-依存関係: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10(直列。各フェーズは前フェーズの完了を前提とする)
+依存関係: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11(直列。各フェーズは前フェーズの完了を前提とする)
 
 - [x] **Phase 1**: tsconfig 強化(両 app)+ type-check/build スクリプト整備 — `phase-01-tsconfig.md`
 - [x] **Phase 2**: backend ESLint 導入+0 エラー化 — `phase-02-backend-eslint.md`
-- [ ] **Phase 3**: frontend ESLint 導入+0 エラー化 — `phase-03-frontend-eslint.md`
+- [x] **Phase 3**: frontend ESLint 導入+0 エラー化 — `phase-03-frontend-eslint.md`
 - [ ] **Phase 4**: frontend vitest 導入+シードテスト — `phase-04-frontend-vitest.md`
 - [ ] **Phase 5**: backend knip 導入+ quality スクリプト+ CI — `phase-05-knip-ci-quality-gate.md`
 - [ ] **Phase 6**: Claude Code 基盤(settings.json / CLAUDE.md / coder / commands / modern-web-guidance) — `phase-06-claude-foundation.md`
@@ -116,6 +118,7 @@
 - [ ] **Phase 8**: 品質系 skills(quality-check / check-local / tdd / test-design / todo-audit / review-dev / refactoring-check) — `phase-08-quality-skills.md`
 - [ ] **Phase 9**: ワークフロー層 skills + 種ファイル(plan.md / TODO / backlog/) — `phase-09-workflow-skills.md`
 - [ ] **Phase 10**: UX 層(ux-design)+ 全体整合性検証 — `phase-10-ux-and-verification.md`
+- [ ] **Phase 11**: 抑制コメント(eslint-disable 等)の全廃(D13) — `phase-11-remove-suppression-comments.md`
 
 ## 各フェーズ共通の完了条件
 
@@ -123,4 +126,4 @@
 2. `apps/backend` / `apps/frontend` で当該フェーズまでに導入済みの品質コマンドが全て 0 エラー・0 警告(導入前のコマンドは対象外)
 3. 本 README の進捗チェックボックスを更新した
 4. フェーズ文書末尾「引き継ぎ事項」に実績を追記した(差異なしなら「差異なし」と明記)
-5. root の `prompt.md` を次フェーズ実行の指示に書き換えた(最終 Phase 10 完了時は「全フェーズ完了。claude_settings/ の扱い(残す/削除)をユーザーに確認する」という内容にする)
+5. root の `prompt.md` を次フェーズ実行の指示に書き換えた(最終 Phase 11 完了時は「全フェーズ完了。claude_settings/ の扱い(残す/削除)をユーザーに確認する」という内容にする)

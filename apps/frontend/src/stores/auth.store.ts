@@ -2,7 +2,23 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { LoginCredentials, AuthState } from '@/types';
 import * as authService from '@/services/auth.service';
-import { getStoredToken } from '@/services/api';
+import { getStoredToken, toErrorMessage } from '@/services/api';
+
+/**
+ * LocalStorage から復元した値がユーザー情報の形をしているか検証する
+ */
+function isStoredUser(value: unknown): value is { id: number; name: string; email: string } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    typeof value.id === 'number' &&
+    'name' in value &&
+    typeof value.name === 'string' &&
+    'email' in value &&
+    typeof value.email === 'string'
+  );
+}
 
 /**
  * 認証ストア
@@ -20,7 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Getters
   const authState = computed<AuthState>(() => ({
     isLoggedIn: isLoggedIn.value,
-    currentUser: currentUser.value || undefined,
+    currentUser: currentUser.value ?? undefined,
     loading: loading.value,
     error: error.value ? { message: error.value } : null
   }));
@@ -36,28 +52,23 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
 
     try {
-      // APIを使用したログイン処理
+      // APIを使用したログイン処理(失敗時は ApiError が throw される)
       const response = await authService.login({
         email: credentials.email,
         password: credentials.password
       });
 
-      if (response && response.user) {
-        isLoggedIn.value = true;
-        currentUser.value = response.user;
-        isInitialized.value = true;
+      isLoggedIn.value = true;
+      currentUser.value = response.user;
+      isInitialized.value = true;
 
-        // LocalStorageにユーザー情報を保存（トークンはAPIクライアントで管理）
-        localStorage.setItem('auth:isLoggedIn', 'true');
-        localStorage.setItem('auth:currentUser', JSON.stringify(response.user));
+      // LocalStorageにユーザー情報を保存（トークンはAPIクライアントで管理）
+      localStorage.setItem('auth:isLoggedIn', 'true');
+      localStorage.setItem('auth:currentUser', JSON.stringify(response.user));
 
-        return true;
-      }
-
-      error.value = 'ログインに失敗しました';
-      return false;
-    } catch (err: any) {
-      error.value = err.message || 'ログイン処理中にエラーが発生しました。';
+      return true;
+    } catch (err) {
+      error.value = toErrorMessage(err, 'ログイン処理中にエラーが発生しました。');
       return false;
     } finally {
       loading.value = false;
@@ -93,18 +104,21 @@ export const useAuthStore = defineStore('auth', () => {
       const token = getStoredToken();
       const storedCurrentUser = localStorage.getItem('auth:currentUser');
 
-      if (token && storedCurrentUser) {
+      if (token !== null && storedCurrentUser !== null) {
         try {
           // 保存されたユーザー情報を一時的に復元
-          const userData = JSON.parse(storedCurrentUser);
-          isLoggedIn.value = true;
-          currentUser.value = userData;
+          const userData: unknown = JSON.parse(storedCurrentUser);
+          if (isStoredUser(userData)) {
+            isLoggedIn.value = true;
+            currentUser.value = userData;
+          }
 
           // バックグラウンドでセッション確認
           const session = await authService.checkSession();
 
-          if (session && session.user) {
+          if (session) {
             // セッション有効 - ユーザー情報を最新に更新
+            isLoggedIn.value = true;
             currentUser.value = session.user;
             localStorage.setItem('auth:currentUser', JSON.stringify(session.user));
           } else {
@@ -114,7 +128,7 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.removeItem('auth:isLoggedIn');
             localStorage.removeItem('auth:currentUser');
           }
-        } catch (err) {
+        } catch {
           // セッション確認でエラーが発生した場合も静かにクリア
           isLoggedIn.value = false;
           currentUser.value = null;

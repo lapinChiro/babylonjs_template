@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { Image } from '@/types';
 import * as imagesService from '@/services/images.service';
-import { ApiError } from '@/services/api';
+import { ApiError, toErrorMessage } from '@/services/api';
 import { useAuthStore } from './auth.store';
 
 /**
@@ -71,13 +71,13 @@ export const useImagesStore = defineStore('images', () => {
       // ローカルステートを更新
       images.value.unshift(newImage);
       return newImage;
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         throw err;
       }
-      error.value = err.message || '画像のアップロードに失敗しました。';
+      error.value = toErrorMessage(err, '画像のアップロードに失敗しました。');
       throw err;
     } finally {
       uploading.value = false;
@@ -107,13 +107,13 @@ export const useImagesStore = defineStore('images', () => {
       if (selectedImage.value?.id === id) {
         selectedImage.value = null;
       }
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         throw err;
       }
-      error.value = err.message || '画像の削除に失敗しました。';
+      error.value = toErrorMessage(err, '画像の削除に失敗しました。');
       throw err;
     } finally {
       loading.value = false;
@@ -149,13 +149,13 @@ export const useImagesStore = defineStore('images', () => {
       const fetchedImages = await imagesService.getImages();
       images.value = fetchedImages;
       isInitialized.value = true;
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         return;
       }
-      error.value = err.message || '画像一覧の取得に失敗しました。';
+      error.value = toErrorMessage(err, '画像一覧の取得に失敗しました。');
     } finally {
       loading.value = false;
     }
@@ -170,7 +170,8 @@ export const useImagesStore = defineStore('images', () => {
 
   // 初期データの取得
   if (!isInitialized.value) {
-    fetchImages();
+    // store 初期化時の fire-and-forget(エラーは error state 側で扱う)
+    void fetchImages();
   }
 
   return {

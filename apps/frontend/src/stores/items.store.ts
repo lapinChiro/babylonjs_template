@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { Item, CreateItemInput, UpdateItemInput } from '@/types';
 import * as itemsService from '@/services/items.service';
-import { ApiError } from '@/services/api';
+import { ApiError, toErrorMessage } from '@/services/api';
 import { useAuthStore } from './auth.store';
 
 /**
@@ -85,13 +85,13 @@ export const useItemsStore = defineStore('items', () => {
       // ローカルステートを更新
       items.value.push(newItem);
       return newItem;
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         throw err;
       }
-      error.value = err.message || 'アイテムの追加に失敗しました。';
+      error.value = toErrorMessage(err, 'アイテムの追加に失敗しました。');
       throw err;
     } finally {
       loading.value = false;
@@ -121,13 +121,13 @@ export const useItemsStore = defineStore('items', () => {
       }
 
       return updatedItem;
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         throw err;
       }
-      error.value = err.message || 'アイテムの更新に失敗しました。';
+      error.value = toErrorMessage(err, 'アイテムの更新に失敗しました。');
       throw err;
     } finally {
       loading.value = false;
@@ -156,13 +156,13 @@ export const useItemsStore = defineStore('items', () => {
       if (paginatedItems.value.length === 0 && currentPage.value > 1) {
         currentPage.value--;
       }
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         throw err;
       }
-      error.value = err.message || 'アイテムの削除に失敗しました。';
+      error.value = toErrorMessage(err, 'アイテムの削除に失敗しました。');
       throw err;
     } finally {
       loading.value = false;
@@ -207,13 +207,13 @@ export const useItemsStore = defineStore('items', () => {
       const fetchedItems = await itemsService.getItems();
       items.value = fetchedItems;
       isInitialized.value = true;
-    } catch (err: any) {
+    } catch (err) {
       // 認証エラー時は認証ストアでナビゲーション処理
       if (err instanceof ApiError && err.status === 401) {
         authStore.handleAuthError();
         return;
       }
-      error.value = err.message || 'アイテム一覧の取得に失敗しました。';
+      error.value = toErrorMessage(err, 'アイテム一覧の取得に失敗しました。');
     } finally {
       loading.value = false;
     }
@@ -228,7 +228,8 @@ export const useItemsStore = defineStore('items', () => {
 
   // 初期データの取得
   if (!isInitialized.value) {
-    fetchItems();
+    // store 初期化時の fire-and-forget(エラーは error state 側で扱う)
+    void fetchItems();
   }
 
   return {
