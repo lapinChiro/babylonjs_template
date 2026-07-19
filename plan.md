@@ -4,7 +4,7 @@
 
 ## 現在の計画
 
-(まだ計画された PRD はない。`docs/work-plan/` の設定構築フェーズ完了後、/backlog-replenishment または /todo-replenishment から開始する)
+(まだ計画された PRD はない。/backlog-replenishment または /todo-replenishment から開始する)
 
 ## 完了 PRD
 
