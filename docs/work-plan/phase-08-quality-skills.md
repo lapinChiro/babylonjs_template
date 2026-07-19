@@ -4,11 +4,11 @@
 
 **ゴール:** TDD サイクルと完了処理タスク列を支える品質系 skill 7 つを `.claude/skills/<name>/SKILL.md` として構築する。quality-check と check-local は全面書き直し、他 5 つは移植元を Read して適合。
 
-**共通原則:** frontmatter(`name` / `description` / `user-invocable` / `model`)は移植元を踏襲(review-dev / refactoring-check の `model: claude-fable-5` 維持)。参照する rule 名は Phase 7 の 19 rule の範囲内のみ。
+**共通原則:** frontmatter(`name` / `description` / `user-invocable` / `model`)は移植元を踏襲(review-dev / refactoring-check の `model: claude-fable-5` 維持)。参照する rule 名は Phase 7 の 20 rule の範囲内のみ。
 
 ### Task 1: quality-check(全面書き直し)
 
-- [ ] `.claude/skills/quality-check/SKILL.md` を以下の内容で作成:
+- [x] `.claude/skills/quality-check/SKILL.md` を以下の内容で作成:
 
 ````markdown
 ---
@@ -53,7 +53,7 @@ user-invocable: true
 
 ### Task 2: check-local(全面書き直し)
 
-- [ ] `.claude/skills/check-local/SKILL.md` を作成。移植元 `claude_settings/.claude/skills/check-local/SKILL.md` を Read し、**構造(計画→環境準備→実行→判定、「環境準備は Claude が自分で行い、目視確認のみユーザーへ委譲」の絶対原則、MECE チェックリスト表)を維持**したまま、機構を本プロジェクトへ全面置換する。置換内容:
+- [x] `.claude/skills/check-local/SKILL.md` を作成。移植元 `claude_settings/.claude/skills/check-local/SKILL.md` を Read し、**構造(計画→環境準備→実行→判定、「環境準備は Claude が自分で行い、目視確認のみユーザーへ委譲」の絶対原則、MECE チェックリスト表)を維持**したまま、機構を本プロジェクトへ全面置換する。置換内容:
   - 起動: `docker compose up --build -d`(root `compose.yml`。サービス: frontend / backend / postgres / minio)。ポートは `.env` が正(未作成なら 5173/3000/5432/9000/9001)
   - seed: 初回起動時に migration + デモユーザー(`test1@example.com` / `password123`)が自動投入される。追加 seed スクリプトは無い
   - API 疎通: `curl http://localhost:3000/`(health)、Swagger UI `http://localhost:3000/swagger-ui`
@@ -63,7 +63,7 @@ user-invocable: true
 
 ### Task 3: tdd(適合)
 
-- [ ] `.claude/skills/tdd/SKILL.md` を作成。移植元を Read し以下を変更:
+- [x] `.claude/skills/tdd/SKILL.md` を作成。移植元を Read し以下を変更:
   - ステップ 0(タスク登録)と完了処理タスク列(refactoring-check → review-dev →〔UI 変更のみ〕ux-design review → quality-check → todo-audit → check-local → prd-completion)は**そのまま維持**(全 skill が移植されるため成立)
   - frontend 作業前の `/modern-web-guidance` 先行調査・UI 着手時の `/ux-design discovery` 指示は維持
   - テスト実行コマンド例を本プロジェクトに合わせる: `cd apps/<app> && npx vitest run <file>`(両 app とも vitest。frontend も Phase 4 で導入済み)
@@ -73,31 +73,31 @@ user-invocable: true
 
 ### Task 4: test-design(軽微適合)
 
-- [ ] `.claude/skills/test-design/SKILL.md` を作成。移植元を Read し以下のみ変更:
+- [x] `.claude/skills/test-design/SKILL.md` を作成。移植元を Read し以下のみ変更:
   - fast-check の節: 「backend/frontend とも導入済」→「未導入。property-based testing が有効な対象(パーサ・数値変換・純関数)が増えたら導入を検討し、導入時に本節を必須化する」に変更
   - DB 固有のリスク例(DST/JST・SQL DISTINCT)は「本プロジェクトでは backend の日付/ページネーション/バリデーション境界、frontend の検索/ページネーション computed、renderer の resize/dispose 状態遷移」等の本プロジェクトの例に置換
   - 技法カタログ(境界値 / 状態遷移 / デシジョンテーブル / ペアワイズ / エラー推測)と 8 ステップ構造は無変更
 
 ### Task 5: todo-audit(軽微適合)
 
-- [ ] `.claude/skills/todo-audit/SKILL.md` を作成。移植元を Read。grep 対象(`apps/backend/src/ apps/frontend/src/`、`*.ts` `*.vue`)は本プロジェクトと同一なのでほぼ無変更。検出マーカー(`TODO|FIXME|HACK|WORKAROUND|XXX`、`as any`・`@ts-ignore` 等)も維持
+- [x] `.claude/skills/todo-audit/SKILL.md` を作成。移植元を Read。grep 対象(`apps/backend/src/ apps/frontend/src/`、`*.ts` `*.vue`)は本プロジェクトと同一なのでほぼ無変更。検出マーカー(`TODO|FIXME|HACK|WORKAROUND|XXX`、`as any`・`@ts-ignore` 等)も維持
 
 ### Task 6: review-dev / refactoring-check(軽微適合)
 
-- [ ] `.claude/skills/review-dev/SKILL.md`: 移植元を Read してコピー。`model: claude-fable-5` 維持。参照 rule(`coverage-floor-not-ceiling` / `design-quality-gates` / `no-prd-references-in-code`)は全て Phase 7 で移植済みなので維持。frontend 節の `/modern-web-guidance` 参照も維持
-- [ ] `.claude/skills/refactoring-check/SKILL.md`: 移植元を Read してコピー。`model: claude-fable-5` 維持。記録先(backlog PRD / plan.md / TODO)の三層参照は維持(Phase 9 で種ファイルを作る)
+- [x] `.claude/skills/review-dev/SKILL.md`: 移植元を Read してコピー。`model: claude-fable-5` 維持。参照 rule(`coverage-floor-not-ceiling` / `design-quality-gates` / `no-prd-references-in-code`)は全て Phase 7 で移植済みなので維持。frontend 節の `/modern-web-guidance` 参照も維持
+- [x] `.claude/skills/refactoring-check/SKILL.md`: 移植元を Read してコピー。`model: claude-fable-5` 維持。記録先(backlog PRD / plan.md / TODO)の三層参照は維持(Phase 9 で種ファイルを作る)
 
 ### Task 7: 検証とコミット
 
-- [ ] skill 間・rule への参照が全て解決することを確認:
+- [x] skill 間・rule への参照が全て解決することを確認:
 
 ```bash
 grep -rhoE '(/[a-z-]+|\.claude/rules/[a-z-]+\.md)' .claude/skills/*/SKILL.md | sort -u
 ```
 
-出力の各参照先が実在する(rules は Phase 7 の 19 ファイル、skills はこのフェーズ+ Phase 9-10 で作る一覧= README マッピング表)ことを突合。Phase 9-10 分は未存在で可(メモを引き継ぎ事項へ)
+出力の各参照先が実在する(rules は Phase 7 の 20 ファイル、skills はこのフェーズ+ Phase 9-10 で作る一覧= README マッピング表)ことを突合。Phase 9-10 分は未存在で可(メモを引き継ぎ事項へ)
 
-- [ ] oxlint / Stryker / PGlite / Storybook / knip-root / promana / EXTERNAL_API_MODE の残滓 grep:
+- [x] oxlint / Stryker / PGlite / Storybook / knip-root / promana / EXTERNAL_API_MODE の残滓 grep:
 
 ```bash
 grep -rln "oxlint\|stryker\|PGlite\|storybook\|EXTERNAL_API_MODE\|promana" .claude/
@@ -105,15 +105,22 @@ grep -rln "oxlint\|stryker\|PGlite\|storybook\|EXTERNAL_API_MODE\|promana" .clau
 
 期待: 0 件
 
-- [ ] コミット依頼: 対象ファイルを提示し、ユーザーに `feat(claude): 品質系 skills 7 つを構築(quality-check/check-local は新ツールチェーンで書き直し)` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
+- [x] コミット依頼: 対象ファイルを提示し、ユーザーに `feat(claude): 品質系 skills 7 つを構築(quality-check/check-local は新ツールチェーンで書き直し)` でのコミットを依頼する(git commit はユーザー特権。README の Global Constraints 参照)
 
 ## 受入基準
 
-- [ ] 7 skill が `.claude/skills/*/SKILL.md` に存在し、`/quality-check` 等で呼び出せる
-- [ ] quality-check のフルモードが Phase 5 の `quality` スクリプトと 1:1 対応
-- [ ] check-local が本プロジェクトの compose 構成・DESIGN.md §11 と整合
-- [ ] 移植元固有ツールの残滓 0 件
+- [x] 7 skill が `.claude/skills/*/SKILL.md` に存在し、`/quality-check` 等で呼び出せる
+- [x] quality-check のフルモードが Phase 5 の `quality` スクリプトと 1:1 対応
+- [x] check-local が本プロジェクトの compose 構成・DESIGN.md §11 と整合
+- [x] 移植元固有ツールの残滓 0 件
 
 ## 引き継ぎ事項(実行セッションが追記)
 
-- (未実行)
+- **7 skill 作成完了**: quality-check / check-local(全面書き直し)、tdd / test-design / todo-audit / review-dev / refactoring-check(移植元 Read → 適合)。review-dev / refactoring-check の `model: claude-fable-5` を維持。
+- **計画との差異(D13 整合による調整)**: Task 1 の quality-check 禁止事項は phase 文書で `eslint-disable` 追加に「正当な例外は理由コメント必須+ユーザーへ報告」と例外を許容する文面だったが、**決定記録 D13(抑制コメント一切禁止・例外なし・ユーザー指示 2026-07-19)と矛盾**するため、「抑制コメントの追加は全面禁止・例外なし、実装側の書き換えで解決」に改めた。同様に todo-audit のステップ2で `@ts-ignore`/`@ts-expect-error` 発見時を「TODO 記録」ではなく「即修正」とする注記を D13 に沿って追加(参照は実在しない rule パスではなく「決定記録 D13」表記)。
+- **test-design の適合**: §2.4 の fast-check を「本プロジェクトは未導入。有効対象が増えたら導入検討し導入時に本節を必須化」に変更。移植元固有ドメイン例(estimate / レビュー進行 / 認可遷移)を本プロジェクト例(quantity / renderer lifecycle 遷移 initialize/resize/setSuspended/dispose / engine backend 選択 / render loop 重複)に置換。技法カタログ・8 ステップ構造は無変更。property-based を前提とした移植元の禁止事項2行・検証1行は未導入に合わせて削除。
+- **tdd の適合**: 完了処理タスク列・フロント先行調査・UX 先行設計は維持。RED のテスト実行例を `cd apps/<app> && npx vitest run <test_file>`(両 app vitest)に調整。property-based 併用の必須文言を「fast-check 導入後に適用(正は /test-design §2.4)」へ緩和。PGlite/Storybook 等の移植元固有記述は移植元原文に存在せず、除去対象なし。
+- **check-local の書き直し**: 起動を root `compose.yml` の `docker compose up --build -d`(frontend/backend/postgres/minio)に置換。seed はデモユーザー自動投入(`test1@example.com`/`password123`、追加 seed スクリプト無し)。health は実装確認の結果 `/health`(phase 文書の `curl http://localhost:3000/`(health) は近似記述だったため実エンドポイント `/health` を採用)、Swagger UI `/swagger-ui`、OpenAPI JSON `/doc`、DB 確認 `PGPASSWORD=password psql -h localhost -p 5432 -U postgres -d dev`。DESIGN.md §11 のブラウザ検証 7 項目を 3D 描画変更時の floor として組込。移植元の EXTERNAL_API_MODE / MSW live-mode / promana / bastion は削除(残滓 grep 0 件)。
+- **参照整合**: rule 参照 7 種(coverage-floor-not-ceiling / design-quality-gates / local-quality-mirrors-ci / no-prd-references-in-code / no-spec-distortion-for-tests / task-tracking / verification)は全て実在 20 rule に解決。skill 間参照は Phase 8 分(quality-check/check-local/tdd/test-design/todo-audit/review-dev/refactoring-check/modern-web-guidance)+ Phase 9-10 で作る分(review-prd/ux-design/prd-template/prd-completion/backlog-management/backlog-replenishment/todo-replenishment/track-management/investigation/rule-writing/rule-maintenance)のみで、後者は未存在で可(最終整合検証は Phase 10)。
+- **phase 文書訂正**: 「19 rule」→「20 rule」を 2 箇所訂正(prompt.md 注記の指示どおり)。
+- **スコープ外の発見**: 特になし。
