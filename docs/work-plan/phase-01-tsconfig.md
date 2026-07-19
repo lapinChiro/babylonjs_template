@@ -145,4 +145,11 @@ cd apps/frontend && npm run build
 
 ## 引き継ぎ事項(実行セッションが追記)
 
-- (未実行)
+- **実行日**: 2026-07-19。全受入基準を満たして完了(backend: type-check 0 エラー・build 成功・dist にテスト非含有・test 8 件全 PASS / frontend: type-check 0 エラー・build 成功)
+- **環境差異**: 両 app とも `node_modules` が未インストールだったため `npm ci` を実施(lock ファイルは無変更)。ローカル npm は 11.17.0(package.json の `packageManager` は npm@12.0.1 だが動作に支障なし)
+- **backend の型エラー修正(6 件)**: 計画どおり新オプション+テスト検査対象化で顕在化し、全て修正した
+  - 未使用宣言の削除 3 件: `apis/images.ts` の `size`(destructure から除去)、`apis/items.ts` の `hashPassword` import、`utils/auth.ts` の `JWT_EXPIRES_IN`
+  - `utils/minio.ts` の `generateUploadUrl` 第 1 引数 `filename` は**削除ではなく `_filename` にリネーム**。ファイル名を object key に含めない仕様が意図的(コメントで明示)で、テストがこのシグネチャを検証しているため。API・テストは無変更
+  - テスト import の `.js` 拡張子付与 2 件(`schemas/images.test.ts` / `utils/minio.test.ts`。NodeNext 解決でテストが型検査対象になったため)
+- **frontend**: `noUncheckedIndexedAccess` / `noImplicitOverride` 追加でも既存コードはエラー 0(修正不要)。`tsc --showConfig` で両フラグの有効化を確認済み
+- **未解決事項**: なし

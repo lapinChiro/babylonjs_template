@@ -106,7 +106,7 @@
 
 依存関係: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10(直列。各フェーズは前フェーズの完了を前提とする)
 
-- [ ] **Phase 1**: tsconfig 強化(両 app)+ type-check/build スクリプト整備 — `phase-01-tsconfig.md`
+- [x] **Phase 1**: tsconfig 強化(両 app)+ type-check/build スクリプト整備 — `phase-01-tsconfig.md`
 - [ ] **Phase 2**: backend ESLint 導入+0 エラー化 — `phase-02-backend-eslint.md`
 - [ ] **Phase 3**: frontend ESLint 導入+0 エラー化 — `phase-03-frontend-eslint.md`
 - [ ] **Phase 4**: frontend vitest 導入+シードテスト — `phase-04-frontend-vitest.md`
