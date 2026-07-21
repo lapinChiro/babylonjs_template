@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET ?? 'dev-secret-key-change-in-productio
  * JWT に格納する認証ペイロード
  */
 export interface AuthTokenPayload {
-  userId: number
+  userId: string
   email: string
 }
 
@@ -50,7 +50,7 @@ export async function generateJWT(payload: AuthTokenPayload): Promise<string> {
 export async function verifyJWT(token: string): Promise<AuthTokenPayload | null> {
   try {
     const { userId, email } = await verify(token, JWT_SECRET, 'HS256')
-    if (typeof userId !== 'number' || typeof email !== 'string') {
+    if (typeof userId !== 'string' || typeof email !== 'string') {
       return null
     }
     return { userId, email }

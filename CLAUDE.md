@@ -23,7 +23,7 @@ docker compose stop            # 停止
 docker compose down -v         # コンテナ+開発データ削除
 ```
 
-**Services**: frontend (5173) / backend (3000) / postgres (5432) / minio (9000, console 9001)。ホスト側ポートは `.env` で変更可(`.env.example` 参照)。デモログイン: `test1@example.com` / `password123`
+**Services**: frontend (15173) / backend (13000) / postgres (15432) / minio (19000, console 19001)。ホスト側ポートは `.env` で変更可(`.env.example` 参照)。デモログイン: `test1@example.com` / `password123`
 
 ### Backend (apps/backend/)
 

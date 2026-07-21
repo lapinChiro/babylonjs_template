@@ -3,13 +3,12 @@ import { createRoute } from '@hono/zod-openapi';
 import { authMiddleware } from '../middleware/auth.js';
 import {
   ImageListSchema,
-  ImageParamsSchema,
   ImageSchema,
   UploadUrlRequestSchema,
   UploadUrlResponseSchema,
   ConfirmUploadSchema
 } from '../schemas/images.js';
-import { ErrorResponseSchema } from '../schemas/common.js';
+import { ErrorResponseSchema, IdParamSchema } from '../schemas/common.js';
 import type { Selectable } from 'kysely';
 import { db } from '../db/connection.js';
 import type { Images } from '../db/generated-types.js';
@@ -25,13 +24,13 @@ import {
  */
 async function formatImageResponse(image: Selectable<Images>) {
   return {
-    id: image.id.toString(),
+    id: image.id,
     file_key: image.file_key,
     original_name: image.original_name,
     mime_type: image.mime_type,
     size: Number(image.size),
     url: await generateDownloadUrl(image.file_key),
-    user_id: image.user_id?.toString() ?? null,
+    user_id: image.user_id ?? null,
     created_at: image.created_at.toISOString(),
     updated_at: image.updated_at.toISOString()
   };
@@ -93,7 +92,7 @@ const storeGetImageRoute = (app: OpenAPIHono) => {
   const getImageRoute = createRoute({
     method: 'get',
     path: '/api/images/{id}',
-    request: { params: ImageParamsSchema },
+    request: { params: IdParamSchema },
     responses: {
       200: {
         content: { 'application/json': { schema: ImageSchema } },
@@ -118,7 +117,7 @@ const storeGetImageRoute = (app: OpenAPIHono) => {
       const image = await db
         .selectFrom('images')
         .select(['id', 'file_key', 'original_name', 'mime_type', 'size', 'user_id', 'created_at', 'updated_at'])
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       if (!image) {
@@ -276,7 +275,7 @@ const storeDeleteImageRoute = (app: OpenAPIHono) => {
   const deleteImageRoute = createRoute({
     method: 'delete',
     path: '/api/images/{id}',
-    request: { params: ImageParamsSchema },
+    request: { params: IdParamSchema },
     responses: {
       204: {
         description: '画像削除成功'
@@ -301,7 +300,7 @@ const storeDeleteImageRoute = (app: OpenAPIHono) => {
       const image = await db
         .selectFrom('images')
         .select(['file_key'])
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       if (!image) {
@@ -317,7 +316,7 @@ const storeDeleteImageRoute = (app: OpenAPIHono) => {
       // DBから削除
       await db
         .deleteFrom('images')
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       return c.body(null, 204);

@@ -1,15 +1,18 @@
 import type { Kysely } from 'kysely'
+import { sql } from 'kysely';
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('items')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('name', 'varchar(255)', (col) => col.notNull())
-    .addColumn('created_at', 'timestamp', (col) =>
-      col.defaultTo('now()').notNull()
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().defaultTo(sql`gen_random_uuid()`)
     )
-    .addColumn('updated_at', 'timestamp', (col) =>
-      col.defaultTo('now()').notNull()
+    .addColumn('name', 'varchar(255)', (col) => col.notNull())
+    .addColumn('created_at', 'timestamptz', (col) =>
+      col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
+    )
+    .addColumn('updated_at', 'timestamptz', (col) =>
+      col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
     .execute()
 

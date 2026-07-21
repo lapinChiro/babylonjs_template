@@ -1,0 +1,10 @@
+# TODO.archive
+
+対応見送り(現状維持 / 実施しない / 解決済み)とユーザーが判断した課題の退避層。構造の正は `.claude/rules/backlog-layer-model.md`。各項目は「再開条件 / 再発トリガー」を持ち、満たされたら `TODO` へ戻す。
+
+- [見送り 2026-07-21] 移植元 uuid-primary-key-generation rule を復活する(新規テーブルの PK は uuid + `gen_random_uuid()` を既定とする規約の明文化)。ユーザーが不要と判断。遡及適用は PRD-2 で完了済み(3 テーブルとも uuid 化済)のため実コードは既に規約準拠。**再開条件**: 新規テーブル追加が増え、uuid PK 規約の逸脱を rule で防ぐ必要が生じたとき。
+- [見送り 2026-07-21] 移植元 tz-storage-convention rule を復活する(datetime=timestamptz / 監査 timestamp は DB 側生成の規約の明文化)。ユーザーが不要と判断。遡及適用は PRD-2 で完了済み。**再開条件**: timestamp/timestamptz 規約の逸脱が発生、または明文化が必要になったとき。
+- [見送り 2026-07-21] 本番デプロイ経路(CD)設計時に移植元 transient-schema-mismatch-policy rule(デプロイ過渡期の互換シム禁止・DB 制約による保存データ保証)の採用を再検討する。ユーザーが不要と判断(本番デプロイ関連)。**再開条件**: 本番デプロイ経路(CD)を設計するとき。
+- [見送り 2026-07-21] frontend の renderer 層(createEngine のフォールバック分岐・BabylonRenderer の dispose 冪等性・lifecycle 契約)へのユニットテスト追加(Babylon Engine を vi.mock する構成)。旧トラック B 単位①。ユーザーが「production コード品質以外は見送り」と判断(テスト追加は production コード変更でないため)。**再開条件**: renderer 層のリファクタや回帰リスクが顕在化、またはテンプレート配布時に renderer 安定性の自動保証が必要になったとき。
+- [見送り 2026-07-21] E2E テスト(初期化状態・engine backend・mesh 数・console error の検証。DESIGN.md §11 の方針)の導入。旧トラック B 単位②。ユーザーが「production コード品質以外は見送り」と判断。**再開条件**: renderer/統合の回帰を自動検出する必要が生じたとき。
+- [見送り 2026-07-21] lint への max-lines / max-lines-per-function 導入(行数稼ぎでなく凝集単位の分割で応える運用)。ユーザーが「production コード品質以外は見送り」と判断(既存コード品質の是正でなく tooling 導入のため)。**再開条件**: ファイルの肥大化が実際に問題になったとき。

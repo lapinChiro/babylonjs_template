@@ -45,10 +45,10 @@ docker compose up --build
 
 | サービス | URL |
 |---|---|
-| フロントエンド | <http://localhost:5173/> |
-| Hono API | <http://localhost:3000/> |
-| Swagger UI | <http://localhost:3000/swagger-ui> |
-| MinIO Console | <http://localhost:9001/> |
+| フロントエンド | <http://localhost:15173/> |
+| Hono API | <http://localhost:13000/> |
+| Swagger UI | <http://localhost:13000/swagger-ui> |
+| MinIO Console | <http://localhost:19001/> |
 
 このワークスペースでは他プロジェクトとのポート競合を避けるため、現在の`.env`で
 Frontend `15173`、API `13000`、PostgreSQL `15432`、MinIO `19000/19001`
@@ -138,5 +138,5 @@ docker compose config
 ## DBアクセス
 
 ```sh
-PGPASSWORD=password psql -h localhost -p "${POSTGRES_PORT:-5432}" -U postgres -d dev
+PGPASSWORD=password psql -h localhost -p "${POSTGRES_PORT:-15432}" -U postgres -d dev
 ```

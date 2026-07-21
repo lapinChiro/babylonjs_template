@@ -2,7 +2,7 @@ import { z } from '@hono/zod-openapi'
 
 // メインユーザースキーマ
 export const UserSchema = z.object({
-  id: z.string().openapi({ example: '1' }),
+  id: z.string().openapi({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' }),
   name: z.string().openapi({ example: 'John Doe' }),
   email: z.email().openapi({ example: 'john@example.com' }),
   active: z.boolean().openapi({ example: true }),
@@ -23,14 +23,6 @@ export const UpdateUserSchema = z.object({
   active: z.boolean().optional().openapi({ example: false }),
   password: z.string().min(6).optional().openapi({ example: 'newPassword123' })
 }).openapi('UpdateUser')
-
-// パスパラメータ用スキーマ
-export const UserParamsSchema = z.object({
-  id: z.string().min(1).openapi({
-    param: { name: 'id', in: 'path' },
-    example: '1'
-  })
-})
 
 // ユーザーリスト用スキーマ
 export const UserListSchema = z.array(UserSchema).openapi('UserList')

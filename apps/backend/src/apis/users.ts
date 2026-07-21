@@ -1,8 +1,8 @@
 import type { OpenAPIHono} from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { authMiddleware } from '../middleware/auth.js';
-import { UserSchema, UserParamsSchema, UserListSchema, CreateUserSchema, UpdateUserSchema } from '../schemas/users.js';
-import { ErrorResponseSchema } from '../schemas/common.js';
+import { UserSchema, UserListSchema, CreateUserSchema, UpdateUserSchema } from '../schemas/users.js';
+import { ErrorResponseSchema, IdParamSchema } from '../schemas/common.js';
 import { db } from '../db/connection.js';
 import { hashPassword } from '../utils/auth.js'
 
@@ -20,7 +20,7 @@ const storeGetUserRoute = (app: OpenAPIHono) => {
   const getUserRoute = createRoute({
     method: 'get',
     path: '/api/users/{id}',
-    request: { params: UserParamsSchema },
+    request: { params: IdParamSchema },
     responses: {
       200: {
         content: { 'application/json': { schema: UserSchema } },
@@ -45,7 +45,7 @@ const storeGetUserRoute = (app: OpenAPIHono) => {
       const user = await db
         .selectFrom('users')
         .select(['id', 'name', 'email', 'active', 'created_at'])
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       if (!user) {
@@ -56,7 +56,7 @@ const storeGetUserRoute = (app: OpenAPIHono) => {
       }
 
       return c.json({
-        id: user.id.toString(),
+        id: user.id,
         name: user.name,
         email: user.email,
         active: user.active,
@@ -100,7 +100,7 @@ const storeGetUsersRoute = (app: OpenAPIHono) => {
         .execute();
 
       const formattedUsers = users.map(user => ({
-        id: user.id.toString(),
+        id: user.id,
         name: user.name,
         email: user.email,
         active: user.active,
@@ -179,7 +179,7 @@ const storeCreateUserRoute = (app: OpenAPIHono) => {
         .executeTakeFirstOrThrow();
 
       return c.json({
-        id: newUser.id.toString(),
+        id: newUser.id,
         name: newUser.name,
         email: newUser.email,
         active: newUser.active,
@@ -202,7 +202,7 @@ const storeUpdateUserRoute = (app: OpenAPIHono) => {
     method: 'put',
     path: '/api/users/{id}',
     request: {
-      params: UserParamsSchema,
+      params: IdParamSchema,
       body: {
         content: { 'application/json': { schema: UpdateUserSchema } }
       }
@@ -235,7 +235,7 @@ const storeUpdateUserRoute = (app: OpenAPIHono) => {
           .selectFrom('users')
           .select('id')
           .where('email', '=', updateData.email.toLowerCase())
-          .where('id', '!=', parseInt(id))
+          .where('id', '!=', id)
           .executeTakeFirst();
 
         if (existingUser) {
@@ -256,7 +256,7 @@ const storeUpdateUserRoute = (app: OpenAPIHono) => {
       const updatedUser = await db
         .updateTable('users')
         .set(dataToUpdate)
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .returning(['id', 'name', 'email', 'active', 'created_at'])
         .executeTakeFirst();
 
@@ -268,7 +268,7 @@ const storeUpdateUserRoute = (app: OpenAPIHono) => {
       }
 
       return c.json({
-        id: updatedUser.id.toString(),
+        id: updatedUser.id,
         name: updatedUser.name,
         email: updatedUser.email,
         active: updatedUser.active,
@@ -290,7 +290,7 @@ const storeDeleteUserRoute = (app: OpenAPIHono) => {
   const deleteUserRoute = createRoute({
     method: 'delete',
     path: '/api/users/{id}',
-    request: { params: UserParamsSchema },
+    request: { params: IdParamSchema },
     responses: {
       204: {
         description: 'ユーザー削除成功'
@@ -313,7 +313,7 @@ const storeDeleteUserRoute = (app: OpenAPIHono) => {
     try {
       const result = await db
         .deleteFrom('users')
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       if (result.numDeletedRows === 0n) {

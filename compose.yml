@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:18.4
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-15432}:5432"
     environment:
       POSTGRES_DB: dev
       POSTGRES_USER: postgres
@@ -27,7 +27,7 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile.frontend
     ports:
-      - "${FRONTEND_PORT:-5173}:5173"
+      - "${FRONTEND_PORT:-15173}:5173"
     volumes:
       - ./apps/frontend:/workspace/apps/frontend
       - /workspace/apps/frontend/node_modules
@@ -43,7 +43,7 @@ services:
       - VITE_ENABLE_PREFETCH=true
       - VITE_ENABLE_PRELOAD=false
       - VITE_CHUNK_SIZE_LIMIT=500
-      - VITE_API_BASE_URL=http://${HOST:-localhost}:${BACKEND_PORT:-3000}${BASE_PATH:-}/api
+      - VITE_API_BASE_URL=http://${HOST:-localhost}:${BACKEND_PORT:-13000}${BASE_PATH:-}/api
       - VITE_BABYLON_RENDERER=${VITE_BABYLON_RENDERER:-webgl}
       - HOST=${HOST:-localhost}
       - BASE_PATH=${BASE_PATH:-}
@@ -55,7 +55,7 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile.backend
     ports:
-      - "${BACKEND_PORT:-3000}:3000"
+      - "${BACKEND_PORT:-13000}:3000"
     volumes:
       - ./apps/backend:/workspace/apps/backend
       - /workspace/apps/backend/node_modules
@@ -78,7 +78,7 @@ services:
       - MINIO_ENDPOINT=minio
       - MINIO_EXTERNAL_ENDPOINT=localhost
       - MINIO_PORT=9000
-      - MINIO_EXTERNAL_PORT=${MINIO_API_PORT:-9000}
+      - MINIO_EXTERNAL_PORT=${MINIO_API_PORT:-19000}
       - MINIO_USE_SSL=false
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin123
@@ -112,13 +112,13 @@ services:
   minio:
     image: quay.io/minio/minio:latest
     ports:
-      - "${MINIO_API_PORT:-9000}:9000"  # API
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"  # Console
+      - "${MINIO_API_PORT:-19000}:9000"  # API
+      - "${MINIO_CONSOLE_PORT:-19001}:9001"  # Console
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
-      MINIO_API_CORS_ALLOW_ORIGIN: "http://localhost:${FRONTEND_PORT:-5173}"
-      MINIO_SERVER_URL: "http://localhost:${MINIO_API_PORT:-9000}"  # presigned URLのベースURL
+      MINIO_API_CORS_ALLOW_ORIGIN: "http://localhost:${FRONTEND_PORT:-15173}"
+      MINIO_SERVER_URL: "http://localhost:${MINIO_API_PORT:-19000}"  # presigned URLのベースURL
     command: server /data --console-address ":9001"
     volumes:
       - minio-data:/data

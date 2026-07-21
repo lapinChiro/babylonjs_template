@@ -4,15 +4,17 @@ import { sql } from 'kysely';
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('users')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().defaultTo(sql`gen_random_uuid()`)
+    )
     .addColumn('name', 'varchar(255)', (col) => col.notNull())
     .addColumn('email', 'varchar(255)', (col) => col.notNull().unique())
     .addColumn('password_hash', 'varchar(255)', (col) => col.notNull())
     .addColumn('active', 'boolean', (col) => col.defaultTo(true).notNull())
-    .addColumn('created_at', 'timestamp', (col) =>
+    .addColumn('created_at', 'timestamptz', (col) =>
       col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
-    .addColumn('updated_at', 'timestamp', (col) =>
+    .addColumn('updated_at', 'timestamptz', (col) =>
       col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
     .execute()

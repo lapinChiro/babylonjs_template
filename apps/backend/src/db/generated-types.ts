@@ -16,17 +16,17 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 export interface Images {
   created_at: Generated<Timestamp>;
   file_key: string;
-  id: Generated<number>;
+  id: Generated<string>;
   mime_type: string;
   original_name: string;
   size: Int8;
   updated_at: Generated<Timestamp>;
-  user_id: number | null;
+  user_id: string | null;
 }
 
 export interface Items {
   created_at: Generated<Timestamp>;
-  id: Generated<number>;
+  id: Generated<string>;
   name: string;
   updated_at: Generated<Timestamp>;
 }
@@ -35,7 +35,7 @@ export interface Users {
   active: Generated<boolean>;
   created_at: Generated<Timestamp>;
   email: string;
-  id: Generated<number>;
+  id: Generated<string>;
   name: string;
   password_hash: string;
   updated_at: Generated<Timestamp>;

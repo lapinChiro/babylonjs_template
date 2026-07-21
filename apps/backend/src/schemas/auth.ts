@@ -21,7 +21,7 @@ export const LoginResponseSchema = z.object({
       description: 'JWT認証トークン'
     }),
     user: z.object({
-      id: z.number().openapi({ example: 1 }),
+      id: z.string().openapi({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' }),
       name: z.string().openapi({ example: 'John Doe' }),
       email: z.email().openapi({ example: 'user@example.com' })
     })
@@ -39,7 +39,7 @@ export const SessionResponseSchema = z.object({
   success: z.boolean().openapi({ example: true }),
   data: z.object({
     user: z.object({
-      id: z.number().openapi({ example: 1 }),
+      id: z.string().openapi({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' }),
       name: z.string().openapi({ example: 'John Doe' }),
       email: z.email().openapi({ example: 'user@example.com' })
     })

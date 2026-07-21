@@ -20,7 +20,7 @@ export interface AuthError {
 export interface AuthState {
   isLoggedIn: boolean;
   currentUser?: {
-    id: number;
+    id: string;
     name: string;
     email: string;
   };

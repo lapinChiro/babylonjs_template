@@ -9,3 +9,12 @@ export const ErrorResponseSchema = z.object({
   message: z.string().openapi({ example: 'Error occurred' }),
   error: z.string().optional().openapi({ example: 'Detailed error message' })
 }).openapi('ErrorResponse')
+
+// id パスパラメータ用スキーマ。3 テーブル (users/items/images) の PK は uuid で
+// 検証規則が同一のため単一スキーマに集約する
+export const IdParamSchema = z.object({
+  id: z.uuid('IDはUUID形式である必要があります').openapi({
+    param: { name: 'id', in: 'path' },
+    example: '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+  })
+})

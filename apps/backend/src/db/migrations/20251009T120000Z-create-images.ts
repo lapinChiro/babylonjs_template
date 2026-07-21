@@ -4,18 +4,20 @@ import { sql } from 'kysely';
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('images')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
+    .addColumn('id', 'uuid', (col) =>
+      col.primaryKey().defaultTo(sql`gen_random_uuid()`)
+    )
     .addColumn('file_key', 'varchar(255)', (col) => col.notNull().unique())
     .addColumn('original_name', 'varchar(255)', (col) => col.notNull())
     .addColumn('mime_type', 'varchar(100)', (col) => col.notNull())
     .addColumn('size', 'bigint', (col) => col.notNull())
-    .addColumn('user_id', 'integer', (col) =>
+    .addColumn('user_id', 'uuid', (col) =>
       col.references('users.id').onDelete('set null')
     )
-    .addColumn('created_at', 'timestamp', (col) =>
+    .addColumn('created_at', 'timestamptz', (col) =>
       col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
-    .addColumn('updated_at', 'timestamp', (col) =>
+    .addColumn('updated_at', 'timestamptz', (col) =>
       col.defaultTo(sql`CURRENT_TIMESTAMP`).notNull()
     )
     .execute();

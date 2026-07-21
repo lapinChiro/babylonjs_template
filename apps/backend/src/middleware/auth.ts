@@ -6,7 +6,7 @@ import { db } from '../db/connection.js'
  * 認証済みユーザー情報(authMiddleware が context に設定する)
  */
 export interface AuthUser {
-  id: number
+  id: string
   name: string
   email: string
 }

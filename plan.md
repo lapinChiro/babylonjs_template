@@ -4,8 +4,15 @@
 
 ## 現在の計画
 
-(まだ計画された PRD はない。/backlog-replenishment または /todo-replenishment から開始する)
+現在アクティブなトラックはない。開発は `TODO` の production コード品質項目から単発 PRD として着手直前に `prd-template` で materialize する（優先順は `TODO` を正とする: DB エラーハンドリング共通化 → メール重複の HTTP ステータス → migration up/down 非対称）。`#5`(DB エラーハンドリング) と `#2`(HTTP ステータス) は同一 handler 群でバッチ化候補。
+
+旧トラック B「3D renderer テストカバレッジ」はユーザー判断で中断し、単位（renderer unit test / E2E）を `TODO.archive` へ退避した（再開条件は `TODO.archive` を参照）。
 
 ## 完了 PRD
 
-(なし)
+（番号 + 短タグ・最新 10 件・新しい順）
+
+| PRD | 短タグ |
+|---|---|
+| 2 | DB スキーマ uuid+timestamptz 化 |
+| 1 | router ガード戻り値化 |

@@ -18,7 +18,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
   };
@@ -27,7 +27,7 @@ export interface LoginResponse {
 
 export interface SessionResponse {
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
   };

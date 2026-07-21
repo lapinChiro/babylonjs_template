@@ -5,7 +5,7 @@
 import { ofetch } from 'ofetch';
 
 // API Base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:13000/api';
 
 // Token storage key
 const TOKEN_KEY = 'auth:token';

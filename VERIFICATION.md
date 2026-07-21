@@ -30,7 +30,7 @@ MinIOが個別に起動するだけでなく、利用者の操作フローとし
 |---|---|---|---|
 | ENV-01 | Build | 全Docker imageをbuild | 全build成功 |
 | ENV-02 | Health | PostgreSQL、MinIO、Backendのhealth | healthy |
-| ENV-03 | Ports | 5173、3000、5432、9000、9001 | HTTP/TCP接続可能 |
+| ENV-03 | Ports | 15173、13000、15432、19000、19001 | HTTP/TCP接続可能 |
 | API-01 | Public API | `/health`、`/doc`、`/swagger-ui` | HTTP 200、OpenAPI形式 |
 | AUTH-01 | Auth | 誤ったpassword | HTTP 401 |
 | AUTH-02 | Auth | デモユーザーでlogin | HTTP 200、JWTとuser |

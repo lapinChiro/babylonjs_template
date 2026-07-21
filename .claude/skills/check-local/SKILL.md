@@ -60,20 +60,20 @@ docker compose logs -f backend # ログ確認
 ```
 
 - **seed**: 初回起動時に migration + デモユーザー(`test1@example.com` / `password123`)が自動投入される。追加 seed スクリプトは無い。データを作り直したいときは `docker compose down -v` 後に再 `up`。
-- **ホスト側ポートは `.env` が正**(未作成なら `.env.example` の既定 = frontend 5173 / backend 3000 / postgres 5432 / minio API 9000 / console 9001)。
+- **ホスト側ポートは `.env` が正**(未作成なら `.env.example` の既定 = frontend 15173 / backend 13000 / postgres 15432 / minio API 19000 / console 19001)。
 - **backend / frontend は必ず docker compose のコンテナとして起動する**(host 側 `npm run dev` での直接起動は禁止)。確認環境をコンテナ実行時と一致させるため。
 
 **CLI で実行可能な確認(自分で行う):**
 
 ```bash
-curl http://localhost:3000/health                 # backend health(応答 200)
-# API 動作: http://localhost:3000/swagger-ui(Swagger UI)/ http://localhost:3000/doc(OpenAPI JSON)
-PGPASSWORD=password psql -h localhost -p 5432 -U postgres -d dev   # DB 確認
+curl http://localhost:13000/health                 # backend health(応答 200)
+# API 動作: http://localhost:13000/swagger-ui(Swagger UI)/ http://localhost:13000/doc(OpenAPI JSON)
+PGPASSWORD=password psql -h localhost -p 15432 -U postgres -d dev   # DB 確認
 ```
 
 ### 3. 私への依頼(実機画面の目視確認だけ)
 
-私が行うのは **ブラウザ実機画面を通じた挙動の目視確認のみ**(WebGL/WebGPU 描画・camera 操作・resize・reduced motion 等、原理的に自動化不能な確認を含む)。それ以外(環境起動・CLI 実行・判定)は section 2 で全てあなたが終わらせる。CLI で実行できる確認をここに混ぜない。依頼は **一つずつ**、具体的な操作手順と「何が見えれば合格か」を添えて出す(frontend は `http://localhost:5173`、デモログイン `test1@example.com` / `password123`)。
+私が行うのは **ブラウザ実機画面を通じた挙動の目視確認のみ**(WebGL/WebGPU 描画・camera 操作・resize・reduced motion 等、原理的に自動化不能な確認を含む)。それ以外(環境起動・CLI 実行・判定)は section 2 で全てあなたが終わらせる。CLI で実行できる確認をここに混ぜない。依頼は **一つずつ**、具体的な操作手順と「何が見えれば合格か」を添えて出す(frontend は `http://localhost:15173`、デモログイン `test1@example.com` / `password123`)。
 
 ### 4. 判定
 

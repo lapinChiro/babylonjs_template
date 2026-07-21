@@ -7,12 +7,12 @@ import { getStoredToken, toErrorMessage } from '@/services/api';
 /**
  * LocalStorage から復元した値がユーザー情報の形をしているか検証する
  */
-function isStoredUser(value: unknown): value is { id: number; name: string; email: string } {
+export function isStoredUser(value: unknown): value is { id: string; name: string; email: string } {
   return (
     typeof value === 'object' &&
     value !== null &&
     'id' in value &&
-    typeof value.id === 'number' &&
+    typeof value.id === 'string' &&
     'name' in value &&
     typeof value.name === 'string' &&
     'email' in value &&
@@ -28,7 +28,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // State
   const isLoggedIn = ref<boolean>(false);
-  const currentUser = ref<{ id: number; name: string; email: string } | null>(null);
+  const currentUser = ref<{ id: string; name: string; email: string } | null>(null);
   const loading = ref<boolean>(false);
   const error = ref<string | null>(null);
   const isInitialized = ref<boolean>(false); // 認証状態復元の完了フラグ

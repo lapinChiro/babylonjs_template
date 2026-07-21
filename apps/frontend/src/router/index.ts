@@ -56,7 +56,7 @@ const router = createRouter({
 });
 
 // ナビゲーションガード
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async (to) => {
   const authStore = useAuthStore();
 
   // 認証状態の復元が完了するまで待機
@@ -68,14 +68,12 @@ router.beforeEach(async (to, _from, next) => {
 
   // 認証が必要なルートのガード
   if (to.meta.requiresAuth && !isLoggedIn) {
-    next('/login');
-    return;
+    return '/login';
   }
 
   // ゲスト専用ルートのガード
   if (to.meta.requiresGuest && isLoggedIn) {
-    next('/dashboard');
-    return;
+    return '/dashboard';
   }
 
   // ページタイトルの設定
@@ -85,7 +83,7 @@ router.beforeEach(async (to, _from, next) => {
     document.title = 'Babylon Stack';
   }
 
-  next();
+  return;
 });
 
 export default router;

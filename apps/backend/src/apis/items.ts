@@ -1,8 +1,8 @@
 import type { OpenAPIHono} from '@hono/zod-openapi';
 import { createRoute } from '@hono/zod-openapi';
 import { authMiddleware } from '../middleware/auth.js';
-import { ItemListSchema, ItemParamsSchema, ItemSchema, CreateItemSchema, UpdateItemSchema } from '../schemas/items.js';
-import { ErrorResponseSchema } from '../schemas/common.js';
+import { ItemListSchema, ItemSchema, CreateItemSchema, UpdateItemSchema } from '../schemas/items.js';
+import { ErrorResponseSchema, IdParamSchema } from '../schemas/common.js';
 import { db } from '../db/connection.js';
 
 export const storeItemApi = (app: OpenAPIHono) => {
@@ -42,7 +42,7 @@ const storeGetItemRoute = (app: OpenAPIHono) => {
         .execute();
 
       const formattedItems = items.map(item => ({
-        id: item.id.toString(),
+        id: item.id,
         name: item.name,
         created_at: item.created_at.toISOString(),
         updated_at: item.updated_at.toISOString()
@@ -65,7 +65,7 @@ const storeGetItemsRoute = (app: OpenAPIHono) => {
   const getItemRoute = createRoute({
     method: 'get',
     path: '/api/items/{id}',
-    request: { params: ItemParamsSchema },
+    request: { params: IdParamSchema },
     responses: {
       200: {
         content: { 'application/json': { schema: ItemSchema } },
@@ -90,7 +90,7 @@ const storeGetItemsRoute = (app: OpenAPIHono) => {
       const item = await db
         .selectFrom('items')
         .select(['id', 'name', 'created_at', 'updated_at'])
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       if (!item) {
@@ -101,7 +101,7 @@ const storeGetItemsRoute = (app: OpenAPIHono) => {
       }
 
       return c.json({
-        id: item.id.toString(),
+        id: item.id,
         name: item.name,
         created_at: item.created_at.toISOString(),
         updated_at: item.updated_at.toISOString()
@@ -157,7 +157,7 @@ const storeCreateItemRoute = (app: OpenAPIHono) => {
         .executeTakeFirstOrThrow();
 
       return c.json({
-        id: newItem.id.toString(),
+        id: newItem.id,
         name: newItem.name,
         created_at: newItem.created_at.toISOString(),
         updated_at: newItem.updated_at.toISOString()
@@ -180,7 +180,7 @@ const storeUpdateItemRoute = (app: OpenAPIHono) => {
     method: 'put',
     path: '/api/items/{id}',
     request: {
-      params: ItemParamsSchema,
+      params: IdParamSchema,
       body: {
         content: { 'application/json': { schema: UpdateItemSchema } }
       }
@@ -210,7 +210,7 @@ const storeUpdateItemRoute = (app: OpenAPIHono) => {
       const updatedItem = await db
         .updateTable('items')
         .set(updateData)
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .returning(['id', 'name', 'created_at', 'updated_at'])
         .executeTakeFirst();
 
@@ -222,7 +222,7 @@ const storeUpdateItemRoute = (app: OpenAPIHono) => {
       }
 
       return c.json({
-        id: updatedItem.id.toString(),
+        id: updatedItem.id,
         name: updatedItem.name,
         created_at: updatedItem.created_at.toISOString(),
         updated_at: updatedItem.updated_at.toISOString()
@@ -243,7 +243,7 @@ const storeDeleteUserRoute = (app: OpenAPIHono) => {
   const deleteItemRoute = createRoute({
     method: 'delete',
     path: '/api/items/{id}',
-    request: { params: ItemParamsSchema },
+    request: { params: IdParamSchema },
     responses: {
       204: {
         description: 'アイテム削除成功'
@@ -266,7 +266,7 @@ const storeDeleteUserRoute = (app: OpenAPIHono) => {
     try {
       const result = await db
         .deleteFrom('items')
-        .where('id', '=', parseInt(id))
+        .where('id', '=', id)
         .executeTakeFirst();
 
       if (result.numDeletedRows === 0n) {
